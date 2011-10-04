@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "_2RealKinect", "_2RealKinect.vcxproj", "{67112A04-6E97-4C40-97EA-2A8FB6C14797}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug (MS KINECT SDK)|Win32 = Debug (MS KINECT SDK)|Win32
+		Debug (OpenNI)|Win32 = Debug (OpenNI)|Win32
+		Debug MTD (MS KINECT SDK)|Win32 = Debug MTD (MS KINECT SDK)|Win32
+		Debug MTD (OpenNI)|Win32 = Debug MTD (OpenNI)|Win32
+		Release (MS KINECT SDK)|Win32 = Release (MS KINECT SDK)|Win32
+		Release (OpenNI)|Win32 = Release (OpenNI)|Win32
+		Release MTD (MS KINECT SDK)|Win32 = Release MTD (MS KINECT SDK)|Win32
+		Release MTD (OpenNI)|Win32 = Release MTD (OpenNI)|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{67112A04-6E97-4C40-97EA-2A8FB6C14797}.Debug (MS KINECT SDK)|Win32.ActiveCfg = Debug (MS KINECT SDK)|Win32
+		{67112A04-6E97-4C40-97EA-2A8FB6C14797}.Debug (MS KINECT SDK)|Win32.Build.0 = Debug (MS KINECT SDK)|Win32
+		{67112A04-6E97-4C40-97EA-2A8FB6C14797}.Debug (OpenNI)|Win32.ActiveCfg = Debug (OpenNI)|Win32
+		{67112A04-6E97-4C40-97EA-2A8FB6C14797}.Debug (OpenNI)|Win32.Build.0 = Debug (OpenNI)|Win32
+		{67112A04-6E97-4C40-97EA-2A8FB6C14797}.Debug MTD (MS KINECT SDK)|Win32.ActiveCfg = Debug MTD (MS KINECT SDK)|Win32
+		{67112A04-6E97-4C40-97EA-2A8FB6C14797}.Debug MTD (MS KINECT SDK)|Win32.Build.0 = Debug MTD (MS KINECT SDK)|Win32
+		{67112A04-6E97-4C40-97EA-2A8FB6C14797}.Debug MTD (OpenNI)|Win32.ActiveCfg = Debug MTD (OpenNI)|Win32
+		{67112A04-6E97-4C40-97EA-2A8FB6C14797}.Debug MTD (OpenNI)|Win32.Build.0 = Debug MTD (OpenNI)|Win32
+		{67112A04-6E97-4C40-97EA-2A8FB6C14797}.Release (MS KINECT SDK)|Win32.ActiveCfg = Release (MS KINECT SDK)|Win32
+		{67112A04-6E97-4C40-97EA-2A8FB6C14797}.Release (MS KINECT SDK)|Win32.Build.0 = Release (MS KINECT SDK)|Win32
+		{67112A04-6E97-4C40-97EA-2A8FB6C14797}.Release (OpenNI)|Win32.ActiveCfg = Release (OpenNI)|Win32
+		{67112A04-6E97-4C40-97EA-2A8FB6C14797}.Release (OpenNI)|Win32.Build.0 = Release (OpenNI)|Win32
+		{67112A04-6E97-4C40-97EA-2A8FB6C14797}.Release MTD (MS KINECT SDK)|Win32.ActiveCfg = Release MTD (MS KINECT SDK)|Win32
+		{67112A04-6E97-4C40-97EA-2A8FB6C14797}.Release MTD (MS KINECT SDK)|Win32.Build.0 = Release MTD (MS KINECT SDK)|Win32
+		{67112A04-6E97-4C40-97EA-2A8FB6C14797}.Release MTD (OpenNI)|Win32.ActiveCfg = Release MTD (OpenNI)|Win32
+		{67112A04-6E97-4C40-97EA-2A8FB6C14797}.Release MTD (OpenNI)|Win32.Build.0 = Release MTD (OpenNI)|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

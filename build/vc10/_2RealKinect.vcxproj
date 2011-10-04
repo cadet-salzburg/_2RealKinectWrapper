@@ -1,0 +1,442 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug (MS KINECT SDK)|Win32">
+      <Configuration>Debug (MS KINECT SDK)</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug (OpenNI)|Win32">
+      <Configuration>Debug (OpenNI)</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug MTD (MS KINECT SDK)|Win32">
+      <Configuration>Debug MTD (MS KINECT SDK)</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug MTD (OpenNI)|Win32">
+      <Configuration>Debug MTD (OpenNI)</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release (OpenNI)|Win32">
+      <Configuration>Release (OpenNI)</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release (MS KINECT SDK)|Win32">
+      <Configuration>Release (MS KINECT SDK)</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release MTD (MS KINECT SDK)|Win32">
+      <Configuration>Release MTD (MS KINECT SDK)</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release MTD (OpenNI)|Win32">
+      <Configuration>Release MTD (OpenNI)</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\include\_2RealImageSource.h" />
+    <ClInclude Include="..\..\include\_2RealKinect.h" />
+    <ClInclude Include="..\..\include\_2RealTypes.h" />
+    <ClInclude Include="..\..\include\_2RealVector2f.h" />
+    <ClInclude Include="..\..\src\I_2RealImplementation.h" />
+    <ClInclude Include="..\..\src\OpenNISpecific\OpenNIColorGenerator.h" />
+    <ClInclude Include="..\..\src\OpenNISpecific\OpenNIDepthGenerator.h" />
+    <ClInclude Include="..\..\src\OpenNISpecific\OpenNIDevice.h" />
+    <ClInclude Include="..\..\src\OpenNISpecific\OpenNIGenerator.h" />
+    <ClInclude Include="..\..\src\OpenNISpecific\OpenNIInfraredGenerator.h" />
+    <ClInclude Include="..\..\src\OpenNISpecific\OpenNIUserGenerator.h" />
+    <ClInclude Include="..\..\src\OpenNISpecific\_2RealImplementationOpenNI.hpp" />
+    <ClInclude Include="..\..\src\WinSDKSpecific\WSDKDevice.h" />
+    <ClInclude Include="..\..\src\WinSDKSpecific\_2RealImplementationWinSDK.hpp" />
+    <ClInclude Include="..\..\src\_2RealConfig.h" />
+    <ClInclude Include="..\..\src\_2RealLogger.h" />
+    <ClInclude Include="..\..\src\_2RealTrackedJoint.h" />
+    <ClInclude Include="..\..\src\_2RealTrackedUser.h" />
+    <ClInclude Include="..\..\src\_2RealUtility.h" />
+    <ClInclude Include="..\..\src\_2RealVersion.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\OpenNISpecific\OpenNIColorGenerator.cpp" />
+    <ClCompile Include="..\..\src\OpenNISpecific\OpenNIDepthGenerator.cpp" />
+    <ClCompile Include="..\..\src\OpenNISpecific\OpenNIDevice.cpp" />
+    <ClCompile Include="..\..\src\OpenNISpecific\OpenNIInfraredGenerator.cpp" />
+    <ClCompile Include="..\..\src\OpenNISpecific\OpenNIUserGenerator.cpp" />
+    <ClCompile Include="..\..\src\WinSDKSpecific\WSDKDevice.cpp" />
+    <ClCompile Include="..\..\src\_2RealKinect.cpp" />
+    <ClCompile Include="..\..\src\_2RealLogger.cpp" />
+    <ClCompile Include="..\..\src\_2RealTrackedJoint.cpp" />
+    <ClCompile Include="..\..\src\_2RealTrackedUser.cpp" />
+    <ClCompile Include="..\..\src\_2RealTypes.cpp" />
+    <ClCompile Include="..\..\src\_2RealVector2f.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\readme.txt" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{67112A04-6E97-4C40-97EA-2A8FB6C14797}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>_2realOpennNI</RootNamespace>
+    <ProjectName>_2RealKinect</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug (OpenNI)|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug MTD (OpenNI)|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug (MS KINECT SDK)|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug MTD (MS KINECT SDK)|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release (MS KINECT SDK)|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release MTD (MS KINECT SDK)|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release (OpenNI)|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release MTD (OpenNI)|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug (OpenNI)|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug MTD (OpenNI)|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug (MS KINECT SDK)|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug MTD (MS KINECT SDK)|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release (MS KINECT SDK)|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release MTD (MS KINECT SDK)|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release (OpenNI)|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release MTD (OpenNI)|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug (OpenNI)|Win32'">
+    <IncludePath>$(BOOST_DIR);$(IncludePath);$(OPEN_NI_INCLUDE)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug MTD (OpenNI)|Win32'">
+    <IncludePath>$(BOOST_DIR);$(IncludePath);$(OPEN_NI_INCLUDE)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug (MS KINECT SDK)|Win32'">
+    <IncludePath>$(BOOST_DIR);$(IncludePath);$(OPEN_NI_INCLUDE)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug MTD (MS KINECT SDK)|Win32'">
+    <IncludePath>$(BOOST_DIR);$(IncludePath);$(OPEN_NI_INCLUDE)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug (OpenNI)|Win32'">
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <TargetName>$(ProjectName)OpenNI_d</TargetName>
+    <OutDir>$(ProjectDir)\..\..\lib\</OutDir>
+    <IntDir>.\obj\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug MTD (OpenNI)|Win32'">
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <TargetName>$(ProjectName)OpenNI_mtd_d</TargetName>
+    <OutDir>$(ProjectDir)\..\..\lib\</OutDir>
+    <IntDir>.\obj\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug (MS KINECT SDK)|Win32'">
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <TargetName>$(ProjectName)MicrosoftSDK_d</TargetName>
+    <OutDir>$(ProjectDir)\..\..\lib\</OutDir>
+    <IntDir>.\obj\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug MTD (MS KINECT SDK)|Win32'">
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <TargetName>$(ProjectName)MicrosoftSDK_mtd_d</TargetName>
+    <OutDir>$(ProjectDir)\..\..\lib\</OutDir>
+    <IntDir>.\obj\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release (MS KINECT SDK)|Win32'">
+    <IncludePath>$(BOOST_DIR);$(IncludePath);$(OPEN_NI_INCLUDE)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release MTD (MS KINECT SDK)|Win32'">
+    <IncludePath>$(BOOST_DIR);$(IncludePath);$(OPEN_NI_INCLUDE)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release (OpenNI)|Win32'">
+    <IncludePath>$(BOOST_DIR);$(IncludePath);$(OPEN_NI_INCLUDE)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release MTD (OpenNI)|Win32'">
+    <IncludePath>$(BOOST_DIR);$(IncludePath);$(OPEN_NI_INCLUDE)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release (MS KINECT SDK)|Win32'">
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <OutDir>$(ProjectDir)\..\..\lib\</OutDir>
+    <IntDir>.\obj\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)MicrosoftSDK</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release MTD (MS KINECT SDK)|Win32'">
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <OutDir>$(ProjectDir)\..\..\lib\</OutDir>
+    <IntDir>.\obj\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)MicrosoftSDK_mtd</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release (OpenNI)|Win32'">
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <OutDir>$(ProjectDir)\..\..\lib\</OutDir>
+    <IntDir>.\obj\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)OpenNI</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release MTD (OpenNI)|Win32'">
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <OutDir>$(ProjectDir)\..\..\lib\</OutDir>
+    <IntDir>.\obj\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)OpenNI_mtd</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug (OpenNI)|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalIncludeDirectories>$(SolutionDir)\..\..\include;$(SolutionDir)\..\..\src;$(OPEN_NI_INCLUDE);$(MSKINECTSDK_DIR)\inc;$(SolutionDir)\..\..\externalLibs\boost</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+    </Lib>
+    <Lib>
+      <AdditionalLibraryDirectories>$(SolutionDir)\..\..\lib;$(OPEN_NI_LIB);$(MSKINECTSDK_DIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug MTD (OpenNI)|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>TARGET_OPENNI;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <AdditionalIncludeDirectories>$(SolutionDir)\..\..\include;$(SolutionDir)\..\..\src;$(OPEN_NI_INCLUDE);$(MSKINECTSDK_DIR)\inc;$(SolutionDir)\..\..\externalLibs\boost</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+    </Lib>
+    <Lib>
+      <AdditionalLibraryDirectories>$(SolutionDir)\..\..\lib;$(OPEN_NI_LIB);$(MSKINECTSDK_DIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug (MS KINECT SDK)|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>TARGET_MSKINECTSDK;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalIncludeDirectories>$(SolutionDir)\..\..\include;$(SolutionDir)\..\..\src;$(OPEN_NI_INCLUDE);$(MSKINECTSDK_DIR)\inc;$(SolutionDir)\..\..\externalLibs\boost</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+    </Lib>
+    <Lib>
+      <AdditionalLibraryDirectories>$(SolutionDir)\..\..\lib;$(OPEN_NI_LIB);$(MSKINECTSDK_DIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug MTD (MS KINECT SDK)|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>TARGET_MSKINECTSDK;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <AdditionalIncludeDirectories>$(SolutionDir)\..\..\include;$(SolutionDir)\..\..\src;$(OPEN_NI_INCLUDE);$(MSKINECTSDK_DIR)\inc;$(SolutionDir)\..\..\externalLibs\boost</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+    </Lib>
+    <Lib>
+      <AdditionalLibraryDirectories>$(SolutionDir)\..\..\lib;$(OPEN_NI_LIB);$(MSKINECTSDK_DIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release (MS KINECT SDK)|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>TARGET_MSKINECTSDK;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)\..\..\include;$(SolutionDir)\..\..\src;$(OPEN_NI_INCLUDE);$(MSKINECTSDK_DIR)\inc;$(SolutionDir)\..\..\externalLibs\boost</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+    </Lib>
+    <Lib>
+      <AdditionalLibraryDirectories>$(SolutionDir)\..\..\lib;$(OPEN_NI_LIB);$(MSKINECTSDK_DIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release MTD (MS KINECT SDK)|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>TARGET_MSKINECTSDK;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)\..\..\include;$(SolutionDir)\..\..\src;$(OPEN_NI_INCLUDE);$(MSKINECTSDK_DIR)\inc;$(SolutionDir)\..\..\externalLibs\boost</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+    </Lib>
+    <Lib>
+      <AdditionalLibraryDirectories>$(SolutionDir)\..\..\lib;$(OPEN_NI_LIB);$(MSKINECTSDK_DIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release (OpenNI)|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)\..\..\include;$(SolutionDir)\..\..\src;$(OPEN_NI_INCLUDE);$(MSKINECTSDK_DIR)\inc;$(SolutionDir)\..\..\externalLibs\boost</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+    </Lib>
+    <Lib>
+      <AdditionalLibraryDirectories>$(SolutionDir)\..\..\lib;$(OPEN_NI_LIB);$(MSKINECTSDK_DIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release MTD (OpenNI)|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>TARGET_OPENNI;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)\..\..\include;$(SolutionDir)\..\..\src;$(OPEN_NI_INCLUDE);$(MSKINECTSDK_DIR)\inc;$(SolutionDir)\..\..\externalLibs\boost</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+    </Lib>
+    <Lib>
+      <AdditionalLibraryDirectories>$(SolutionDir)\..\..\lib;$(OPEN_NI_LIB);$(MSKINECTSDK_DIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

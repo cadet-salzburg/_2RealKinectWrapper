@@ -1,0 +1,156 @@
+/*********************************************************************************************/
+	CADET - Center for Advances in Digital Entertainment Technologies
+	Copyright 2011 University of Applied Science Salzburg / MultiMediaTechnology
+
+	http://www.cadet.at
+	http://multimediatechnology.at/
+
+	Licensed under the Apache License, Version 2.0 (the "License");
+	you may not use this file except in compliance with the License.
+	You may obtain a copy of the License at
+
+	http://www.apache.org/licenses/LICENSE-2.0
+
+	Unless required by applicable law or agreed to in writing, software
+	distributed under the License is distributed on an "AS IS" BASIS,
+	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	See the License for the specific language governing permissions and
+	limitations under the License.
+
+	CADET - Center for Advances in Digital Entertainment Technologies
+		funded by the Austrian Research Promotion Agency (http://www.ffg.at)
+
+	Authors: Robert Praxmarer, Gerlinde Emsenhuber, Robert Sommeregger, Andreas Stallinger
+	Email: support@cadet.at
+	Created: 08-09-2011
+
+   
+   Version
+     0.9.0 (this is still a beta)
+   
+   Bug reports, feature request or inquiries to:
+	support@cadet.at
+	
+   General info about CADET
+     info@cadet.at
+    
+   Website:
+     http://www.cadet.at
+	 
+/*********************************************************************************************/
+
+Info
+----
+	_2RealKinectWrapper is an API built as a static library which simplifies the usage of multiple Kinect sensors (PrimeSense, Microsoft) for C++ programmers. 
+	It supports both major SDKs (OpenNI and Microsoft's Kinect SDK) with one easy to use programming interface. It is multithreaded for maximum performance.
+	Simple examples for libCinder, OpenFrameworks and plain OpenGL/GLUT  accompany the release to demonstrate it's capabilities and usage. 
+	The programming interface shouldn't change in the future in terms of breaking your code, new functions nevertheless might be added.
+	We tried to test the software as good as possible. However if you find bugs or issues we are happy if you send us a report or a solution to support@cadet.at, or use github ...
+	You can acquire different images (Depth, RGB, IR,...) of different Kinects at the same time. 
+	However skeleton and user detection on multiple devices is not available for Microsoft's SDK.
+	OpenNI in principal supports this feature at least for 2 devices, our solution has still a flaw as OpenNI is handling multiple user nodes really strange, but we are working on fixing it as soon as possible ...
+
+	Watch the demo video here:
+		http://www.vimeo.com/29949750
+
+	If you find that software helpful for your projects, comment on the vimeo and like it, as we are funded by a research grant we have to proove we are doing something useful ;-)
+	
+Supported Platforms
+-------------------
+	Win7 (OpenNI, Microsoft Kinect) 
+	Planned Linux, MacOS (just OpenNI)
+
+Prerequistites
+--------------
+	Install device driver:
+		The microsoft comes with it's own driver and installs it automatically.
+		OpenNI installs the PrimeSense driver as default. If you want to use a Kinect with OpenNI be sure to install the patched driver:
+			https://github.com/avin2/SensorKinect  (in the bin folder you find the driver just double click and install it)
+
+	You need to:
+		if you want to use OpenNI
+			* install newest unstable OpenNI lib --> http://openni.org/downloadfiles/opennimodules/openni-binaries/20-latest-unstable
+			* install newest unstable NITE SDK --> http://openni.org/downloadfiles/opennimodules/openni-compliant-middleware-binaries/33-latest-unstable
+		or for Microsoft's Kinect SDK
+			* install newest MS Kinect SDK --> http://research.microsoft.com/en-us/um/redmond/projects/kinectsdk/download.aspx
+		
+	Note if you want to use both SDKs on your system (Win7), you can install all of the above libs. 
+
+Build
+-----
+	Add environment variables:
+		You have to set the following environment variables in your system ( http://www.windows7hacker.com/index.php/2010/05/how-to-addedit-environment-variables-in-windows-7/ ) :
+			MSKINECTSDK_DIR		your drive\your base path where you installed the sdk (e.g. c:\sdk\Microsoft Research KinectSDK)
+			You don't need to set a environment variable for OpenNI (as the installer from OpenNI does this automatically)
+			
+		If you want to build the cinder sample add:
+			CINDER_DIR		your drive\your base path where you installed cinder (e.g. c:\sdk\cinder)
+
+		If you want to build the openframeworks sample add:
+			OPENFRAMEWORKS_DIR		your drive\your base path where you installed cinder (e.g. c:\sdk\of_preRelease_v007_vs2010)
+
+	To build _2RealKinect go to _2RealKinectWrapper/build/vc10
+	In Visual Studio go to menu build/batch build ...
+	Check all targets and press rebuild ... Note if you just installed OpenNI or MSKinect uncheck the targets you don't need 
+	Now you find all necessary libs in the _2RealKinectWrapper/lib folder (debug, release for MSKinect and OpenNI using dynamic standard library or static)
+
+Sample
+------
+	There are 3 samples accompaning the wrapper (Openframeworks, Cinder, Glut)
+
+	The glut sample is very simple and should work out of the box, it just shows the use of one kinect and just outputs rgb and depth image.
+	For the others you must have installed Cinder and/or openframeworks and set the environment variables as stated above.
+	The samples show the output (rgb,depth,user,skeleton) for all connected and by the windows detected devices
+
+Switching the used Kinect SDK in the samples or your own project
+----------------------------------------------------------------
+	Default is OpenNI (you don't have to change anything for that configuration)
+
+	When you want to use MS Kinect SDK just add a define before the include like this and rebuild (or define the preprocessor define in your visual studio settings):
+	#define TARGET_MSKINECTSDK
+	#include "_2RealKinect.h"
+
+	If you include "_2RealKinect.h" more often in your project be sure to always add the target before or just put the target define at the top of the "_2RealKinect.h" file itself
+
+	How to switch driver in the device manager of Win7:
+		Open device manager.
+		Click on Kinect in the device list, right click on Kinect Camera, choose update driver, choose search on computer / choose manually, choose "choose from a list", now you should see 2 devices of which you can choose.
+		Take the other one which is not active right now and press enter. You can distinguish the drivers as the Microsoft driver is signed has a icon showing this...
+	
+Dependencies
+------------
+	OpenNI (not bundled with the library, please download and install)
+	MS Kinect SDK (not bundled with the library, please download and install)
+	Subset of Boost library (it's delivered with this lib in the externalLibs folder)
+
+Known issues
+------------
+	Both
+		* Multiple Kinects only work if they are connected to separated USB busses (note on laptops all the usb connections are often on a single bus)
+		* You can't use RGB and IR image at the same time this is a limitation by both SDKs
+		* Right now all found devices will start with the nodes you entered in the start routine, if there is a use we will make an overloaded start for starting different nodes on different devices...
+		
+	OpenNI
+		* Multi device user segmentation and skeletonizations are not working correctly yet (it mixes up the different devices, openni is strange)
+		* OpenNI with Kinect sensor only supports 640x480 resolution, Primesense sensor supports different resolutions
+		
+
+	Microsoft Kinect SDK
+		* MS SDK just supports user and skeleton tracking for a single device, depth and rgb go for multiple devices
+		* Color IDs of users can be different at start up (problem seems to be in the Microsoft Kinect SDK, which doesn't seem to do the ids right)
+		* Mirroring seems to be somehow different at startup (sometimes) 
+		* No support for IR images yet
+
+Todo
+----
+	  * MacOS (codeblocks/xcode4) / Linux (codeblocks)
+	  * Panasonic TOF SDK support
+	  * Tutorial
+	  * High Level Recording and Tracking Library (under development)
+	  * Multi device user tracking bug fixing
+  
+Additional notes on the implementation
+--------------------------------------
+	In our API we make heavy use of the pimpl ideom to encapsulate the necessary specific implementation details which shouldn't bother the user. The API should be easily extendable to other DepthCameraSDKs, Panasonic Imager is on our list...
+	
+Please help us make this wrapper multiplatform, specially xcode, and spread the word and maybe write a nice comment on vimeo, thx!!!
