@@ -80,28 +80,31 @@ void GlSingleKinectApp::UpdateTextures()
 
 void GlSingleKinectApp::Draw()
 {
-	UpdateTextures();
+	if( m_IsInitialized )
+	{
+		UpdateTextures();
 
-	glBindTexture(GL_TEXTURE_2D, m_Texture[0]);
-	glScalef( 1, -1, 1 );
-	glTranslatef(-2.0f,-2.0f,-5.0f);
-	glBegin(GL_QUADS);
+		glBindTexture(GL_TEXTURE_2D, m_Texture[0]);
+		glScalef( 1, -1, 1 );
+		glTranslatef(-2.0f,-2.0f,-5.0f);
+		glBegin(GL_QUADS);
+			// Front Face
+			glTexCoord2f(0.0f, 0.0f); glVertex3f(0.0f, 0.0f,  0.0f);
+			glTexCoord2f(1.0f, 0.0f); glVertex3f( 2.0f, 0.0f,  0.0f);
+			glTexCoord2f(1.0f, 1.0f); glVertex3f( 2.0f,  2.0f,  0.0f);
+			glTexCoord2f(0.0f, 1.0f); glVertex3f(0.0f,  2.0f,  0.0f);
+		glEnd();
+
+		glBindTexture( GL_TEXTURE_2D, m_Texture[1] );
+		glTranslatef(2.0f,0.0f,0.0f);
+		glBegin(GL_QUADS);
 		// Front Face
 		glTexCoord2f(0.0f, 0.0f); glVertex3f(0.0f, 0.0f,  0.0f);
 		glTexCoord2f(1.0f, 0.0f); glVertex3f( 2.0f, 0.0f,  0.0f);
 		glTexCoord2f(1.0f, 1.0f); glVertex3f( 2.0f,  2.0f,  0.0f);
 		glTexCoord2f(0.0f, 1.0f); glVertex3f(0.0f,  2.0f,  0.0f);
-	glEnd();
-
-	glBindTexture( GL_TEXTURE_2D, m_Texture[1] );
-	glTranslatef(2.0f,0.0f,0.0f);
-	glBegin(GL_QUADS);
-	// Front Face
-	glTexCoord2f(0.0f, 0.0f); glVertex3f(0.0f, 0.0f,  0.0f);
-	glTexCoord2f(1.0f, 0.0f); glVertex3f( 2.0f, 0.0f,  0.0f);
-	glTexCoord2f(1.0f, 1.0f); glVertex3f( 2.0f,  2.0f,  0.0f);
-	glTexCoord2f(0.0f, 1.0f); glVertex3f(0.0f,  2.0f,  0.0f);
-	glEnd();
+		glEnd();
+	}
 }
 
 bool GlSingleKinectApp::LoadTextures()
