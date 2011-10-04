@@ -1,6 +1,6 @@
 #ifdef TARGET_MSKINECTSDK
 #include "_2RealConfig.h"
-#include "WinSDKSpecific\WSDKDevice.h"
+#include "WinSDKSpecific/WSDKDevice.h"
 #include <sstream>
 #include "_2RealTypes.h"
 #include "_2RealTrackedUser.h"

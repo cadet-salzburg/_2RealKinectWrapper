@@ -8,11 +8,11 @@ namespace _2Real
 _2RealTrackedJoint::_2RealTrackedJoint( const _2RealJointType jointType, const _2RealVector2f& screenPosition, const _2RealVector3f& worldPosition,
 	const _2RealMatrix3x3& worldOrientation, const float positionConfidence, const float orientationConfidence )
 	: 
-#ifndef TARGET_MSKINECTSDK
-	m_JointType( jointType ),
+#ifdef TARGET_MSKINECTSDK
+	m_JointType( jointType ),							// MS Kinect
 #else
-	m_JointType( (_2RealJointType)(jointType -1) ),
-#endif
+	m_JointType( (_2RealJointType)(jointType - 1)),		// OpenNI joints starts at 1
+#endif	
 	m_ScreenPosition( screenPosition ),
 	m_WorldPosition( worldPosition ),
 	m_WorldOrientation( worldOrientation ),
