@@ -1,7 +1,8 @@
 #pragma once
 
 #include "ofMain.h"
-#define TARGET_MSKINECTSDK
+//uncomment the following line to use Microsoft Kinect SDK instead
+//#define TARGET_MSKINECTSDK
 #include "_2RealKinect.h"
 
 class ofMultipleKinectApp : public ofBaseApp{
