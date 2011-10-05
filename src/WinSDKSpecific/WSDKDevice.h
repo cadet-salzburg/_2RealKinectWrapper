@@ -41,7 +41,7 @@ namespace _2Real
 	typedef unsigned char uchar;
 	class _2RealTrackedUser;
 	class _2RealTrackedJoint;
-	typedef std::vector<const _2RealTrackedUser>	_2RealTrackedUserVector;
+	typedef std::vector<_2RealTrackedUser>	_2RealTrackedUserVector;
 
 class WSDKDevice
 {

@@ -25,7 +25,9 @@
 #pragma once
 #ifndef TARGET_MSKINECTSDK
 #include "_2RealConfig.h"
+#include "boost/thread.hpp"
 #include "boost/thread/mutex.hpp"
+#include <boost/date_time/posix_time/posix_time.hpp>
 #include "I_2RealImplementation.h"
 #include "_2RealTypes.h"
 #include "XnOpenNI.h"
@@ -36,7 +38,7 @@
 
 namespace _2Real
 {
-	
+
 class _2RealImplementationOpenNI : public I_2RealImplementation
 {
 	private:
@@ -51,14 +53,14 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 		_2RealTrackedUserVector					m_TrackedUserVector;
 
 	public:
-		
+
 		_2RealImplementationOpenNI()
 			: m_NumDevices( 0 ),
 			m_IsInitialized( 0 ),
 			m_GeneratorConfig( CONFIG_DEFAULT ),
 			m_ImageConfig( IMAGE_CONFIG_DEFAULT )
 		{
-		
+
 		}
 
 		~_2RealImplementationOpenNI()
@@ -98,8 +100,8 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 			//fetching infrared-generator-nodes
 			checkError( m_Context.EnumerateProductionTrees( XN_NODE_TYPE_IR, NULL, irNodes, NULL ),
 						 "_2RealIMplOpenNI::start Error when enumerating infrared nodes\n" );
-			
-			//fetching all user-generator-nodes			
+
+			//fetching all user-generator-nodes
 			checkError( m_Context.EnumerateProductionTrees( XN_NODE_TYPE_USER, NULL, userNodes, NULL ),
 						 "_2RealIMplOpenNI::start Error when enumerating user nodes\n" );
 
@@ -108,7 +110,7 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 
 			//get number of devices -------------------------------------------------------------------------------->
 			xn::NodeInfoList::Iterator deviceIter = deviceNodes.Begin();
-			for( ; deviceIter != deviceNodes.End(); ++deviceIter ) 
+			for( ; deviceIter != deviceNodes.End(); ++deviceIter )
 				++m_NumDevices;
 			_2REAL_LOG(info) << "_2Real: Found and allocated " << (int)m_NumDevices << " device[s]" << std::endl;
 
@@ -127,7 +129,8 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 				std::stringstream name;
 				name << "_2Real_Kinect_" << i;
 				//initializing device
-				m_Devices[i] = new OpenNIDevice( i, name.str(), m_Context, (*devIter) );
+				xn::NodeInfo nodeinfo = (*devIter);
+				m_Devices[i] = new OpenNIDevice( i, name.str(), m_Context, nodeinfo );
 			}
 
 
@@ -136,12 +139,13 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 			{
 				//iterate through all image-generators
 				xn::NodeInfoList::Iterator iter = imageNodes.Begin();
-				for( int i = 0 ; iter != imageNodes.End(); ++iter, ++i ) 
+				for( int i = 0 ; iter != imageNodes.End(); ++iter, ++i )
 				{
 					//break if there are more image gen-nodes than devices in array
-					if( i >= m_NumDevices )	
+					if( i >= m_NumDevices )
 						break;
-					m_Devices[i]->startupProcessingColorGenerator( *iter, configureImages );
+                    xn::NodeInfo nodeinfo = *iter;
+					m_Devices[i]->startupProcessingColorGenerator( nodeinfo, configureImages );
 				}
 			}
 
@@ -150,12 +154,13 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 			{
 				//iterate through all depth-generators
 				xn::NodeInfoList::Iterator iter = depthNodes.Begin();
-				for( int i = 0 ; iter != depthNodes.End(); ++iter, ++i ) 
+				for( int i = 0 ; iter != depthNodes.End(); ++iter, ++i )
 				{
 					//break if there are more depthNodes than devices in array
-					if( i >= m_NumDevices )	
+					if( i >= m_NumDevices )
 						break;
-					m_Devices[i]->startupProcessingDepthGenerator( *iter, configureImages );
+                    xn::NodeInfo nodeinfo = *iter;
+					m_Devices[i]->startupProcessingDepthGenerator( nodeinfo, configureImages );
 				}
 			}
 
@@ -167,12 +172,13 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 			{
 				//iterate through all infrared-generators
 				xn::NodeInfoList::Iterator iter = irNodes.Begin();
-				for( int i = 0 ; iter != irNodes.End(); ++iter, ++i ) 
+				for( int i = 0 ; iter != irNodes.End(); ++iter, ++i )
 				{
 					//break if there are more infrared nodes than devices in array
-					if( i >= m_NumDevices )	
+					if( i >= m_NumDevices )
 						break;
-					m_Devices[i]->startupProcessingInfraredGenerator( *iter, configureImages );
+                    xn::NodeInfo nodeinfo = *iter;
+					m_Devices[i]->startupProcessingInfraredGenerator( nodeinfo, configureImages );
 				}
 			}
 
@@ -180,20 +186,21 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 			if( startGenerators & USERIMAGE || startGenerators & USERIMAGE_COLORED )
 			{
 				//iterate through all user-generators
-				xn::NodeInfoList::Iterator iter = userNodes.Begin();				
-				
-				for( int i = 0 ; iter != userNodes.End(); ++iter, ++i ) 
+				xn::NodeInfoList::Iterator iter = userNodes.Begin();
+
+				for( int i = 0 ; iter != userNodes.End(); ++iter, ++i )
 				{
-					//break if there are more user nodes than devices in array					
-					if( i >= m_NumDevices )						
-						break;					
-					m_Devices[i]->startupProcessingUserGenerator( *iter, configureImages );
+					//break if there are more user nodes than devices in array
+					if( i >= m_NumDevices )
+						break;
+                    xn::NodeInfo nodeinfo = *iter;
+					m_Devices[i]->startupProcessingUserGenerator( nodeinfo, configureImages );
 				}
-				
+
 			}
 
 			//finally starting all generators----------------------------------------------------------------------->
-			for( int i = 0 ; i < m_NumDevices; ++i ) 
+			for( int i = 0 ; i < m_NumDevices; ++i )
 			{
 				if( !m_Devices[i]->startGenerators( startGenerators ) )
 					return false;
@@ -202,11 +209,11 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 			//success!!! =)
 			return ( m_IsInitialized = true );
 		}
-		
-		virtual void setMirrored( const uint32_t deviceID, _2RealGenerator type, bool flag ) 
+
+		virtual void setMirrored( const uint32_t deviceID, _2RealGenerator type, bool flag )
 		{
 			checkDeviceRunning(deviceID, "_2RealImplOpenNI::setMirrored() Error, deviceID out of bounds!" );
-			
+
 			switch( type )
 			{
 			case COLORIMAGE:
@@ -236,7 +243,7 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 				checkError( m_Devices[deviceID]->m_InfraredGenerator.setMirroring( flag ),
 							"Error _2RealImplOpenNI::setMirrored() Error when trying to set mirroring for color image\n" );
 				break;
-			case USERIMAGE_COLORED:			
+			case USERIMAGE_COLORED:
 			case USERIMAGE:
 				break;
 			default:
@@ -307,7 +314,7 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 			}
 		}
 
-		virtual void resetSkeleton( const uint32_t deviceID, const uint32_t id ) 
+		virtual void resetSkeleton( const uint32_t deviceID, const uint32_t id )
 		{
 			checkDeviceRunning(deviceID, "_2RealImplOpenNI::resetSkeleton() Error, deviceID out of bounds!" );
 
@@ -317,7 +324,7 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 			}
 		}
 
-		virtual void resetAllSkeletons() 
+		virtual void resetAllSkeletons()
 		{
 			for ( int i = 0; i < m_NumDevices; ++i )
 			{
@@ -328,7 +335,7 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 			}
 		}
 
-		virtual bool shutdown() 
+		virtual bool shutdown()
 		{
 			//freeing memory
 			if( m_IsInitialized )
@@ -354,7 +361,7 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 				m_Devices = NULL;
 
 				m_NumDevices = 0;
-				
+
 				_2REAL_LOG(info) << "OK" << std::endl;
 				return true;
 			}
@@ -362,7 +369,7 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 			return false;
 		}
 
-		virtual unsigned char* getImageData( const uint32_t deviceID, _2RealGenerator type, bool waitAndBlock, const uint8_t userId ) 
+		virtual unsigned char* getImageData( const uint32_t deviceID, _2RealGenerator type, bool waitAndBlock, const uint8_t userId )
 		{
 			checkDeviceRunning(deviceID, "_2RealImplOpenNI::getImageData() error, deviceID out of bounds!" );
 
@@ -408,7 +415,7 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 					{
 						_2REAL_LOG(warn) << "_2Real: OpenNIImpl::getImageData() user generator is not activated! Cannot fetch image..." << std::endl;
 						return NULL;
-					}					
+					}
 					if( colorUserImage )
 						return device->getUserColorImageBuffer();
 					else
@@ -448,20 +455,20 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 			{
 			case COLORIMAGE:
 				{
-					return (uint32_t)m_Devices[deviceID]->getOutputmodeColor().nXRes; 
+					return (uint32_t)m_Devices[deviceID]->getOutputmodeColor().nXRes;
 				}
 			case DEPTHIMAGE:
 				{
-					return (uint32_t)m_Devices[deviceID]->getOutputmodeDepth().nXRes; 
+					return (uint32_t)m_Devices[deviceID]->getOutputmodeDepth().nXRes;
 				}
 			case INFRAREDIMAGE:
 				{
-					return (uint32_t)m_Devices[deviceID]->getOutputmodeInfrared().nXRes; 
+					return (uint32_t)m_Devices[deviceID]->getOutputmodeInfrared().nXRes;
 				}
 			case USERIMAGE_COLORED:
 			case USERIMAGE:
 				{
-					return (uint32_t)m_Devices[deviceID]->getOutputmodeUser().nXRes; 
+					return (uint32_t)m_Devices[deviceID]->getOutputmodeUser().nXRes;
 				}
 			default:
 				throwError( "_2RealImplOpenNI::getImageWidth() Error: Wrong type of generator assigned?!" );
@@ -477,7 +484,7 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 			{
 			case COLORIMAGE:
 				{
-					return (uint32_t)m_Devices[deviceID]->getOutputmodeColor().nYRes; 
+					return (uint32_t)m_Devices[deviceID]->getOutputmodeColor().nYRes;
 				}
 			case DEPTHIMAGE:
 				{
@@ -485,19 +492,19 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 				}
 			case INFRAREDIMAGE:
 				{
-					return (uint32_t)m_Devices[deviceID]->getOutputmodeInfrared().nYRes; 					
+					return (uint32_t)m_Devices[deviceID]->getOutputmodeInfrared().nYRes;
 				}
 			case USERIMAGE_COLORED:
 			case USERIMAGE:
 				{
-					return (uint32_t)m_Devices[deviceID]->getOutputmodeUser().nYRes;					
+					return (uint32_t)m_Devices[deviceID]->getOutputmodeUser().nYRes;
 				}
 			default:
 				throwError( "_2RealImplOpenNI::getImageHeight() Error: Wrong type of generator assigned?!" );
 			}
 			return NULL;
 		}
-		
+
 		virtual uint32_t getNumberOfDevices() const
 		{
 			return m_NumDevices;
@@ -564,15 +571,15 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 		virtual const uint32_t getNumberOfSkeletons( const uint32_t deviceID ) const
 		{
 			checkDeviceRunning(deviceID, "_2RealImplOpenNI::setAlignColorDepthImage()");
-			return m_Devices[deviceID]->getUsers().size(); //awesome!!! :) -> terror by robz			
+			return m_Devices[deviceID]->getUsers().size(); //awesome!!! :) -> terror by robz
 		}
 
 		virtual void setAlignColorDepthImage( const uint32_t deviceID, bool flag )
 		{
 			checkDeviceRunning(deviceID, "_2RealImplOpenNI::setAlignColorDepthImage()");
 			xn::DepthGenerator& dg = m_Devices[deviceID]->GetOpenNIDepthGenerator();
-			if( dg.IsValid() && 
-				m_Devices[deviceID]->GetOpenNIImageGenerator().IsValid() && 
+			if( dg.IsValid() &&
+				m_Devices[deviceID]->GetOpenNIImageGenerator().IsValid() &&
 				dg.IsCapabilitySupported( XN_CAPABILITY_ALTERNATIVE_VIEW_POINT ) )
 			{
 				if( flag ) //enabling
@@ -594,7 +601,7 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 		{
 			_2REAL_LOG(info) << std::endl << "_2Real: Shutting system down..." << std::endl;
 			shutdown();
-			Sleep( 3000 ); //preventing reinitialization to fast
+			boost::this_thread::sleep(boost::posix_time::seconds((long)3)); //preventing reinitialization to fast (wait 3 sec)
 			_2REAL_LOG(info) << "_2Real: Restarting system..." << std::endl;
 			return start( m_GeneratorConfig, m_ImageConfig );
 		}
@@ -620,22 +627,22 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 				_2REAL_LOG(warn) << "_2Real: ConvertWorldToProjective, depth generator of device id: " << deviceID << " is not enabled!" << std::endl;
 		}
 
-		virtual void setLogLevel(_2RealLogLevel iLevel) 
-		{ 
-			_2RealLogger::getInstance().setLogLevel(iLevel); 
+		virtual void setLogLevel(_2RealLogLevel iLevel)
+		{
+			_2RealLogger::getInstance().setLogLevel(iLevel);
 		};
 
-		virtual void setLogOutputStream(std::ostream* outStream) 
-		{  
-			_2RealLogger::getInstance().setLogOutputStream(outStream); 
+		virtual void setLogOutputStream(std::ostream* outStream)
+		{
+			_2RealLogger::getInstance().setLogOutputStream(outStream);
 		};
 
 	private:
-		
+
 		void checkError( XnStatus status, std::string strError ) const
 		{
 			if ( status != XN_STATUS_OK )
-				throwError( strError );	
+				throwError( strError );
 		}
 
 		void checkDeviceRunning(uint8_t deviceID, std::string strError) const

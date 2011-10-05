@@ -1,7 +1,7 @@
 /*
    CADET - Center for Advances in Digital Entertainment Technologies
    Copyright 2011 University of Applied Science Salzburg / MultiMediaTechnology
-	  
+
 	   http://www.cadet.at
 	   http://multimediatechnology.at/
 
@@ -33,7 +33,7 @@
 
 namespace _2Real
 {
-	
+
 class _2RealTrackedUser
 {
 	public:
@@ -54,7 +54,7 @@ class _2RealTrackedUser
 			/return const _2RealTrackedJoint* - reference to joint - return null if jointtype is not available
 		*/
 		const _2RealTrackedJoint*				getJoint( const _2RealJointType jointType ) const;
-	
+
 		/*! /brief returns a vector containing the users' joint positions in world space; if confidence expectations aren't met position for joint will be (0,0,0)
 			Use _2RealJointType enum to return a specific joint through the operator[] ( getJointWorldPositions()[JOINT_HEAD] )
 			/param jointVertices a vector of floats where the xyz coordinates of the users' joints will be stored

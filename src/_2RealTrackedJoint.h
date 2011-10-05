@@ -27,7 +27,7 @@
 namespace _2Real
 {
 	class _2RealTrackedJoint;
-	typedef std::vector<const _2RealTrackedJoint>	_2RealTrackedJointVector;
+	typedef std::vector<_2RealTrackedJoint>	_2RealTrackedJointVector;
 
 class _2RealTrackedJoint
 {

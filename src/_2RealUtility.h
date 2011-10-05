@@ -32,10 +32,10 @@
 
 namespace _2Real
 {
-	void inline throwError(std::string strError) 
+	void inline throwError(std::string strError)
 	{
 		_2REAL_LOG(error) << strError;
-		throw( std::exception(strError.c_str()) );
+		throw( _2RealException(strError) );
 	}
 }
 

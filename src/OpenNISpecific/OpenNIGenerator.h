@@ -38,15 +38,15 @@ namespace _2Real
 	//fwds
 	class _2RealTrackedUser;
 	class _2RealTrackedJoint;
-	typedef std::vector<const _2RealTrackedUser>	_2RealTrackedUserVector;
+	typedef std::vector<_2RealTrackedUser>	_2RealTrackedUserVector;
 
 class OpenNIGenerator
 {
 	public:
 		virtual XnStatus			registerCallbacks() = 0;
 		virtual XnStatus			startGenerating() = 0;
-		virtual XnStatus			stopGenerating() = 0;	
-		virtual bool				isGenerating() const = 0;	
+		virtual XnStatus			stopGenerating() = 0;
+		virtual bool				isGenerating() const = 0;
 		virtual XnStatus			lockGenerator() = 0;
 		virtual XnStatus			unlockGenerator() = 0;
 		virtual XnStatus			getErrorState() const = 0;

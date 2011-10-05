@@ -36,11 +36,11 @@
 #include <boost/thread/thread.hpp>
 #include <vector>
 
-	
+
 
 namespace _2Real
 {
-	typedef std::vector<const _2RealTrackedUser>	_2RealTrackedUserVector;
+	typedef std::vector<_2RealTrackedUser>	_2RealTrackedUserVector;
 
 //container for the generators of a kinect device
 class OpenNIDevice
@@ -48,7 +48,7 @@ class OpenNIDevice
 	public:
 		OpenNIDevice( const int id, const std::string& name, xn::Context& context, xn::NodeInfo& deviceInfo );
 		~OpenNIDevice( void );
-	
+
 		xn::DepthGenerator&			GetOpenNIDepthGenerator();
 		xn::UserGenerator&			GetOpenNIUserGenerator();
 		xn::ImageGenerator&			GetOpenNIImageGenerator();

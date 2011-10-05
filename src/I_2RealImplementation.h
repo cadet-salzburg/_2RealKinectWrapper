@@ -35,7 +35,7 @@
 namespace _2Real
 {
 	//fwds
-	typedef std::vector<const _2RealTrackedUser>	_2RealTrackedUserVector;
+	typedef std::vector<_2RealTrackedUser>	_2RealTrackedUserVector;
 	struct _2RealVector2f;
 	struct _2RealVector3f;
 
@@ -44,7 +44,7 @@ class I_2RealImplementation
 {
 	public:
 		virtual bool								start( uint32_t startGenerators, uint32_t configureImages ) = 0;
-		virtual bool								shutdown() = 0;	
+		virtual bool								shutdown() = 0;
 
 		virtual unsigned char*						getImageData( const uint32_t deviceID, _2RealGenerator type, bool waitAndBlock=false, const uint8_t userId=0 ) = 0;
 		virtual uint16_t*							getImageDataDepth16Bit( const uint32_t deviceID, bool waitAndBlock=false) = 0;
