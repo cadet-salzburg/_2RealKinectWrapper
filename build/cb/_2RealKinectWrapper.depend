@@ -1,0 +1,1938 @@
+# depslib dependency file v1.0
+1317723943 source:/home/ottona/Projekte/cadet/trunk/projects/_2RealKinectWrapper/src/_2RealKinect.cpp
+	"_2RealKinect.h"
+	"_2RealVersion.h"
+	<boost/thread/mutex.hpp>
+	<boost/interprocess/sync/scoped_lock.hpp>
+	<stdint.h>
+	"OpenNISpecific/_2RealImplementationOpenNI.hpp"
+	"WinSDKSpecific/_2RealImplementationWinSDK.hpp"
+
+1317729749 /home/ottona/Projekte/cadet/trunk/projects/_2RealKinectWrapper/include/_2RealKinect.h
+	"_2RealTypes.h"
+
+1317733318 /home/ottona/Projekte/cadet/trunk/projects/_2RealKinectWrapper/include/_2RealTypes.h
+	<stdint.h>
+	<vector>
+	<iostream>
+	<string>
+	"_2RealImageSource.h"
+
+1317723943 /home/ottona/Projekte/cadet/trunk/projects/_2RealKinectWrapper/include/_2RealImageSource.h
+	<stdint.h>
+	"_2RealVector2f.h"
+
+1317723943 /home/ottona/Projekte/cadet/trunk/projects/_2RealKinectWrapper/include/_2RealVector2f.h
+
+1317723943 /home/ottona/Projekte/cadet/trunk/projects/_2RealKinectWrapper/src/_2RealVersion.h
+	<string>
+	<sstream>
+
+1317735336 /home/ottona/Projekte/cadet/trunk/projects/_2RealKinectWrapper/src/OpenNISpecific/_2RealImplementationOpenNI.hpp
+	"_2RealConfig.h"
+	"boost/thread.hpp"
+	"boost/thread/mutex.hpp"
+	"I_2RealImplementation.h"
+	"_2RealTypes.h"
+	"XnOpenNI.h"
+	"OpenNISpecific/OpenNIDevice.h"
+	<iostream>
+	<istream>
+
+1317723943 /home/ottona/Projekte/cadet/trunk/projects/_2RealKinectWrapper/src/_2RealConfig.h
+
+1317733349 /home/ottona/Projekte/cadet/trunk/projects/_2RealKinectWrapper/src/I_2RealImplementation.h
+	"_2RealTrackedUser.h"
+	<stdint.h>
+	<vector>
+
+1317731986 /home/ottona/Projekte/cadet/trunk/projects/_2RealKinectWrapper/src/_2RealTrackedUser.h
+	"_2RealTrackedJoint.h"
+	"_2RealTypes.h"
+	<stdint.h>
+	<vector>
+
+1317732210 /home/ottona/Projekte/cadet/trunk/projects/_2RealKinectWrapper/src/_2RealTrackedJoint.h
+	<vector>
+	"_2RealTypes.h"
+
+1317737108 /usr/include/ni/XnOpenNI.h
+	"XnTypes.h"
+	"XnContext.h"
+	"XnLicensing.h"
+	"XnUtils.h"
+	"XnPrdNodeInfo.h"
+	"XnQueries.h"
+	"XnPrdNode.h"
+	"XnEnumerationErrors.h"
+	"XnVersion.h"
+	"XnStatusCodes.h"
+	"XnStatus.h"
+
+1317737108 /usr/include/ni/XnTypes.h
+	<XnStatus.h>
+	<XnOS.h>
+
+1317737108 /usr/include/ni/XnStatus.h
+	"XnPlatform.h"
+
+1317737108 /usr/include/ni/XnPlatform.h
+	"Win32/XnPlatformWin32.h"
+	"Android-Arm/XnPlatformAndroid-Arm.h"
+	"Linux-x86/XnPlatformLinux-x86.h"
+	"Linux-Arm/XnPlatformLinux-Arm.h"
+	"ARC/XnPlatformARC.h"
+	"MacOSX/XnPlatformMacOSX.h"
+
+1317737108 /usr/include/ni/Linux-x86/XnPlatformLinux-x86.h
+	<unistd.h>
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<assert.h>
+
+1317737108 /usr/include/ni/XnOS.h
+	"XnPlatform.h"
+	"XnMacros.h"
+	"XnStatusCodes.h"
+	"XnOSStrings.h"
+	"XnOSMemory.h"
+	"Win32/XnOSWin32.h"
+	"Linux-x86/XnOSLinux-x86.h"
+	"ARC/XnOSARC.h"
+	<new>
+
+1317737108 /usr/include/ni/XnMacros.h
+	"XnStatusCodes.h"
+
+1317737108 /usr/include/ni/XnStatusCodes.h
+	"XnStatus.h"
+
+1317737108 /usr/include/ni/XnOSStrings.h
+	"XnPlatform.h"
+	<stdarg.h>
+
+1317737108 /usr/include/ni/XnOSMemory.h
+	"XnPlatform.h"
+
+1317737108 /usr/include/ni/Linux-x86/XnOSLinux-x86.h
+	<sys/types.h>
+	<stdarg.h>
+	<time.h>
+	<pthread.h>
+	<sys/stat.h>
+	<fcntl.h>
+
+1317737108 /usr/include/ni/XnContext.h
+	<XnTypes.h>
+	<XnQueries.h>
+	<XnPrdNodeInfoList.h>
+
+1317737108 /usr/include/ni/XnQueries.h
+	"XnTypes.h"
+
+1317737108 /usr/include/ni/XnPrdNodeInfoList.h
+	<XnTypes.h>
+
+1317737108 /usr/include/ni/XnLicensing.h
+	<XnTypes.h>
+
+1317737108 /usr/include/ni/XnUtils.h
+	<XnTypes.h>
+	<XnModuleInterface.h>
+
+1317737108 /usr/include/ni/XnModuleInterface.h
+	<XnTypes.h>
+
+1317737108 /usr/include/ni/XnPrdNodeInfo.h
+	<XnTypes.h>
+
+1317737108 /usr/include/ni/XnPrdNode.h
+	<XnTypes.h>
+
+1317737108 /usr/include/ni/XnEnumerationErrors.h
+	<XnTypes.h>
+
+1317737108 /usr/include/ni/XnVersion.h
+	"XnPlatform.h"
+
+1317733496 /home/ottona/Projekte/cadet/trunk/projects/_2RealKinectWrapper/src/OpenNISpecific/OpenNIDevice.h
+	"OpenNISpecific/OpenNIColorGenerator.h"
+	"OpenNISpecific/OpenNIDepthGenerator.h"
+	"OpenNISpecific/OpenNIInfraredGenerator.h"
+	"OpenNISpecific/OpenNIUserGenerator.h"
+	"_2RealUtility.h"
+	"_2RealTrackedUser.h"
+	"XnOpenNI.h"
+	"boost/thread/mutex.hpp"
+	<boost/thread/thread.hpp>
+	<vector>
+
+1317723943 /home/ottona/Projekte/cadet/trunk/projects/_2RealKinectWrapper/src/OpenNISpecific/OpenNIColorGenerator.h
+	"OpenNISpecific/OpenNIGenerator.h"
+	<vector>
+
+1317733496 /home/ottona/Projekte/cadet/trunk/projects/_2RealKinectWrapper/src/OpenNISpecific/OpenNIGenerator.h
+	"_2RealConfig.h"
+	"_2RealUtility.h"
+	"XnOpenNI.h"
+	"XnCppWrapper.h"
+	<stdint.h>
+	<vector>
+
+1317733047 /home/ottona/Projekte/cadet/trunk/projects/_2RealKinectWrapper/src/_2RealUtility.h
+	<stdint.h>
+	<string>
+	"_2RealLogger.h"
+
+1317723943 /home/ottona/Projekte/cadet/trunk/projects/_2RealKinectWrapper/src/_2RealLogger.h
+	<ostream>
+	<iostream>
+	"_2RealTypes.h"
+	<boost/thread/mutex.hpp>
+
+1317737108 /usr/include/ni/XnCppWrapper.h
+	<XnOpenNI.h>
+	<XnCodecIDs.h>
+
+1317737108 /usr/include/ni/XnCodecIDs.h
+	"XnTypes.h"
+
+1317723943 /home/ottona/Projekte/cadet/trunk/projects/_2RealKinectWrapper/src/OpenNISpecific/OpenNIDepthGenerator.h
+	"OpenNISpecific/OpenNIGenerator.h"
+	"_2RealTypes.h"
+
+1317723943 /home/ottona/Projekte/cadet/trunk/projects/_2RealKinectWrapper/src/OpenNISpecific/OpenNIInfraredGenerator.h
+	"OpenNISpecific/OpenNIGenerator.h"
+
+1317723943 /home/ottona/Projekte/cadet/trunk/projects/_2RealKinectWrapper/src/OpenNISpecific/OpenNIUserGenerator.h
+	"_2RealTypes.h"
+	"OpenNISpecific/OpenNIGenerator.h"
+
+1317723943 /home/ottona/Projekte/cadet/trunk/projects/_2RealKinectWrapper/src/WinSDKSpecific/_2RealImplementationWinSDK.hpp
+	"_2RealConfig.h"
+	"I_2RealImplementation.h"
+	"_2RealUtility.h"
+	<Windows.h>
+	"MSR_NuiApi.h"
+	"MSR_NuiImageCamera.h"
+	"MSR_NuiProps.h"
+	"MSR_NuiSkeleton.h"
+	<iostream>
+	<vector>
+	"WSDKDevice.h"
+	<sstream>
+
+1317723943 /home/ottona/Projekte/cadet/trunk/projects/_2RealKinectWrapper/src/WinSDKSpecific/WSDKDevice.h
+	"_2RealTypes.h"
+	"_2RealUtility.h"
+	<Windows.h>
+	"MSR_NuiApi.h"
+	"MSR_NuiProps.h"
+	<iostream>
+	<stdint.h>
+	<boost/thread/shared_mutex.hpp>
+	<boost/thread/condition.hpp>
+
+1317723943 source:/home/ottona/Projekte/cadet/trunk/projects/_2RealKinectWrapper/src/_2RealLogger.cpp
+	"_2RealLogger.h"
+
+1317723943 source:/home/ottona/Projekte/cadet/trunk/projects/_2RealKinectWrapper/src/_2RealTrackedJoint.cpp
+	"_2RealTrackedJoint.h"
+	"XnTypes.h"
+
+1317723943 source:/home/ottona/Projekte/cadet/trunk/projects/_2RealKinectWrapper/src/_2RealTrackedUser.cpp
+	"_2RealTrackedUser.h"
+	"_2RealConfig.h"
+	"_2RealUtility.h"
+
+1317723943 source:/home/ottona/Projekte/cadet/trunk/projects/_2RealKinectWrapper/src/_2RealTypes.cpp
+	"_2RealTypes.h"
+	"XnCppWrapper.h"
+	"XnOpenNI.h"
+	"XnTypes.h"
+
+1317735670 source:/home/ottona/Projekte/cadet/trunk/projects/_2RealKinectWrapper/src/_2RealVector2f.cpp
+	"_2RealTypes.h"
+
+1317738999 source:/Users/2real/projects/_2RealKinectWrapper/src/_2RealKinect.cpp
+	"_2RealKinect.h"
+	"_2RealVersion.h"
+	<boost/thread/mutex.hpp>
+	<boost/interprocess/sync/scoped_lock.hpp>
+	<stdint.h>
+	"OpenNISpecific/_2RealImplementationOpenNI.hpp"
+	"WinSDKSpecific/_2RealImplementationWinSDK.hpp"
+
+1317738999 /Users/2real/projects/_2RealKinectWrapper/include/_2RealKinect.h
+	"_2RealTypes.h"
+
+1317738999 /Users/2real/projects/_2RealKinectWrapper/include/_2RealTypes.h
+	<stdint.h>
+	<vector>
+	<iostream>
+	<string>
+	"_2RealImageSource.h"
+
+1317738999 /Users/2real/projects/_2RealKinectWrapper/include/_2RealImageSource.h
+	<stdint.h>
+	"_2RealVector2f.h"
+
+1317738999 /Users/2real/projects/_2RealKinectWrapper/include/_2RealVector2f.h
+
+1317738999 /Users/2real/projects/_2RealKinectWrapper/src/_2RealVersion.h
+	<string>
+	<sstream>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/thread/mutex.hpp
+	<boost/thread/detail/platform.hpp>
+	<boost/thread/win32/mutex.hpp>
+	<boost/thread/pthread/mutex.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/thread/detail/platform.hpp
+	<boost/config.hpp>
+	<boost/config/requires_threads.hpp>
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/config.hpp
+	<boost/config/select_compiler_config.hpp>
+	<boost/config/select_stdlib_config.hpp>
+	<boost/config/select_platform_config.hpp>
+	<boost/config/suffix.hpp>
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/config/select_compiler_config.hpp
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/config/select_stdlib_config.hpp
+	<cstddef>
+	<boost/config/no_tr1/utility.hpp>
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/config/no_tr1/utility.hpp
+	<utility>
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/config/select_platform_config.hpp
+	<boost/config/posix_features.hpp>
+
+1317740034 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/config/posix_features.hpp
+	<unistd.h>
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/config/suffix.hpp
+	<limits.h>
+	<cstddef>
+	"boost/type.hpp"
+	"boost/non_type.hpp"
+	<typeinfo>
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/type.hpp
+
+1317740744 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/non_type.hpp
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/config/requires_threads.hpp
+	<boost/config.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/thread/win32/mutex.hpp
+	"basic_timed_mutex.hpp"
+	<boost/utility.hpp>
+	<boost/thread/exceptions.hpp>
+	<boost/thread/locks.hpp>
+	<boost/config/abi_prefix.hpp>
+	<boost/config/abi_suffix.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/thread/win32/basic_timed_mutex.hpp
+	<boost/assert.hpp>
+	"thread_primitives.hpp"
+	"interlocked_read.hpp"
+	<boost/thread/thread_time.hpp>
+	<boost/thread/xtime.hpp>
+	<boost/detail/interlocked.hpp>
+	<boost/config/abi_prefix.hpp>
+	<boost/config/abi_suffix.hpp>
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/assert.hpp
+	<boost/current_function.hpp>
+	<assert.h>
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/current_function.hpp
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/thread/win32/thread_primitives.hpp
+	<boost/config.hpp>
+	<boost/throw_exception.hpp>
+	<boost/assert.hpp>
+	<boost/thread/exceptions.hpp>
+	<boost/detail/interlocked.hpp>
+	<algorithm>
+	<windows.h>
+	<kfuncs.h>
+	<boost/config/abi_prefix.hpp>
+	<boost/config/abi_suffix.hpp>
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/throw_exception.hpp
+	<boost/exception/detail/attribute_noreturn.hpp>
+	<boost/detail/workaround.hpp>
+	<boost/config.hpp>
+	<exception>
+	<boost/exception/exception.hpp>
+	<boost/current_function.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/thread/exceptions.hpp
+	<boost/thread/detail/config.hpp>
+	<string>
+	<stdexcept>
+	<boost/config/abi_prefix.hpp>
+	<boost/config/abi_suffix.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/thread/detail/config.hpp
+	<boost/config.hpp>
+	<boost/detail/workaround.hpp>
+	"platform.hpp"
+	<boost/config/auto_link.hpp>
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/config/auto_link.hpp
+	<boost/config.hpp>
+	<boost/version.hpp>
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/version.hpp
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/config/abi_prefix.hpp
+	<boost/config.hpp>
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/config/abi_suffix.hpp
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/thread/win32/interlocked_read.hpp
+	<boost/detail/interlocked.hpp>
+	<boost/config/abi_prefix.hpp>
+	<boost/config/abi_suffix.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/thread/thread_time.hpp
+	<boost/date_time/microsec_time_clock.hpp>
+	<boost/date_time/posix_time/posix_time_types.hpp>
+	<boost/config/abi_prefix.hpp>
+	<boost/config/abi_suffix.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/microsec_time_clock.hpp
+	<boost/cstdint.hpp>
+	<boost/shared_ptr.hpp>
+	<boost/detail/workaround.hpp>
+	<boost/date_time/compiler_config.hpp>
+	<boost/date_time/c_time.hpp>
+	<boost/date_time/time_clock.hpp>
+	<boost/date_time/filetime_functions.hpp>
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/cstdint.hpp
+	<boost/config.hpp>
+	<inttypes.h>
+	<inttypes.h>
+	<stdint.h>
+	<inttypes.h>
+	<boost/limits.hpp>
+	<limits.h>
+	<limits.h>
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/limits.hpp
+	<boost/config.hpp>
+	<boost/detail/limits.hpp>
+	<limits>
+	<climits>
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/shared_ptr.hpp
+	<boost/smart_ptr/shared_ptr.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/smart_ptr/shared_ptr.hpp
+	<boost/config.hpp>
+	<boost/smart_ptr/detail/shared_ptr_nmt.hpp>
+	<boost/config/no_tr1/memory.hpp>
+	<boost/assert.hpp>
+	<boost/checked_delete.hpp>
+	<boost/throw_exception.hpp>
+	<boost/smart_ptr/detail/shared_count.hpp>
+	<boost/detail/workaround.hpp>
+	<boost/smart_ptr/detail/sp_convertible.hpp>
+	<boost/smart_ptr/detail/spinlock_pool.hpp>
+	<boost/memory_order.hpp>
+	<algorithm>
+	<functional>
+	<typeinfo>
+	<iosfwd>
+	<ostream>
+	<boost/smart_ptr/detail/operator_bool.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/smart_ptr/detail/shared_ptr_nmt.hpp
+	<boost/assert.hpp>
+	<boost/checked_delete.hpp>
+	<boost/throw_exception.hpp>
+	<boost/smart_ptr/detail/atomic_count.hpp>
+	<memory>
+	<algorithm>
+	<functional>
+	<new>
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/checked_delete.hpp
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/smart_ptr/detail/atomic_count.hpp
+	<boost/config.hpp>
+	<boost/smart_ptr/detail/sp_has_sync.hpp>
+	<boost/smart_ptr/detail/atomic_count_pthreads.hpp>
+	<boost/smart_ptr/detail/atomic_count_gcc_x86.hpp>
+	<boost/smart_ptr/detail/atomic_count_win32.hpp>
+	<boost/smart_ptr/detail/atomic_count_sync.hpp>
+	<boost/smart_ptr/detail/atomic_count_gcc.hpp>
+	<boost/smart_ptr/detail/atomic_count_pthreads.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/smart_ptr/detail/sp_has_sync.hpp
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/smart_ptr/detail/atomic_count_pthreads.hpp
+	<pthread.h>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/smart_ptr/detail/atomic_count_gcc_x86.hpp
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/smart_ptr/detail/atomic_count_win32.hpp
+	<boost/detail/interlocked.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/smart_ptr/detail/atomic_count_sync.hpp
+	<ia64intrin.h>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/smart_ptr/detail/atomic_count_gcc.hpp
+	<ext/atomicity.h>
+	<bits/atomicity.h>
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/config/no_tr1/memory.hpp
+	<memory>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/smart_ptr/detail/shared_count.hpp
+	<boost/config.hpp>
+	<boost/checked_delete.hpp>
+	<boost/throw_exception.hpp>
+	<boost/smart_ptr/bad_weak_ptr.hpp>
+	<boost/smart_ptr/detail/sp_counted_base.hpp>
+	<boost/smart_ptr/detail/sp_counted_impl.hpp>
+	<boost/detail/workaround.hpp>
+	<boost/config/no_tr1/memory.hpp>
+	<functional>
+	<new>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/smart_ptr/bad_weak_ptr.hpp
+	<exception>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/smart_ptr/detail/sp_counted_base.hpp
+	<boost/config.hpp>
+	<boost/smart_ptr/detail/sp_has_sync.hpp>
+	<boost/smart_ptr/detail/sp_counted_base_nt.hpp>
+	<boost/smart_ptr/detail/sp_counted_base_spin.hpp>
+	<boost/smart_ptr/detail/sp_counted_base_pt.hpp>
+	<boost/smart_ptr/detail/sp_counted_base_nt.hpp>
+	<boost/smart_ptr/detail/sp_counted_base_gcc_x86.hpp>
+	<boost/smart_ptr/detail/sp_counted_base_gcc_ia64.hpp>
+	<boost/smart_ptr/detail/sp_counted_base_acc_ia64.hpp>
+	<boost/smart_ptr/detail/sp_counted_base_cw_ppc.hpp>
+	<boost/smart_ptr/detail/sp_counted_base_gcc_ppc.hpp>
+	<boost/smart_ptr/detail/sp_counted_base_gcc_mips.hpp>
+	<boost/smart_ptr/detail/sp_counted_base_sync.hpp>
+	<boost/smart_ptr/detail/sp_counted_base_gcc_sparc.hpp>
+	<boost/smart_ptr/detail/sp_counted_base_w32.hpp>
+	<boost/smart_ptr/detail/sp_counted_base_nt.hpp>
+	<boost/smart_ptr/detail/sp_counted_base_spin.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/smart_ptr/detail/sp_counted_base_nt.hpp
+	<boost/detail/sp_typeinfo.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/smart_ptr/detail/sp_counted_base_spin.hpp
+	<boost/detail/sp_typeinfo.hpp>
+	<boost/smart_ptr/detail/spinlock_pool.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/smart_ptr/detail/spinlock_pool.hpp
+	<boost/config.hpp>
+	<boost/smart_ptr/detail/spinlock.hpp>
+	<cstddef>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/smart_ptr/detail/spinlock.hpp
+	<boost/config.hpp>
+	<boost/smart_ptr/detail/sp_has_sync.hpp>
+	<boost/smart_ptr/detail/spinlock_gcc_arm.hpp>
+	<boost/smart_ptr/detail/spinlock_sync.hpp>
+	<boost/smart_ptr/detail/spinlock_w32.hpp>
+	<boost/smart_ptr/detail/spinlock_pt.hpp>
+	<boost/smart_ptr/detail/spinlock_nt.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/smart_ptr/detail/spinlock_gcc_arm.hpp
+	<boost/smart_ptr/detail/yield_k.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/smart_ptr/detail/yield_k.hpp
+	<boost/config.hpp>
+	<windows.h>
+	<sched.h>
+	<time.h>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/smart_ptr/detail/spinlock_sync.hpp
+	<boost/smart_ptr/detail/yield_k.hpp>
+	<ia64intrin.h>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/smart_ptr/detail/spinlock_w32.hpp
+	<boost/detail/interlocked.hpp>
+	<boost/smart_ptr/detail/yield_k.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/smart_ptr/detail/spinlock_pt.hpp
+	<pthread.h>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/smart_ptr/detail/spinlock_nt.hpp
+	<boost/assert.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/smart_ptr/detail/sp_counted_base_pt.hpp
+	<boost/detail/sp_typeinfo.hpp>
+	<pthread.h>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/smart_ptr/detail/sp_counted_base_gcc_x86.hpp
+	<boost/detail/sp_typeinfo.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/smart_ptr/detail/sp_counted_base_gcc_ia64.hpp
+	<boost/detail/sp_typeinfo.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/smart_ptr/detail/sp_counted_base_acc_ia64.hpp
+	<boost/detail/sp_typeinfo.hpp>
+	<machine/sys/inline.h>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/smart_ptr/detail/sp_counted_base_cw_ppc.hpp
+	<boost/detail/sp_typeinfo.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/smart_ptr/detail/sp_counted_base_gcc_ppc.hpp
+	<boost/detail/sp_typeinfo.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/smart_ptr/detail/sp_counted_base_gcc_mips.hpp
+	<boost/detail/sp_typeinfo.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/smart_ptr/detail/sp_counted_base_sync.hpp
+	<boost/detail/sp_typeinfo.hpp>
+	<limits.h>
+	<ia64intrin.h>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/smart_ptr/detail/sp_counted_base_gcc_sparc.hpp
+	<boost/detail/sp_typeinfo.hpp>
+	<inttypes.h>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/smart_ptr/detail/sp_counted_base_w32.hpp
+	<boost/detail/interlocked.hpp>
+	<boost/detail/workaround.hpp>
+	<boost/detail/sp_typeinfo.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/smart_ptr/detail/sp_counted_impl.hpp
+	<boost/config.hpp>
+	<boost/checked_delete.hpp>
+	<boost/smart_ptr/detail/sp_counted_base.hpp>
+	<boost/smart_ptr/detail/quick_allocator.hpp>
+	<memory>
+	<cstddef>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/smart_ptr/detail/quick_allocator.hpp
+	<boost/config.hpp>
+	<boost/smart_ptr/detail/lightweight_mutex.hpp>
+	<boost/type_traits/type_with_alignment.hpp>
+	<boost/type_traits/alignment_of.hpp>
+	<new>
+	<cstddef>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/smart_ptr/detail/lightweight_mutex.hpp
+	<boost/config.hpp>
+	<boost/smart_ptr/detail/lwm_nop.hpp>
+	<boost/smart_ptr/detail/lwm_pthreads.hpp>
+	<boost/smart_ptr/detail/lwm_win32_cs.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/smart_ptr/detail/lwm_nop.hpp
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/smart_ptr/detail/lwm_pthreads.hpp
+	<boost/assert.hpp>
+	<pthread.h>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/smart_ptr/detail/lwm_win32_cs.hpp
+	<windows.h>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/smart_ptr/detail/sp_convertible.hpp
+	<boost/config.hpp>
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/memory_order.hpp
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/smart_ptr/detail/operator_bool.hpp
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/compiler_config.hpp
+	<cstdlib>
+	<boost/config.hpp>
+	<boost/detail/workaround.hpp>
+	<boost/date_time/locale_config.hpp>
+	<boost/cstdint.hpp>
+	<locale>
+	<boost/config/auto_link.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/locale_config.hpp
+	"boost/config.hpp"
+	"boost/detail/workaround.hpp"
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/c_time.hpp
+	<ctime>
+	<string>
+	<stdexcept>
+	<boost/throw_exception.hpp>
+	<boost/date_time/compiler_config.hpp>
+	<sys/time.h>
+	<time.h>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/time_clock.hpp
+	"boost/date_time/c_time.hpp"
+	"boost/shared_ptr.hpp"
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/filetime_functions.hpp
+	<boost/date_time/compiler_config.hpp>
+	<windows.h>
+	<boost/cstdint.hpp>
+	<boost/date_time/time.hpp>
+	<boost/date_time/date_defs.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/time.hpp
+	<string>
+	<boost/operators.hpp>
+	<boost/date_time/time_defs.hpp>
+	<boost/date_time/special_defs.hpp>
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/operators.hpp
+	<boost/config.hpp>
+	<boost/iterator.hpp>
+	<boost/detail/workaround.hpp>
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/iterator.hpp
+	<iterator>
+	<cstddef>
+	<boost/config.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/time_defs.hpp
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/special_defs.hpp
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/date_defs.hpp
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/posix_time/posix_time_types.hpp
+	"boost/date_time/time_clock.hpp"
+	"boost/date_time/microsec_time_clock.hpp"
+	"boost/date_time/posix_time/ptime.hpp"
+	"boost/date_time/posix_time/date_duration_operators.hpp"
+	"boost/date_time/posix_time/posix_time_duration.hpp"
+	"boost/date_time/posix_time/posix_time_system.hpp"
+	"boost/date_time/posix_time/time_period.hpp"
+	"boost/date_time/time_iterator.hpp"
+	"boost/date_time/dst_rules.hpp"
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/posix_time/ptime.hpp
+	"boost/date_time/posix_time/posix_time_system.hpp"
+	"boost/date_time/time.hpp"
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/posix_time/posix_time_system.hpp
+	"boost/date_time/posix_time/posix_time_config.hpp"
+	"boost/date_time/time_system_split.hpp"
+	"boost/date_time/time_system_counted.hpp"
+	"boost/date_time/compiler_config.hpp"
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/posix_time/posix_time_config.hpp
+	<cstdlib>
+	<boost/limits.hpp>
+	<boost/cstdint.hpp>
+	<boost/config/no_tr1/cmath.hpp>
+	<boost/date_time/time_duration.hpp>
+	<boost/date_time/time_resolution_traits.hpp>
+	<boost/date_time/gregorian/gregorian_types.hpp>
+	<boost/date_time/wrapping_int.hpp>
+	<boost/date_time/compiler_config.hpp>
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/config/no_tr1/cmath.hpp
+	<cmath>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/time_duration.hpp
+	<boost/cstdint.hpp>
+	<boost/operators.hpp>
+	<boost/date_time/time_defs.hpp>
+	<boost/date_time/special_defs.hpp>
+	<boost/date_time/compiler_config.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/time_resolution_traits.hpp
+	<boost/cstdint.hpp>
+	<boost/date_time/time_defs.hpp>
+	<boost/date_time/int_adapter.hpp>
+	<boost/date_time/compiler_config.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/int_adapter.hpp
+	"boost/config.hpp"
+	"boost/limits.hpp"
+	"boost/date_time/special_defs.hpp"
+	"boost/date_time/locale_config.hpp"
+	<ostream>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/gregorian/gregorian_types.hpp
+	"boost/date_time/date.hpp"
+	"boost/date_time/period.hpp"
+	"boost/date_time/gregorian/greg_calendar.hpp"
+	"boost/date_time/gregorian/greg_duration.hpp"
+	"boost/date_time/gregorian/greg_duration_types.hpp"
+	"boost/date_time/gregorian/greg_date.hpp"
+	"boost/date_time/date_generators.hpp"
+	"boost/date_time/date_clock_device.hpp"
+	"boost/date_time/date_iterator.hpp"
+	"boost/date_time/adjust_functors.hpp"
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/date.hpp
+	<boost/operators.hpp>
+	<boost/date_time/year_month_day.hpp>
+	<boost/date_time/special_defs.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/year_month_day.hpp
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/period.hpp
+	"boost/operators.hpp"
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/gregorian/greg_calendar.hpp
+	<boost/cstdint.hpp>
+	<boost/date_time/gregorian/greg_weekday.hpp>
+	<boost/date_time/gregorian/greg_day_of_year.hpp>
+	<boost/date_time/gregorian_calendar.hpp>
+	<boost/date_time/gregorian/greg_ymd.hpp>
+	<boost/date_time/int_adapter.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/gregorian/greg_weekday.hpp
+	"boost/date_time/constrained_value.hpp"
+	"boost/date_time/date_defs.hpp"
+	"boost/date_time/compiler_config.hpp"
+	<stdexcept>
+	<string>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/constrained_value.hpp
+	<exception>
+	<stdexcept>
+	<boost/config.hpp>
+	<boost/throw_exception.hpp>
+	<boost/mpl/if.hpp>
+	<boost/type_traits/is_base_of.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/gregorian/greg_day_of_year.hpp
+	"boost/date_time/constrained_value.hpp"
+	<stdexcept>
+	<string>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/gregorian_calendar.hpp
+	"boost/date_time/gregorian_calendar.ipp"
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/gregorian_calendar.ipp
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/gregorian/greg_ymd.hpp
+	"boost/date_time/year_month_day.hpp"
+	"boost/date_time/special_defs.hpp"
+	"boost/date_time/gregorian/greg_day.hpp"
+	"boost/date_time/gregorian/greg_year.hpp"
+	"boost/date_time/gregorian/greg_month.hpp"
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/gregorian/greg_day.hpp
+	"boost/date_time/constrained_value.hpp"
+	<stdexcept>
+	<string>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/gregorian/greg_year.hpp
+	"boost/date_time/constrained_value.hpp"
+	<stdexcept>
+	<string>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/gregorian/greg_month.hpp
+	"boost/date_time/constrained_value.hpp"
+	"boost/date_time/date_defs.hpp"
+	"boost/shared_ptr.hpp"
+	"boost/date_time/compiler_config.hpp"
+	<stdexcept>
+	<string>
+	<map>
+	<algorithm>
+	<cctype>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/gregorian/greg_duration.hpp
+	<boost/date_time/date_duration.hpp>
+	<boost/date_time/int_adapter.hpp>
+	<boost/date_time/special_defs.hpp>
+	<boost/date_time/date_duration_types.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/date_duration.hpp
+	<boost/operators.hpp>
+	<boost/date_time/special_defs.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/date_duration_types.hpp
+	<boost/date_time/int_adapter.hpp>
+	<boost/date_time/special_defs.hpp>
+	<boost/date_time/date_duration.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/gregorian/greg_duration_types.hpp
+	<boost/date_time/gregorian/greg_date.hpp>
+	<boost/date_time/int_adapter.hpp>
+	<boost/date_time/adjust_functors.hpp>
+	<boost/date_time/date_duration_types.hpp>
+	<boost/date_time/gregorian/greg_duration.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/gregorian/greg_date.hpp
+	<boost/throw_exception.hpp>
+	<boost/date_time/date.hpp>
+	<boost/date_time/special_defs.hpp>
+	<boost/date_time/gregorian/greg_calendar.hpp>
+	<boost/date_time/gregorian/greg_duration.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/adjust_functors.hpp
+	"boost/date_time/date.hpp"
+	"boost/date_time/wrapping_int.hpp"
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/wrapping_int.hpp
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/date_generators.hpp
+	<stdexcept>
+	<sstream>
+	<boost/throw_exception.hpp>
+	<boost/date_time/date.hpp>
+	<boost/date_time/compiler_config.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/date_clock_device.hpp
+	"boost/date_time/c_time.hpp"
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/date_iterator.hpp
+	<iterator>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/time_system_split.hpp
+	<string>
+	"boost/date_time/compiler_config.hpp"
+	"boost/date_time/special_defs.hpp"
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/time_system_counted.hpp
+	"boost/date_time/time_defs.hpp"
+	<string>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/posix_time/date_duration_operators.hpp
+	"boost/date_time/gregorian/greg_duration_types.hpp"
+	"boost/date_time/posix_time/ptime.hpp"
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/posix_time/posix_time_duration.hpp
+	"boost/date_time/posix_time/posix_time_config.hpp"
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/posix_time/time_period.hpp
+	"boost/date_time/period.hpp"
+	"boost/date_time/posix_time/posix_time_duration.hpp"
+	"boost/date_time/posix_time/ptime.hpp"
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/time_iterator.hpp
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/dst_rules.hpp
+	"boost/date_time/date_generators.hpp"
+	"boost/date_time/period.hpp"
+	"boost/date_time/date_defs.hpp"
+	<stdexcept>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/thread/xtime.hpp
+	<boost/thread/detail/config.hpp>
+	<boost/cstdint.hpp>
+	<boost/thread/thread_time.hpp>
+	<boost/date_time/posix_time/conversion.hpp>
+	<boost/config/abi_prefix.hpp>
+	<boost/config/abi_suffix.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/posix_time/conversion.hpp
+	<cstring>
+	<boost/date_time/posix_time/ptime.hpp>
+	<boost/date_time/posix_time/posix_time_duration.hpp>
+	<boost/date_time/filetime_functions.hpp>
+	<boost/date_time/c_time.hpp>
+	<boost/date_time/time_resolution_traits.hpp>
+	<boost/date_time/gregorian/conversion.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/date_time/gregorian/conversion.hpp
+	<cstring>
+	<string>
+	<stdexcept>
+	<boost/throw_exception.hpp>
+	<boost/date_time/c_time.hpp>
+	<boost/date_time/special_defs.hpp>
+	<boost/date_time/gregorian/gregorian_types.hpp>
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/utility.hpp
+	<boost/utility/addressof.hpp>
+	<boost/utility/base_from_member.hpp>
+	<boost/utility/binary.hpp>
+	<boost/utility/enable_if.hpp>
+	<boost/checked_delete.hpp>
+	<boost/next_prior.hpp>
+	<boost/noncopyable.hpp>
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/next_prior.hpp
+	<iterator>
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/noncopyable.hpp
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/thread/locks.hpp
+	<boost/thread/detail/config.hpp>
+	<boost/thread/exceptions.hpp>
+	<boost/thread/detail/move.hpp>
+	<algorithm>
+	<iterator>
+	<boost/thread/thread_time.hpp>
+	<boost/detail/workaround.hpp>
+	<boost/type_traits/is_class.hpp>
+	<boost/config/abi_prefix.hpp>
+	<boost/config/abi_suffix.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/thread/detail/move.hpp
+	<boost/utility/enable_if.hpp>
+	<boost/type_traits/is_convertible.hpp>
+	<boost/config/abi_prefix.hpp>
+	<boost/config/abi_suffix.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/thread/pthread/mutex.hpp
+	<pthread.h>
+	<boost/utility.hpp>
+	<boost/throw_exception.hpp>
+	<boost/thread/exceptions.hpp>
+	<boost/thread/locks.hpp>
+	<boost/thread/thread_time.hpp>
+	<boost/thread/xtime.hpp>
+	<boost/assert.hpp>
+	<errno.h>
+	"timespec.hpp"
+	"pthread_mutex_scoped_lock.hpp"
+	<boost/config/abi_prefix.hpp>
+	<boost/config/abi_suffix.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/thread/pthread/timespec.hpp
+	<boost/thread/thread_time.hpp>
+	<boost/date_time/posix_time/conversion.hpp>
+	<pthread.h>
+	<unistd.h>
+	<boost/config/abi_prefix.hpp>
+	<boost/config/abi_suffix.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/thread/pthread/pthread_mutex_scoped_lock.hpp
+	<pthread.h>
+	<boost/assert.hpp>
+	<boost/config/abi_prefix.hpp>
+	<boost/config/abi_suffix.hpp>
+
+1317739000 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/interprocess/sync/scoped_lock.hpp
+	<boost/interprocess/detail/config_begin.hpp>
+	<boost/interprocess/detail/workaround.hpp>
+	<boost/interprocess/interprocess_fwd.hpp>
+	<boost/interprocess/sync/lock_options.hpp>
+	<boost/interprocess/exceptions.hpp>
+	<boost/interprocess/detail/mpl.hpp>
+	<boost/interprocess/detail/type_traits.hpp>
+	<boost/interprocess/detail/move.hpp>
+	<boost/interprocess/detail/posix_time_types_wrk.hpp>
+	<boost/interprocess/detail/config_end.hpp>
+
+1317738999 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/interprocess/detail/config_begin.hpp
+	<boost/config.hpp>
+
+1317738999 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/interprocess/detail/workaround.hpp
+	<boost/interprocess/detail/config_begin.hpp>
+	<unistd.h>
+	<boost/interprocess/detail/config_end.hpp>
+
+1317738999 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/interprocess/detail/config_end.hpp
+
+1317739000 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/interprocess/interprocess_fwd.hpp
+	<boost/interprocess/detail/config_begin.hpp>
+	<boost/interprocess/detail/workaround.hpp>
+	<cstddef>
+	<boost/interprocess/detail/config_end.hpp>
+
+1317739000 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/interprocess/sync/lock_options.hpp
+	<boost/interprocess/detail/config_begin.hpp>
+	<boost/interprocess/detail/workaround.hpp>
+	<boost/interprocess/detail/config_end.hpp>
+
+1317739000 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/interprocess/exceptions.hpp
+	<boost/interprocess/detail/config_begin.hpp>
+	<boost/interprocess/detail/workaround.hpp>
+	<boost/interprocess/errors.hpp>
+	<stdexcept>
+	<new>
+	<boost/interprocess/detail/config_end.hpp>
+
+1317739000 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/interprocess/errors.hpp
+	<boost/interprocess/detail/config_begin.hpp>
+	<boost/interprocess/detail/workaround.hpp>
+	<stdarg.h>
+	<string>
+	<boost/interprocess/detail/win32_api.hpp>
+	<errno.h>
+	<cstring>
+	<boost/interprocess/detail/config_end.hpp>
+
+1317738999 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/interprocess/detail/win32_api.hpp
+	<boost/interprocess/detail/config_begin.hpp>
+	<boost/interprocess/detail/workaround.hpp>
+	<cstddef>
+	<cstring>
+	<string>
+	<memory>
+	<cstdarg>
+	<boost/detail/interlocked.hpp>
+	<windows.h>
+	<boost/interprocess/detail/config_end.hpp>
+
+1317738999 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/interprocess/detail/mpl.hpp
+	<cstddef>
+
+1317738999 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/interprocess/detail/type_traits.hpp
+	<boost/interprocess/detail/config_begin.hpp>
+	<boost/interprocess/detail/config_end.hpp>
+
+1317738999 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/interprocess/detail/move.hpp
+	<boost/config.hpp>
+	<algorithm>
+	<memory>
+	<iterator>
+	<boost/mpl/if.hpp>
+	<boost/utility/enable_if.hpp>
+	<boost/mpl/bool.hpp>
+	<boost/type_traits/has_trivial_destructor.hpp>
+	<boost/utility/addressof.hpp>
+	<boost/type_traits/remove_reference.hpp>
+
+1317738999 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/interprocess/detail/posix_time_types_wrk.hpp
+	<boost/date_time/posix_time/posix_time_types.hpp>
+
+1317738999 /Users/2real/projects/_2RealKinectWrapper/src/OpenNISpecific/_2RealImplementationOpenNI.hpp
+	"_2RealConfig.h"
+	"boost/thread.hpp"
+	"boost/thread/mutex.hpp"
+	"I_2RealImplementation.h"
+	"_2RealTypes.h"
+	"XnOpenNI.h"
+	"OpenNISpecific/OpenNIDevice.h"
+	<iostream>
+	<istream>
+
+1317738999 /Users/2real/projects/_2RealKinectWrapper/src/_2RealConfig.h
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/thread.hpp
+	<boost/thread/thread.hpp>
+	<boost/thread/condition_variable.hpp>
+	<boost/thread/exceptions.hpp>
+	<boost/thread/mutex.hpp>
+	<boost/thread/once.hpp>
+	<boost/thread/recursive_mutex.hpp>
+	<boost/thread/tss.hpp>
+	<boost/thread/thread_time.hpp>
+	<boost/thread/locks.hpp>
+	<boost/thread/shared_mutex.hpp>
+	<boost/thread/barrier.hpp>
+	<boost/thread/future.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/thread/thread.hpp
+	<boost/thread/detail/platform.hpp>
+	<boost/thread/win32/thread_data.hpp>
+	<boost/thread/pthread/thread_data.hpp>
+	<boost/thread/detail/thread.hpp>
+	<boost/thread/detail/thread_interruption.hpp>
+	<boost/thread/detail/thread_group.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/thread/win32/thread_data.hpp
+	<boost/thread/detail/config.hpp>
+	<boost/intrusive_ptr.hpp>
+	<boost/thread/thread_time.hpp>
+	"thread_primitives.hpp"
+	"thread_heap_alloc.hpp"
+	<boost/config/abi_prefix.hpp>
+	<boost/config/abi_suffix.hpp>
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/intrusive_ptr.hpp
+	<boost/smart_ptr/intrusive_ptr.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/smart_ptr/intrusive_ptr.hpp
+	<boost/config.hpp>
+	<boost/assert.hpp>
+	<boost/detail/workaround.hpp>
+	<boost/smart_ptr/detail/sp_convertible.hpp>
+	<boost/config/no_tr1/functional.hpp>
+	<iosfwd>
+	<ostream>
+	<boost/smart_ptr/detail/operator_bool.hpp>
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/config/no_tr1/functional.hpp
+	<functional>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/thread/win32/thread_heap_alloc.hpp
+	<new>
+	"thread_primitives.hpp"
+	<stdexcept>
+	<boost/assert.hpp>
+	<boost/throw_exception.hpp>
+	<windows.h>
+	<boost/config/abi_prefix.hpp>
+	<boost/config/abi_suffix.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/thread/pthread/thread_data.hpp
+	<boost/thread/detail/config.hpp>
+	<boost/thread/exceptions.hpp>
+	<boost/shared_ptr.hpp>
+	<boost/enable_shared_from_this.hpp>
+	<boost/thread/mutex.hpp>
+	<boost/optional.hpp>
+	<pthread.h>
+	"condition_variable_fwd.hpp"
+	<map>
+	<boost/config/abi_prefix.hpp>
+	<boost/config/abi_suffix.hpp>
+
+1317740744 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/enable_shared_from_this.hpp
+	<boost/smart_ptr/enable_shared_from_this.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/smart_ptr/enable_shared_from_this.hpp
+	<boost/smart_ptr/weak_ptr.hpp>
+	<boost/smart_ptr/shared_ptr.hpp>
+	<boost/assert.hpp>
+	<boost/config.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/smart_ptr/weak_ptr.hpp
+	<memory>
+	<boost/smart_ptr/detail/shared_count.hpp>
+	<boost/smart_ptr/shared_ptr.hpp>
+
+1317740744 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/optional.hpp
+	"boost/optional/optional.hpp"
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/thread/pthread/condition_variable_fwd.hpp
+	<boost/assert.hpp>
+	<boost/throw_exception.hpp>
+	<pthread.h>
+	<boost/thread/mutex.hpp>
+	<boost/thread/locks.hpp>
+	<boost/thread/thread_time.hpp>
+	<boost/thread/xtime.hpp>
+	<boost/config/abi_prefix.hpp>
+	<boost/config/abi_suffix.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/thread/detail/thread.hpp
+	<boost/thread/exceptions.hpp>
+	<ostream>
+	<boost/thread/detail/move.hpp>
+	<boost/thread/mutex.hpp>
+	<boost/thread/xtime.hpp>
+	<boost/thread/detail/thread_heap_alloc.hpp>
+	<boost/utility.hpp>
+	<boost/assert.hpp>
+	<list>
+	<algorithm>
+	<boost/ref.hpp>
+	<boost/cstdint.hpp>
+	<boost/bind.hpp>
+	<stdlib.h>
+	<memory>
+	<boost/utility/enable_if.hpp>
+	<boost/type_traits/remove_reference.hpp>
+	<boost/config/abi_prefix.hpp>
+	<boost/config/abi_suffix.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/thread/detail/thread_heap_alloc.hpp
+	<boost/thread/detail/platform.hpp>
+	<boost/thread/win32/thread_heap_alloc.hpp>
+	<boost/thread/pthread/thread_heap_alloc.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/thread/pthread/thread_heap_alloc.hpp
+	<boost/config/abi_prefix.hpp>
+	<boost/config/abi_suffix.hpp>
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/ref.hpp
+	<boost/config.hpp>
+	<boost/utility/addressof.hpp>
+	<boost/mpl/bool.hpp>
+	<boost/detail/workaround.hpp>
+	<boost/type.hpp>
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/bind.hpp
+	<boost/bind/bind.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/bind/bind.hpp
+	<boost/config.hpp>
+	<boost/ref.hpp>
+	<boost/mem_fn.hpp>
+	<boost/type.hpp>
+	<boost/is_placeholder.hpp>
+	<boost/bind/arg.hpp>
+	<boost/detail/workaround.hpp>
+	<boost/visit_each.hpp>
+	<boost/bind/storage.hpp>
+	<boost/bind/bind_template.hpp>
+	<boost/bind/bind_template.hpp>
+	<boost/bind/bind_template.hpp>
+	<boost/bind/bind_cc.hpp>
+	<boost/bind/bind_cc.hpp>
+	<boost/bind/bind_cc.hpp>
+	<boost/bind/bind_cc.hpp>
+	<boost/bind/bind_mf_cc.hpp>
+	<boost/bind/bind_mf2_cc.hpp>
+	<boost/bind/bind_mf_cc.hpp>
+	<boost/bind/bind_mf2_cc.hpp>
+	<boost/bind/bind_mf_cc.hpp>
+	<boost/bind/bind_mf2_cc.hpp>
+	<boost/bind/bind_mf_cc.hpp>
+	<boost/bind/bind_mf2_cc.hpp>
+	<boost/bind/placeholders.hpp>
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/mem_fn.hpp
+	<boost/bind/mem_fn.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/bind/mem_fn.hpp
+	<boost/config.hpp>
+	<boost/get_pointer.hpp>
+	<boost/detail/workaround.hpp>
+	<boost/bind/mem_fn_template.hpp>
+	<boost/bind/mem_fn_template.hpp>
+	<boost/bind/mem_fn_template.hpp>
+	<boost/bind/mem_fn_template.hpp>
+	<boost/bind/mem_fn_template.hpp>
+	<boost/bind/mem_fn_template.hpp>
+	<boost/bind/mem_fn_template.hpp>
+	<boost/bind/mem_fn_template.hpp>
+	<boost/bind/mem_fn_vw.hpp>
+	<boost/bind/mem_fn_vw.hpp>
+	<boost/bind/mem_fn_vw.hpp>
+	<boost/bind/mem_fn_vw.hpp>
+	<boost/bind/mem_fn_template.hpp>
+	<boost/bind/mem_fn_template.hpp>
+	<boost/bind/mem_fn_template.hpp>
+	<boost/bind/mem_fn_template.hpp>
+	<boost/bind/mem_fn_cc.hpp>
+	<boost/bind/mem_fn_cc.hpp>
+	<boost/bind/mem_fn_cc.hpp>
+	<boost/bind/mem_fn_cc.hpp>
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/get_pointer.hpp
+	<boost/config/no_tr1/memory.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/bind/mem_fn_template.hpp
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/bind/mem_fn_vw.hpp
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/bind/mem_fn_cc.hpp
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/is_placeholder.hpp
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/bind/arg.hpp
+	<boost/config.hpp>
+	<boost/is_placeholder.hpp>
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/visit_each.hpp
+	<boost/config.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/bind/storage.hpp
+	<boost/config.hpp>
+	<boost/bind/arg.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/bind/bind_template.hpp
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/bind/bind_cc.hpp
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/bind/bind_mf_cc.hpp
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/bind/bind_mf2_cc.hpp
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/bind/placeholders.hpp
+	<boost/bind/arg.hpp>
+	<boost/config.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/thread/detail/thread_interruption.hpp
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/thread/detail/thread_group.hpp
+	<list>
+	<boost/thread/shared_mutex.hpp>
+	<boost/thread/mutex.hpp>
+	<boost/config/abi_prefix.hpp>
+	<boost/config/abi_suffix.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/thread/shared_mutex.hpp
+	<boost/thread/detail/platform.hpp>
+	<boost/thread/win32/shared_mutex.hpp>
+	<boost/thread/pthread/shared_mutex.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/thread/win32/shared_mutex.hpp
+	<boost/assert.hpp>
+	<boost/detail/interlocked.hpp>
+	<boost/thread/win32/thread_primitives.hpp>
+	<boost/static_assert.hpp>
+	<limits.h>
+	<boost/utility.hpp>
+	<boost/thread/thread_time.hpp>
+	<boost/config/abi_prefix.hpp>
+	<boost/config/abi_suffix.hpp>
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/static_assert.hpp
+	<boost/config.hpp>
+	<boost/detail/workaround.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/thread/pthread/shared_mutex.hpp
+	<boost/assert.hpp>
+	<boost/static_assert.hpp>
+	<boost/thread/mutex.hpp>
+	<boost/thread/condition_variable.hpp>
+	<boost/thread/detail/thread_interruption.hpp>
+	<boost/config/abi_prefix.hpp>
+	<boost/config/abi_suffix.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/thread/condition_variable.hpp
+	<boost/thread/detail/platform.hpp>
+	<boost/thread/win32/condition_variable.hpp>
+	<boost/thread/pthread/condition_variable.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/thread/win32/condition_variable.hpp
+	<boost/thread/mutex.hpp>
+	"thread_primitives.hpp"
+	<limits.h>
+	<boost/assert.hpp>
+	<algorithm>
+	<boost/thread/thread.hpp>
+	<boost/thread/thread_time.hpp>
+	"interlocked_read.hpp"
+	<boost/thread/xtime.hpp>
+	<vector>
+	<boost/intrusive_ptr.hpp>
+	<boost/config/abi_prefix.hpp>
+	<boost/config/abi_suffix.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/thread/pthread/condition_variable.hpp
+	"timespec.hpp"
+	"pthread_mutex_scoped_lock.hpp"
+	"thread_data.hpp"
+	"condition_variable_fwd.hpp"
+	<boost/config/abi_prefix.hpp>
+	<boost/config/abi_suffix.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/thread/once.hpp
+	<boost/thread/detail/platform.hpp>
+	<boost/thread/win32/once.hpp>
+	<boost/thread/pthread/once.hpp>
+	<boost/config/abi_prefix.hpp>
+	<boost/config/abi_suffix.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/thread/win32/once.hpp
+	<cstring>
+	<cstddef>
+	<boost/assert.hpp>
+	<boost/static_assert.hpp>
+	<boost/detail/interlocked.hpp>
+	<boost/thread/win32/thread_primitives.hpp>
+	<boost/thread/win32/interlocked_read.hpp>
+	<boost/config/abi_prefix.hpp>
+	<boost/config/abi_suffix.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/thread/pthread/once.hpp
+	<boost/thread/detail/config.hpp>
+	<boost/config.hpp>
+	<pthread.h>
+	<boost/assert.hpp>
+	"pthread_mutex_scoped_lock.hpp"
+	<boost/thread/pthread/pthread_mutex_scoped_lock.hpp>
+	<boost/cstdint.hpp>
+	<boost/config/abi_prefix.hpp>
+	<boost/config/abi_suffix.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/thread/recursive_mutex.hpp
+	<boost/thread/detail/platform.hpp>
+	<boost/thread/win32/recursive_mutex.hpp>
+	<boost/thread/pthread/recursive_mutex.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/thread/win32/recursive_mutex.hpp
+	<boost/utility.hpp>
+	"basic_recursive_mutex.hpp"
+	<boost/thread/exceptions.hpp>
+	<boost/thread/locks.hpp>
+	<boost/config/abi_prefix.hpp>
+	<boost/config/abi_suffix.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/thread/win32/basic_recursive_mutex.hpp
+	"thread_primitives.hpp"
+	"basic_timed_mutex.hpp"
+	<boost/config/abi_prefix.hpp>
+	<boost/config/abi_suffix.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/thread/pthread/recursive_mutex.hpp
+	<pthread.h>
+	<boost/utility.hpp>
+	<boost/throw_exception.hpp>
+	<boost/thread/exceptions.hpp>
+	<boost/thread/locks.hpp>
+	<boost/thread/thread_time.hpp>
+	<boost/assert.hpp>
+	<unistd.h>
+	<boost/date_time/posix_time/conversion.hpp>
+	<errno.h>
+	"timespec.hpp"
+	"pthread_mutex_scoped_lock.hpp"
+	<boost/config/abi_prefix.hpp>
+	<boost/config/abi_suffix.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/thread/tss.hpp
+	<boost/thread/detail/config.hpp>
+	<boost/shared_ptr.hpp>
+	<boost/thread/detail/thread_heap_alloc.hpp>
+	<boost/config/abi_prefix.hpp>
+	<boost/config/abi_suffix.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/thread/barrier.hpp
+	<boost/thread/detail/config.hpp>
+	<boost/throw_exception.hpp>
+	<boost/thread/mutex.hpp>
+	<boost/thread/condition_variable.hpp>
+	<string>
+	<stdexcept>
+	<boost/config/abi_prefix.hpp>
+	<boost/config/abi_suffix.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/thread/future.hpp
+	<stdexcept>
+	<boost/thread/detail/move.hpp>
+	<boost/thread/thread_time.hpp>
+	<boost/thread/mutex.hpp>
+	<boost/thread/condition_variable.hpp>
+	<boost/exception_ptr.hpp>
+	<boost/shared_ptr.hpp>
+	<boost/scoped_ptr.hpp>
+	<boost/type_traits/is_fundamental.hpp>
+	<boost/type_traits/is_convertible.hpp>
+	<boost/mpl/if.hpp>
+	<boost/config.hpp>
+	<boost/throw_exception.hpp>
+	<algorithm>
+	<boost/function.hpp>
+	<boost/bind.hpp>
+	<boost/ref.hpp>
+	<boost/scoped_array.hpp>
+	<boost/utility/enable_if.hpp>
+	<list>
+	<boost/next_prior.hpp>
+	<vector>
+
+1317740744 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/exception_ptr.hpp
+	<boost/exception/detail/exception_ptr.hpp>
+
+1317740744 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/scoped_ptr.hpp
+	<boost/smart_ptr/scoped_ptr.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/smart_ptr/scoped_ptr.hpp
+	<boost/assert.hpp>
+	<boost/checked_delete.hpp>
+	<boost/detail/workaround.hpp>
+	<memory>
+	<boost/smart_ptr/detail/operator_bool.hpp>
+
+1317740744 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/function.hpp
+	<functional>
+	<boost/preprocessor/iterate.hpp>
+	<boost/detail/workaround.hpp>
+	<boost/function/detail/prologue.hpp>
+	<boost/function/function0.hpp>
+	<boost/function/function1.hpp>
+	<boost/function/function2.hpp>
+	<boost/function/function3.hpp>
+	<boost/function/function4.hpp>
+	<boost/function/function5.hpp>
+	<boost/function/function6.hpp>
+	<boost/function/function7.hpp>
+	<boost/function/function8.hpp>
+	<boost/function/function9.hpp>
+	<boost/function/function10.hpp>
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/preprocessor/iterate.hpp
+	<boost/preprocessor/iteration/iterate.hpp>
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/preprocessor/iteration/iterate.hpp
+	<boost/preprocessor/arithmetic/dec.hpp>
+	<boost/preprocessor/arithmetic/inc.hpp>
+	<boost/preprocessor/array/elem.hpp>
+	<boost/preprocessor/array/size.hpp>
+	<boost/preprocessor/cat.hpp>
+	<boost/preprocessor/slot/slot.hpp>
+	<boost/preprocessor/tuple/elem.hpp>
+
+1317739002 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/preprocessor/arithmetic/dec.hpp
+	<boost/preprocessor/config/config.hpp>
+
+1317739002 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/preprocessor/config/config.hpp
+
+1317739002 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/preprocessor/arithmetic/inc.hpp
+	<boost/preprocessor/config/config.hpp>
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/preprocessor/array/elem.hpp
+	<boost/preprocessor/array/data.hpp>
+	<boost/preprocessor/array/size.hpp>
+	<boost/preprocessor/config/config.hpp>
+	<boost/preprocessor/tuple/elem.hpp>
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/preprocessor/array/data.hpp
+	<boost/preprocessor/config/config.hpp>
+	<boost/preprocessor/tuple/elem.hpp>
+
+1317739002 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/preprocessor/tuple/elem.hpp
+	<boost/preprocessor/config/config.hpp>
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/preprocessor/array/size.hpp
+	<boost/preprocessor/config/config.hpp>
+	<boost/preprocessor/tuple/elem.hpp>
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/preprocessor/cat.hpp
+	<boost/preprocessor/config/config.hpp>
+
+1317739002 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/preprocessor/slot/slot.hpp
+	<boost/preprocessor/cat.hpp>
+	<boost/preprocessor/slot/detail/def.hpp>
+
+1317739002 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/preprocessor/slot/detail/def.hpp
+
+1317740719 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/function/detail/prologue.hpp
+	<cassert>
+	<algorithm>
+	<boost/config/no_tr1/functional.hpp>
+	<boost/throw_exception.hpp>
+	<boost/config.hpp>
+	<boost/function/function_base.hpp>
+	<boost/mem_fn.hpp>
+	<boost/type_traits/is_integral.hpp>
+	<boost/preprocessor/enum.hpp>
+	<boost/preprocessor/enum_params.hpp>
+	<boost/preprocessor/cat.hpp>
+	<boost/preprocessor/repeat.hpp>
+	<boost/preprocessor/inc.hpp>
+	<boost/type_traits/is_void.hpp>
+
+1317740719 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/function/function_base.hpp
+	<stdexcept>
+	<string>
+	<memory>
+	<new>
+	<boost/config.hpp>
+	<boost/detail/sp_typeinfo.hpp>
+	<boost/assert.hpp>
+	<boost/integer.hpp>
+	<boost/type_traits/has_trivial_copy.hpp>
+	<boost/type_traits/has_trivial_destructor.hpp>
+	<boost/type_traits/is_const.hpp>
+	<boost/type_traits/is_integral.hpp>
+	<boost/type_traits/is_volatile.hpp>
+	<boost/type_traits/composite_traits.hpp>
+	<boost/type_traits/ice.hpp>
+	<boost/ref.hpp>
+	<boost/mpl/if.hpp>
+	<boost/detail/workaround.hpp>
+	<boost/type_traits/alignment_of.hpp>
+	"boost/utility/enable_if.hpp"
+	"boost/mpl/bool.hpp"
+	<boost/function_equal.hpp>
+	<boost/function/function_fwd.hpp>
+	<cstring>
+
+1317740744 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/integer.hpp
+	<boost/integer_fwd.hpp>
+	<boost/integer_traits.hpp>
+	<boost/limits.hpp>
+	<boost/cstdint.hpp>
+
+1317740744 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/integer_fwd.hpp
+	<climits>
+	<cstddef>
+	<boost/config.hpp>
+	<boost/limits.hpp>
+	<boost/cstdint.hpp>
+
+1317740744 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/integer_traits.hpp
+	<boost/config.hpp>
+	<boost/limits.hpp>
+	<limits.h>
+	<wchar.h>
+
+1317740744 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/function_equal.hpp
+
+1317740719 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/function/function_fwd.hpp
+	<boost/config.hpp>
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/preprocessor/enum.hpp
+	<boost/preprocessor/repetition/enum.hpp>
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/preprocessor/repetition/enum.hpp
+	<boost/preprocessor/cat.hpp>
+	<boost/preprocessor/config/config.hpp>
+	<boost/preprocessor/debug/error.hpp>
+	<boost/preprocessor/detail/auto_rec.hpp>
+	<boost/preprocessor/punctuation/comma_if.hpp>
+	<boost/preprocessor/repetition/repeat.hpp>
+	<boost/preprocessor/tuple/elem.hpp>
+	<boost/preprocessor/tuple/rem.hpp>
+
+1317739002 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/preprocessor/debug/error.hpp
+	<boost/preprocessor/cat.hpp>
+	<boost/preprocessor/config/config.hpp>
+
+1317739002 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/preprocessor/detail/auto_rec.hpp
+	<boost/preprocessor/config/config.hpp>
+	<boost/preprocessor/detail/dmc/auto_rec.hpp>
+	<boost/preprocessor/control/iif.hpp>
+
+1317739002 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/preprocessor/detail/dmc/auto_rec.hpp
+	<boost/preprocessor/control/iif.hpp>
+
+1317739002 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/preprocessor/control/iif.hpp
+	<boost/preprocessor/config/config.hpp>
+
+1317739002 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/preprocessor/punctuation/comma_if.hpp
+	<boost/preprocessor/config/config.hpp>
+	<boost/preprocessor/control/if.hpp>
+	<boost/preprocessor/facilities/empty.hpp>
+	<boost/preprocessor/punctuation/comma.hpp>
+
+1317739002 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/preprocessor/control/if.hpp
+	<boost/preprocessor/config/config.hpp>
+	<boost/preprocessor/control/iif.hpp>
+	<boost/preprocessor/logical/bool.hpp>
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/preprocessor/logical/bool.hpp
+	<boost/preprocessor/config/config.hpp>
+
+1317739002 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/preprocessor/facilities/empty.hpp
+
+1317739002 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/preprocessor/punctuation/comma.hpp
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/preprocessor/repetition/repeat.hpp
+	<boost/preprocessor/cat.hpp>
+	<boost/preprocessor/config/config.hpp>
+	<boost/preprocessor/debug/error.hpp>
+	<boost/preprocessor/detail/auto_rec.hpp>
+	<boost/preprocessor/tuple/eat.hpp>
+
+1317739002 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/preprocessor/tuple/eat.hpp
+	<boost/preprocessor/config/config.hpp>
+
+1317739002 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/preprocessor/tuple/rem.hpp
+	<boost/preprocessor/config/config.hpp>
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/preprocessor/enum_params.hpp
+	<boost/preprocessor/repetition/enum_params.hpp>
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/preprocessor/repetition/enum_params.hpp
+	<boost/preprocessor/config/config.hpp>
+	<boost/preprocessor/punctuation/comma_if.hpp>
+	<boost/preprocessor/repetition/repeat.hpp>
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/preprocessor/repeat.hpp
+	<boost/preprocessor/repetition/repeat.hpp>
+
+1317739003 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/preprocessor/inc.hpp
+	<boost/preprocessor/arithmetic/inc.hpp>
+
+1317740719 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/function/function0.hpp
+	<boost/function/detail/maybe_include.hpp>
+
+1317740719 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/function/detail/maybe_include.hpp
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+	<boost/function/function_template.hpp>
+
+1317740719 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/function/function_template.hpp
+	<boost/function/detail/prologue.hpp>
+	<boost/detail/no_exceptions_support.hpp>
+
+1317740719 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/function/function1.hpp
+	<boost/function/detail/maybe_include.hpp>
+
+1317740719 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/function/function2.hpp
+	<boost/function/detail/maybe_include.hpp>
+
+1317740719 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/function/function3.hpp
+	<boost/function/detail/maybe_include.hpp>
+
+1317740719 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/function/function4.hpp
+	<boost/function/detail/maybe_include.hpp>
+
+1317740719 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/function/function5.hpp
+	<boost/function/detail/maybe_include.hpp>
+
+1317740719 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/function/function6.hpp
+	<boost/function/detail/maybe_include.hpp>
+
+1317740719 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/function/function7.hpp
+	<boost/function/detail/maybe_include.hpp>
+
+1317740719 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/function/function8.hpp
+	<boost/function/detail/maybe_include.hpp>
+
+1317740719 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/function/function9.hpp
+	<boost/function/detail/maybe_include.hpp>
+
+1317740719 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/function/function10.hpp
+	<boost/function/detail/maybe_include.hpp>
+
+1317740744 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/scoped_array.hpp
+	<boost/smart_ptr/scoped_array.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/smart_ptr/scoped_array.hpp
+	<boost/assert.hpp>
+	<boost/checked_delete.hpp>
+	<boost/config.hpp>
+	<boost/detail/workaround.hpp>
+	<cstddef>
+	<boost/smart_ptr/detail/operator_bool.hpp>
+
+1317738999 /Users/2real/projects/_2RealKinectWrapper/src/I_2RealImplementation.h
+	"_2RealTrackedUser.h"
+	<stdint.h>
+	<vector>
+
+1317738999 /Users/2real/projects/_2RealKinectWrapper/src/_2RealTrackedUser.h
+	"_2RealTrackedJoint.h"
+	"_2RealTypes.h"
+	<stdint.h>
+	<vector>
+
+1317738999 /Users/2real/projects/_2RealKinectWrapper/src/_2RealTrackedJoint.h
+	<vector>
+	"_2RealTypes.h"
+
+1317737108 /usr/include/ni/Linux-Arm/XnPlatformLinux-Arm.h
+	"../Linux-x86/XnPlatformLinux-x86.h"
+
+1317737108 /usr/include/ni/MacOSX/XnPlatformMacOSX.h
+	"../Linux-x86/XnPlatformLinux-x86.h"
+	<sys/time.h>
+
+1317738999 /Users/2real/projects/_2RealKinectWrapper/src/OpenNISpecific/OpenNIDevice.h
+	"OpenNISpecific/OpenNIColorGenerator.h"
+	"OpenNISpecific/OpenNIDepthGenerator.h"
+	"OpenNISpecific/OpenNIInfraredGenerator.h"
+	"OpenNISpecific/OpenNIUserGenerator.h"
+	"_2RealUtility.h"
+	"_2RealTrackedUser.h"
+	"XnOpenNI.h"
+	"boost/thread/mutex.hpp"
+	<boost/thread/thread.hpp>
+	<vector>
+
+1317738999 /Users/2real/projects/_2RealKinectWrapper/src/OpenNISpecific/OpenNIColorGenerator.h
+	"OpenNISpecific/OpenNIGenerator.h"
+	<vector>
+
+1317738999 /Users/2real/projects/_2RealKinectWrapper/src/OpenNISpecific/OpenNIGenerator.h
+	"_2RealConfig.h"
+	"_2RealUtility.h"
+	"XnOpenNI.h"
+	"XnCppWrapper.h"
+	<stdint.h>
+	<vector>
+
+1317738999 /Users/2real/projects/_2RealKinectWrapper/src/_2RealUtility.h
+	<stdint.h>
+	<string>
+	"_2RealLogger.h"
+
+1317738999 /Users/2real/projects/_2RealKinectWrapper/src/_2RealLogger.h
+	<ostream>
+	<iostream>
+	"_2RealTypes.h"
+	<boost/thread/mutex.hpp>
+
+1317738999 /Users/2real/projects/_2RealKinectWrapper/src/OpenNISpecific/OpenNIDepthGenerator.h
+	"OpenNISpecific/OpenNIGenerator.h"
+	"_2RealTypes.h"
+
+1317738999 /Users/2real/projects/_2RealKinectWrapper/src/OpenNISpecific/OpenNIInfraredGenerator.h
+	"OpenNISpecific/OpenNIGenerator.h"
+
+1317738999 /Users/2real/projects/_2RealKinectWrapper/src/OpenNISpecific/OpenNIUserGenerator.h
+	"_2RealTypes.h"
+	"OpenNISpecific/OpenNIGenerator.h"
+
+1317738999 /Users/2real/projects/_2RealKinectWrapper/src/WinSDKSpecific/_2RealImplementationWinSDK.hpp
+	"_2RealConfig.h"
+	"I_2RealImplementation.h"
+	"_2RealUtility.h"
+	<Windows.h>
+	"MSR_NuiApi.h"
+	"MSR_NuiImageCamera.h"
+	"MSR_NuiProps.h"
+	"MSR_NuiSkeleton.h"
+	<iostream>
+	<vector>
+	"WSDKDevice.h"
+	<sstream>
+
+1317738999 /Users/2real/projects/_2RealKinectWrapper/src/WinSDKSpecific/WSDKDevice.h
+	"_2RealTypes.h"
+	"_2RealUtility.h"
+	<Windows.h>
+	"MSR_NuiApi.h"
+	"MSR_NuiProps.h"
+	<iostream>
+	<stdint.h>
+	<boost/thread/shared_mutex.hpp>
+	<boost/thread/condition.hpp>
+
+1317739001 /Users/2real/projects/_2RealKinectWrapper/externalLibs/boost/boost/thread/condition.hpp
+	<boost/thread/condition_variable.hpp>
+
+1317738999 source:/Users/2real/projects/_2RealKinectWrapper/src/_2RealLogger.cpp
+	"_2RealLogger.h"
+
+1317738999 source:/Users/2real/projects/_2RealKinectWrapper/src/_2RealTrackedJoint.cpp
+	"_2RealTrackedJoint.h"
+	"XnTypes.h"
+
+1317738999 source:/Users/2real/projects/_2RealKinectWrapper/src/_2RealTrackedUser.cpp
+	"_2RealTrackedUser.h"
+	"_2RealConfig.h"
+	"_2RealUtility.h"
+
+1317738999 source:/Users/2real/projects/_2RealKinectWrapper/src/_2RealTypes.cpp
+	"_2RealTypes.h"
+	"XnCppWrapper.h"
+	"XnOpenNI.h"
+	"XnTypes.h"
+
+1317738999 source:/Users/2real/projects/_2RealKinectWrapper/src/_2RealVector2f.cpp
+	"_2RealVector2f.h"
+	"_2RealTypes.h"
+
