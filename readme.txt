@@ -140,6 +140,7 @@ Known issues
 		* Color IDs of users can be different at start up (problem seems to be in the Microsoft Kinect SDK, which doesn't seem to do the ids right)
 		* Mirroring seems to be somehow different at startup (sometimes) 
 		* No support for IR images yet
+		* If you switched the driver and used the openni sdk before and don't unplug and replug the kinect the depth image is mirrored the wrong way in the MS Kinect SDK
 
 Todo
 ----

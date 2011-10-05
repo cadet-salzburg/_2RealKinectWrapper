@@ -22,16 +22,23 @@
 	Created: 08-31-2011
 */
 #pragma once
-#include <stdint.h>
-#include <vector>
+    #include <stdint.h>
+    #include <vector>
+
+#ifdef LINUX
+    #include <iostream>
+    #include <string>
+#endif
+
 #include "_2RealImageSource.h"
+
 
 
 namespace _2Real
 {
 	struct _2RealVector3f;
-	typedef std::vector<const _2RealVector3f>		_2RealPositionVector3f;
-	typedef std::vector<const _2RealVector2f>		_2RealPositionVector2f;
+	typedef std::vector<_2RealVector3f>		_2RealPositionVector3f;
+	typedef std::vector<_2RealVector2f>		_2RealPositionVector2f;
 
 
 	/*	_2RealJointType *
@@ -106,9 +113,9 @@ namespace _2Real
 #else
 		IMAGE_CONFIG_DEFAULT		= 546 //IMAGE_COLOR_640X480, IMAGE_DEPTH_320X240, IMAGE_MIRRORING
 #endif
-		
+
 	};
-	
+
 	// Logger enums
 	enum _2RealLogLevel {none, error, warn, info, debug };	// debug outputs all messages, none outputs nothing
 
@@ -125,9 +132,18 @@ namespace _2Real
 		float z;
 	};
 
-	
+
 	struct _2RealMatrix3x3
 	{
 		float elements[9];
+	};
+
+	class _2RealException : public std::exception
+	{
+	    std::string msg;
+	    public:
+	    _2RealException(const std::string& message) throw():std::exception(),msg(message){}
+	    ~_2RealException() throw(){}
+	    const char* what() const throw(){return msg.c_str();}
 	};
 }
