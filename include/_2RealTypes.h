@@ -22,13 +22,10 @@
 	Created: 08-31-2011
 */
 #pragma once
-    #include <stdint.h>
-    #include <vector>
-
-#ifdef LINUX
-    #include <iostream>
-    #include <string>
-#endif
+#include <stdint.h>
+#include <vector>
+#include <iostream>
+#include <string>
 
 #include "_2RealImageSource.h"
 

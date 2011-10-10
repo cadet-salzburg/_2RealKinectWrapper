@@ -481,7 +481,7 @@ void OpenNIDevice::convertImage_16_to_8( const uint16_t* source, unsigned char* 
 {
 	//iterating each pixel and writing normalized pixel data
 	for( unsigned int i=0; i<size; ++i )
-		destination[i] = unsigned char ( source[i] * ( (float)( 1 << 8 ) / normalizing ) ); //normalized 16bit to 8bit
+		destination[i] = (unsigned char) ( source[i] * ( (float)( 1 << 8 ) / normalizing ) ); //normalized 16bit to 8bit
 }
 
 _2Real::_2RealTrackedUserVector OpenNIDevice::getUsers()
