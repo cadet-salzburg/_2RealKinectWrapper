@@ -123,6 +123,7 @@ void ofMultipleKinectApp::drawSkeletons(int deviceID, ofRectangle rect)
 		}
 	}	
 	glPopMatrix();
+	glColor3f( 1.0, 1.0, 1.0 );	// reset vertex color to white
 }
 
 
