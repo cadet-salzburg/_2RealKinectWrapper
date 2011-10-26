@@ -24,7 +24,7 @@ class ofMultipleKinectApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
 	private:
 		void			drawKinectImages();
-		void			drawSkeletons(int deviceID);
+		void			drawSkeletons(int deviceID, ofRectangle rect);
 		void			resizeImages();
 		void			mirrorImages();
 		

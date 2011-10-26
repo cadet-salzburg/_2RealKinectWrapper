@@ -94,11 +94,37 @@ void ofMultipleKinectApp::drawKinectImages()
 		m_iKinectWidth = m_2RealKinect->getImageWidth( i, COLORIMAGE );		
 		m_iKinectHeight = m_2RealKinect->getImageHeight( i, COLORIMAGE );
 		//skeleton		
-		//drawSkeletons(i, ofRect( i * m_ImageSize.x, m_ImageSize.y *3 , m_ImageSize.x, m_ImageSize.y);
+		drawSkeletons(i, ofRectangle( i * m_ImageSize.x, m_ImageSize.y *3 , m_ImageSize.x, m_ImageSize.y));
 
-		//drawing debug strings for devices
 	}
 }
+
+void ofMultipleKinectApp::drawSkeletons(int deviceID, ofRectangle rect)
+{
+	float fRadius = 12.0;
+
+	glPushMatrix();
+
+	glTranslatef( rect.x, rect.y, 0 );
+	glScalef( rect.width/(float)m_iKinectWidth, rect.height/(float)m_iKinectHeight, 1);
+
+	_2RealPositionVector2f::iterator iter;
+	int numberOfUsers = m_2RealKinect->getNumberOfUsers( deviceID );
+
+	for( int i = 0; i < numberOfUsers; ++i)
+	{		
+		glColor3f( 0, 1.0, 0.0 );				
+		_2RealPositionVector2f skeleton = m_2RealKinect->getSkeletonScreen( deviceID, i );
+		int size = skeleton.size();		
+		for(int j = 0; j < size; ++j)
+		{	
+			if( m_2RealKinect->isJointAvailable( (_2RealJointType)j ) )
+				ofCircle( skeleton[j].x, skeleton[j].y , fRadius );
+		}
+	}	
+	glPopMatrix();
+}
+
 
 void ofMultipleKinectApp::resizeImages()
 {
