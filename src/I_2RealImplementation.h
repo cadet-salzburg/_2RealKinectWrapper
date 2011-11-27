@@ -52,10 +52,12 @@ class I_2RealImplementation
 		virtual uint32_t							getImageWidth( const uint32_t deviceID, _2RealGenerator type) = 0;
 		virtual uint32_t							getImageHeight( const uint32_t deviceID, _2RealGenerator type) = 0;
 		virtual uint32_t							getNumberOfDevices() const = 0;
-		virtual const _2RealVector3f				getJointWorld( const uint32_t deviceID, const uint8_t userID, _2RealJointType type ) = 0;
-		virtual const _2RealPositionVector3f&		getAllJointsWorld( const uint32_t deviceID, const uint8_t userID ) = 0;
-		virtual const _2RealVector2f				getJointScreen( const uint32_t deviceID, const uint8_t userID, _2RealJointType type ) = 0;
-		virtual const _2RealPositionVector2f&		getAllJointsScreen( const uint32_t deviceID, const uint8_t userID ) = 0;
+		virtual const _2RealVector3f				getJointWorldPosition( const uint32_t deviceID, const uint8_t userID, _2RealJointType type ) = 0;
+		virtual const _2RealPositionsVector3f&		getSkeletonWorldPositions( const uint32_t deviceID, const uint8_t userID ) = 0;
+		virtual const _2RealVector2f				getJointScreenPosition( const uint32_t deviceID, const uint8_t userID, _2RealJointType type ) = 0;
+		virtual const _2RealPositionsVector2f&		getSkeletonScreenPositions( const uint32_t deviceID, const uint8_t userID ) = 0;
+		virtual const _2RealMatrix3x3				getJointWorldOrientation( const uint32_t deviceID, const uint8_t userID, _2RealJointType type ) = 0;
+		virtual const _2RealOrientationsMatrix3x3&	getSkeletonWorldOrientations( const uint32_t deviceID, const uint8_t userID ) = 0;
 		virtual const uint32_t						getNumberOfUsers( const uint32_t deviceID ) const = 0;
 		virtual const uint32_t						getNumberOfSkeletons( const uint32_t deviceID ) const = 0;
 
@@ -64,6 +66,7 @@ class I_2RealImplementation
 		virtual void								setAlignColorDepthImage( const uint32_t deviceID, bool flag ) = 0;
 		virtual bool								isJointAvailable( _2RealJointType type ) const = 0;
 
+		virtual bool								hasFeatureJointOrientation() const = 0;
 		virtual void								resetSkeleton( const uint32_t deviceID, const uint32_t id ) = 0;
 		virtual void								resetAllSkeletons() = 0;
 		virtual bool								restart() = 0;

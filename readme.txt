@@ -26,7 +26,7 @@
 
    
    Version
-     0.9.0 (this is still a beta)
+     0.9.1 (this is still a beta)
    
    Bug reports, feature request or inquiries to:
 	support@cadet.at
@@ -38,6 +38,14 @@
      http://www.cadet.at
 	 
 /*********************************************************************************************/
+
+Version History
+---------------
+0.9.1 Update release
+	+ small name changes in the interface class
+	+ added joint orientation methods (just works for OpenNI), use hasFeatureJointOrientation() to check
+	+ updated to the newest unstable versions of OpenNI (1.4.0.2), NITE (1.5.0.2), Avin2 Driver (5.0.5.1)
+	+ updated to the newest MS Kinect SDK lib (1.0beta2) 
 
 Info
 ----
@@ -80,8 +88,7 @@ Build
 -----
 	Add environment variables:
 		You have to set the following environment variables in your system ( http://www.windows7hacker.com/index.php/2010/05/how-to-addedit-environment-variables-in-windows-7/ ) :
-			MSKINECTSDK_DIR		your drive\your base path where you installed the sdk (e.g. c:\sdk\Microsoft Research KinectSDK)
-			You don't need to set a environment variable for OpenNI (as the installer from OpenNI does this automatically)
+			No need anymore with the new MS Kinect SDK to set a manual environment variable. The installer automaically sets KINECTSDK_DIR as env var
 			
 		If you want to build the cinder sample add:
 			CINDER_DIR		your drive\your base path where you installed cinder (e.g. c:\sdk\cinder)

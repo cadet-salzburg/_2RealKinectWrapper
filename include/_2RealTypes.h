@@ -33,9 +33,13 @@
 
 namespace _2Real
 {
-	struct _2RealVector3f;
-	typedef std::vector<_2RealVector3f>		_2RealPositionVector3f;
-	typedef std::vector<_2RealVector2f>		_2RealPositionVector2f;
+	struct _2RealVector3f;		// forward decls
+	struct _2RealVector2f;
+	struct _2RealMatrix3x3;
+
+	typedef std::vector<_2RealVector3f>		_2RealPositionsVector3f;
+	typedef std::vector<_2RealVector2f>		_2RealPositionsVector2f;
+	typedef std::vector<_2RealMatrix3x3>	_2RealOrientationsMatrix3x3;
 
 
 	/*	_2RealJointType *

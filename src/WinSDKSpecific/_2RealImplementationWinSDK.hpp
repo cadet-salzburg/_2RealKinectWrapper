@@ -129,27 +129,27 @@ public:
 		return m_Devices[deviceID]->GetUsers( waitAndBlock );
 	}
 
-	virtual const _2RealVector3f getJointWorld( const uint32_t deviceID, const uint8_t userID, _2RealJointType type )
+	virtual const _2RealVector3f getJointWorldPosition( const uint32_t deviceID, const uint8_t userID, _2RealJointType type )
 	{
-		checkDeviceRunning(deviceID, "_2RealImplWSDK::getJointWorld()" );
+		checkDeviceRunning(deviceID, "_2RealImplWSDK::getJointWorldPosition()" );
 		_2RealTrackedUserVector& users = m_Devices[deviceID]->GetUsers( 0 ); 
 		if( userID >= users.size() )
-			throwError( "_2RealImplWSDK::getJointWorld() Error, userID out of bounds!" );
+			throwError( "_2RealImplWSDK::getJointWorldPosition() Error, userID out of bounds!" );
 		if( int( type ) < 0 || int( type ) > _2REAL_NUMBER_OF_JOINTS - 1 )
-			throwError( "_2RealImplWinSDK::getJointWorld() Error, joint id out of bounds!" );
+			throwError( "_2RealImplWinSDK::getJointWorldPosition() Error, joint id out of bounds!" );
 		return users[userID].getJointWorldPosition( type );
 	}
 
-	virtual const _2RealPositionVector3f& getAllJointsWorld( const uint32_t deviceID, const uint8_t userID )
+	virtual const _2RealPositionsVector3f& getSkeletonWorldPositions( const uint32_t deviceID, const uint8_t userID )
 	{
-		checkDeviceRunning(deviceID, "_2RealImplWSDK::getJointWorld()" );
+		checkDeviceRunning(deviceID, "_2RealImplWSDK::getSkeletonWorldPositions()" );
 		_2RealTrackedUserVector& users = m_Devices[deviceID]->GetUsers( 0 ); 
 		if( userID >= users.size() )
-			throwError( "_2RealImplWSDK::getJointWorld() Error, userID out of bounds!" );
-		return users[userID].getJointWorldPositions();
+			throwError( "_2RealImplWSDK::getSkeletonWorldPositions() Error, userID out of bounds!" );
+		return users[userID].getSkeletonWorldPositions();
 	}
 
-	virtual const _2RealVector2f getJointScreen( const uint32_t deviceID, const uint8_t userID, _2RealJointType type )
+	virtual const _2RealVector2f getJointScreenPosition( const uint32_t deviceID, const uint8_t userID, _2RealJointType type )
 	{
 		checkDeviceRunning(deviceID, "_2RealImplWSDK::getJointScreen()" );
 		_2RealTrackedUserVector& users = m_Devices[deviceID]->GetUsers( 0 ); 
@@ -160,13 +160,35 @@ public:
 		return users[userID].getJointScreenPosition( type );
 	}
 
-	virtual const _2RealPositionVector2f& getAllJointsScreen( const uint32_t deviceID, const uint8_t userID )
+	virtual const _2RealPositionsVector2f& getSkeletonScreenPositions( const uint32_t deviceID, const uint8_t userID )
 	{
-		checkDeviceRunning(deviceID, "_2RealImplWSDK::getAllJointsScreen()" );
+		checkDeviceRunning(deviceID, "_2RealImplWSDK::getSkeletonScreenPositions()" );
 		_2RealTrackedUserVector& users = m_Devices[deviceID]->GetUsers( 0 ); 
 		if( userID >= users.size() )
-			throwError( "_2RealImplWSDK::getAllJointsScreen() Error, userID out of bounds!" );
-		return users[userID].getJointScreenPositions();
+			throwError( "_2RealImplWSDK::getSkeletonScreenPositions() Error, userID out of bounds!" );
+		return users[userID].getSkeletonScreenPositions();
+	}
+
+	virtual const _2RealMatrix3x3 getJointWorldOrientation( const uint32_t deviceID, const uint8_t userID, _2RealJointType type )
+	{
+		_2REAL_LOG(warn) << "_2Real: Joint rotations aren't supported yet by MS Kinect SDK" << std::endl;
+		checkDeviceRunning(deviceID, "_2RealImplWSDK::getJointScreen()" );
+		_2RealTrackedUserVector& users = m_Devices[deviceID]->GetUsers( 0 ); 
+		if( userID >= users.size() )
+			throwError( "_2RealImplWSDK::getJointScreen() Error, userID out of bounds!" );
+		if( int( type ) < 0 || int( type ) > _2REAL_NUMBER_OF_JOINTS - 1 )
+			throwError( "_2RealImplWinSDK::getJointScreen() Error, joint id out of bounds!" );
+		return users[userID].getJointWorldOrientation( type );
+	}
+
+	virtual const _2RealOrientationsMatrix3x3& getSkeletonWorldOrientations( const uint32_t deviceID, const uint8_t userID )
+	{
+		_2REAL_LOG(warn) << "_2Real: Joint rotations aren't supported yet by MS Kinect SDK" << std::endl;
+		checkDeviceRunning(deviceID, "_2RealImplWSDK::getSkeletonWorldOrientations()" );
+		_2RealTrackedUserVector& users = m_Devices[deviceID]->GetUsers( 0 ); 
+		if( userID >= users.size() )
+			throwError( "_2RealImplWSDK::getSkeletonWorldOrientations() Error, userID out of bounds!" );
+		return users[userID].getSkeletonWorldOrientations();
 	}
 
 	virtual const uint32_t getNumberOfUsers( const uint32_t deviceID ) const
@@ -196,6 +218,11 @@ public:
 		default:
 			return true;
 		}
+	}
+
+	virtual bool hasFeatureJointOrientation() const
+	{
+		return false;
 	}
 
 	virtual void resetAllSkeletons() 

@@ -117,35 +117,50 @@ class _2RealKinect
 		!*/
 		uint32_t							getNumberOfDevices() const;
 
-		/*! /brief
+		/*! /brief		Returns position of specific joint of specific skeleton
 			/param		const uint32_t deviceID for choosing specific device
 			/param		const uint8_t userID
 			/param		_2RealJointType indicating the type of the joint to be requested, Use _2RealJointType enum
 			/return		const _2RealVector3f
 		!*/
-		const _2RealVector3f				getSkeletonJointWorld( const uint32_t deviceID, const uint8_t userID, _2RealJointType type );
+		const _2RealVector3f				getSkeletonJointWorldPosition( const uint32_t deviceID, const uint8_t userID, _2RealJointType type );
 
 		/*! /brief		Returns all joints of the skeleton
 			/param		const uint32_t deviceID for choosing specific device
 			/param		const uint8_t userID
 			/return		const _2RealVector3f
 		!*/
-		const _2RealPositionVector3f		getSkeletonWorld( const uint32_t deviceID, const uint8_t userID );
+		const _2RealPositionsVector3f		getSkeletonWorldPositions( const uint32_t deviceID, const uint8_t userID );
 
-		/*! /brief		Returns all joints of the skeleton
+		/*! /brief		Returns position of specific joint of specific skeleton
 			/param		const uint32_t deviceID for choosing specific device
 			/param		const uint8_t userID
 			/param		_2RealJointType type indicating the type of the joint to be requested, Use _2RealJointType enum
 			/return		const _2RealVector3f
 		!*/
-		const _2RealVector2f				getSkeletonJointScreen( const uint32_t deviceID, const uint8_t userID, _2RealJointType type );
+		const _2RealVector2f				getSkeletonJointScreenPosition( const uint32_t deviceID, const uint8_t userID, _2RealJointType type );
 
 		/*! /brief		Returns all joints of the skeleton
 			/param		const uint32_t deviceID for choosing specific device
 			/param		const uint8_t userID
 			/return		const _2RealVector3f
 		!*/
-		const _2RealPositionVector2f		getSkeletonScreen( const uint32_t deviceID, const uint8_t userID );
+		const _2RealPositionsVector2f		getSkeletonScreenPositions( const uint32_t deviceID, const uint8_t userID );
+
+		/*! /brief		Returns orientation of specific joint of specific skeleton
+			/param		const uint32_t deviceID for choosing specific device
+			/param		const uint8_t userID
+			/param		_2RealJointType type indicating the type of the joint to be requested, Use _2RealJointType enum
+			/return		const _2RealVector3f
+		!*/
+		const _2RealMatrix3x3 getSkeletonJointWorldOrientation( const uint32_t deviceID, const uint8_t userID, _2RealJointType type );
+
+		/*! /brief		Returns all joint orientations of the skeleton
+			/param		const uint32_t deviceID for choosing specific device
+			/param		const uint8_t userID
+			/return		const _2RealMatrix3x3
+		!*/
+		const _2RealOrientationsMatrix3x3 getSkeletonWorldOrientations( const uint32_t deviceID, const uint8_t userID );
 
 		/*! /brief		Returns all joints of the skeleton
 			/param		const uint32_t deviceID for choosing specific device
@@ -180,6 +195,12 @@ class _2RealKinect
 		!*/
 		virtual bool						isJointAvailable( _2RealJointType type ) const;
 
+		/*! /brief  returns if the used SDK (OpenNI, MS SDK) has the joint orientation feature
+		 /param     _2RealJointType type indicating the type of the joint to be requested, Use _2RealJointType enum
+		 /return    bool
+		!*/
+		virtual bool						hasFeatureJointOrientation() const;
+		
 		/*! /brief     Resetting a particular calibrated user (skeleton) of a particular device (OpenNI only) (this is needed as OpenNI takes up to 15 seconds to delete a lost skeleton)
 			/param     const uint32_t deviceID for choosing specific device
 			/param     const uint32_t id id of the user to be resetted

@@ -134,24 +134,34 @@ void _2RealKinect::convertWorldToProjective( const uint32_t deviceID, const uint
 	m_Implementation->convertWorldToProjective( deviceID, coordinateCount, inWorld, outProjective );
 }
 
-const _2RealVector3f _2RealKinect::getSkeletonJointWorld( const uint32_t deviceID, const uint8_t userID, _2RealJointType type )
+const _2RealVector3f _2RealKinect::getSkeletonJointWorldPosition( const uint32_t deviceID, const uint8_t userID, _2RealJointType type )
 {
-	return m_Implementation->getJointWorld( deviceID, userID, type );
+	return m_Implementation->getJointWorldPosition( deviceID, userID, type );
 }
 
-const _2RealPositionVector3f _2RealKinect::getSkeletonWorld( const uint32_t deviceID, const uint8_t userID )
+const _2RealPositionsVector3f _2RealKinect::getSkeletonWorldPositions( const uint32_t deviceID, const uint8_t userID )
 {
-	return m_Implementation->getAllJointsWorld( deviceID, userID );
+	return m_Implementation->getSkeletonWorldPositions( deviceID, userID );
 }
 
-const _2RealVector2f _2RealKinect::getSkeletonJointScreen( const uint32_t deviceID, const uint8_t userID, _2RealJointType type )
+const _2RealVector2f _2RealKinect::getSkeletonJointScreenPosition( const uint32_t deviceID, const uint8_t userID, _2RealJointType type )
 {
-	return m_Implementation->getJointScreen( deviceID, userID, type );
+	return m_Implementation->getJointScreenPosition( deviceID, userID, type );
 }
 
-const _2RealPositionVector2f _2RealKinect::getSkeletonScreen( const uint32_t deviceID, const uint8_t userID )
+const _2RealPositionsVector2f _2RealKinect::getSkeletonScreenPositions( const uint32_t deviceID, const uint8_t userID )
 {
-	return m_Implementation->getAllJointsScreen( deviceID, userID );
+	return m_Implementation->getSkeletonScreenPositions( deviceID, userID );
+}
+
+const _2RealMatrix3x3 _2RealKinect::getSkeletonJointWorldOrientation( const uint32_t deviceID, const uint8_t userID, _2RealJointType type )
+{
+	return m_Implementation->getJointWorldOrientation( deviceID, userID, type );
+}
+
+const _2RealOrientationsMatrix3x3 _2RealKinect::getSkeletonWorldOrientations( const uint32_t deviceID, const uint8_t userID )
+{
+	return m_Implementation->getSkeletonWorldOrientations( deviceID, userID );
 }
 
 const uint32_t _2RealKinect::getNumberOfSkeletons( const uint32_t deviceID ) const
@@ -167,6 +177,11 @@ const uint32_t _2RealKinect::getNumberOfUsers( const uint32_t deviceID ) const
 bool _2RealKinect::isJointAvailable( _2RealJointType type ) const
 {
 	return m_Implementation->isJointAvailable( type );
+}
+
+bool _2RealKinect::hasFeatureJointOrientation() const
+{
+	return m_Implementation->hasFeatureJointOrientation();
 }
 
 void _2RealKinect::setLogLevel(_2RealLogLevel iLevel) 

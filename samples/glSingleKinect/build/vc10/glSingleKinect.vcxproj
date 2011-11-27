@@ -95,7 +95,7 @@
       <SubSystem>Windows</SubSystem>
       <OutputFile>$(TargetDir)$(TargetName)$(TargetExt)</OutputFile>
       <AdditionalDependencies>opengl32.lib;glu32.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)\..\..\..\..\lib;$(MSKINECTSDK_DIR)\lib;$(OPEN_NI_LIB);$(SolutionDir)\..\..\..\..\externalLibs\boost\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\..\..\..\..\lib;$(KINECTSDK_DIR)\lib\x86;$(OPEN_NI_LIB);$(SolutionDir)\..\..\..\..\externalLibs\boost\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -135,7 +135,7 @@
       <SubSystem>Windows</SubSystem>
       <OutputFile>$(TargetDir)$(TargetName)$(TargetExt)</OutputFile>
       <AdditionalDependencies>opengl32.lib;glu32.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)\..\..\..\..\lib;$(MSKINECTSDK_DIR)\lib;$(OPEN_NI_LIB);$(SolutionDir)\..\..\..\..\externalLibs\boost\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\..\..\..\..\lib;$(KINECTSDK_DIR)\lib\x86;$(OPEN_NI_LIB);$(SolutionDir)\..\..\..\..\externalLibs\boost\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

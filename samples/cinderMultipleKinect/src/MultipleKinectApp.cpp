@@ -18,7 +18,7 @@
 	limitations under the License.
 
 	CADET - Center for Advances in Digital Entertainment Technologies
-
+	 
 	Authors: Robert Praxmarer, Gerlinde Emsenhuber, Robert Sommeregger
 	Email: support@cadet.at
 	Created: 08-09-2011
@@ -32,6 +32,7 @@
 #include "cinder/gl/Texture.h"
 #include "cinder/Rect.h"
 #include "cinder/Utilities.h"
+#include "cinder/Camera.h"
 
 // _2RealKinect Include
 //#define TARGET_MSKINECTSDK		// use this for MS Kinect SDK, comment it or just not define it for using OpenNI
@@ -80,9 +81,11 @@ MultipleKinectApp::~MultipleKinectApp()
 
 void MultipleKinectApp::prepareSettings( Settings* settings )
 {
+#ifdef _WIN32 || _WIN64							// just open windows console if compiled for windows
 	FILE* f;
 	AllocConsole();
 	freopen_s( &f, "CON", "w", stdout );
+#endif
 
 	settings->setTitle("CADET | http://www.cadet.at | MultipleKinectSample");
 	settings->setWindowSize( 1024, 768 );
@@ -116,6 +119,9 @@ void MultipleKinectApp::setup()
 	}
 
 	gl::enableAlphaBlending();
+	gl::enableDepthRead();
+	gl::enableDepthWrite();
+
 	m_Font = Font("Arial", 24);
 }
 
@@ -170,8 +176,10 @@ void MultipleKinectApp::drawKinectImages()
 		drawSkeletons(i, destinationRectangle );
 		
 		//drawing debug strings for devices
+		gl::disableDepthRead();
 		gl::color(Color( 1.0, 1.0, 1.0 ));	
-		gl::drawString( "Device "+ toString(i), Vec2f( m_ImageSize.x * i + 20 , 0 ), Color( 1.0f, 0.0f, 0.0f ), m_Font );			
+		gl::drawString( "Device "+ toString(i), Vec2f( m_ImageSize.x * i + 20 , 0 ), Color( 1.0f, 0.0f, 0.0f ), m_Font );		
+		gl::enableDepthRead();
 	}
 }
 
@@ -186,25 +194,51 @@ unsigned char* MultipleKinectApp::getImageData( int deviceID, _2RealGenerator im
 
 void MultipleKinectApp::drawSkeletons(int deviceID, ci::Rectf rect)
 {
-	float fRadius = 12.0;
+	float fRadius = 10.0;
 
 	glPushMatrix();
 	
 	glTranslatef( rect.getX1(), rect.getY1(), 0 );
 	glScalef( rect.getWidth()/(float)m_iKinectWidth, rect.getHeight()/(float)m_iKinectHeight, 1);
 
-	_2RealPositionVector2f::iterator iter;
+	_2RealPositionsVector2f::iterator iter;
 	int numberOfUsers = m_2RealKinect->getNumberOfUsers( deviceID );
 
 	for( int i = 0; i < numberOfUsers; ++i)
 	{		
 		glColor3f( 0, 1.0, 0.0 );				
-		_2RealPositionVector2f skeleton = m_2RealKinect->getSkeletonScreen( deviceID, i );
-		int size = skeleton.size();		
+		_2RealPositionsVector2f skeletonPositions = m_2RealKinect->getSkeletonScreenPositions( deviceID, i );
+		
+		_2RealOrientationsMatrix3x3 skeletonOrientations;
+		if(m_2RealKinect->hasFeatureJointOrientation())
+			skeletonOrientations = m_2RealKinect->getSkeletonWorldOrientations( deviceID, i );
+
+		int size = skeletonPositions.size();		
 		for(int j = 0; j < size; ++j)
 		{	
+			gl::pushModelView();
 			if( m_2RealKinect->isJointAvailable( (_2RealJointType)j ) )
-				gl::drawSolidCircle( Vec2f( skeleton[j].x, skeleton[j].y ), fRadius );
+			{
+				glTranslatef(Vec3f( skeletonPositions[j].x, skeletonPositions[j].y, 0 ));
+
+				if(m_2RealKinect->hasFeatureJointOrientation())
+				{
+					Matrix44<float> rotMat  = gl::getModelView();
+					rotMat.m00 = skeletonOrientations[j].elements[0];
+					rotMat.m01 = skeletonOrientations[j].elements[1];
+					rotMat.m02 = skeletonOrientations[j].elements[2];
+					rotMat.m10 = skeletonOrientations[j].elements[3];
+					rotMat.m11 = skeletonOrientations[j].elements[4];
+					rotMat.m12 = skeletonOrientations[j].elements[5];
+					rotMat.m20 = skeletonOrientations[j].elements[6];
+					rotMat.m21 = skeletonOrientations[j].elements[7];
+					rotMat.m22 = skeletonOrientations[j].elements[8];
+					glLoadMatrixf(rotMat);		
+				}
+				
+				gl::drawColorCube( Vec3f( 0, 0, 0 ), Vec3f(fRadius,fRadius, fRadius) );
+			}
+			gl::popModelView();
 		}
 	}	
 	glPopMatrix();

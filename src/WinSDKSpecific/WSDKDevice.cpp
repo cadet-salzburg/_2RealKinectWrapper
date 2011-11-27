@@ -340,7 +340,7 @@ void WSDKDevice::ProcessColorImageEvent()
 	}
 
 	m_MutexImage.lock();
-	KINECT_LOCKED_RECT LockedRect;
+	NUI_LOCKED_RECT LockedRect;
 	nuiFrame->pFrameTexture->LockRect( 0, &LockedRect, NULL, 0 );
 
 	//copy over pixels from BGRX to RGB
@@ -384,7 +384,7 @@ void WSDKDevice::ProcessDepthImageEvent()
 		return;
 	}
 	m_MutexDepth.lock();
-	KINECT_LOCKED_RECT LockedRect;
+	NUI_LOCKED_RECT LockedRect;
 	nuiFrame->pFrameTexture->LockRect( 0, &LockedRect, NULL, 0 );
 
 	int size = m_WidthImageDepthAndUser * m_HeightImageDepthAndUser; //get number of pixels
@@ -461,7 +461,7 @@ _2RealTrackedJoint WSDKDevice::GetJoint( _2RealJointType type, _NUI_SKELETON_POS
 	screenPos.x *= m_WidthImageDepthAndUser*2;
 	screenPos.y *= m_HeightImageDepthAndUser*2;
 
-	return _2RealTrackedJoint( type, screenPos, worldPos, _2RealMatrix3x3(), 1, 1 );
+	return _2RealTrackedJoint( type, screenPos, worldPos, _2RealMatrix3x3(), 1, -1 );		// orientation cofidence set to -1 because it is not yet supported
 }
 
 void WSDKDevice::ProcessSkeletonEvent()
