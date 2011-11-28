@@ -151,6 +151,9 @@ Known issues
 
 Todo
 ----
+	  * Fix confidence position issue (we need the user to know when a position is invalid right now it's draw to nirvana but that't not really a good solution)
+	  * Change implementation to shared_ptr
+	  * Integrate Hand detector of OpenNi
 	  * MacOS (codeblocks/xcode4) / Linux (codeblocks)
 	  * Panasonic TOF SDK support
 	  * Tutorial

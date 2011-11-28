@@ -81,8 +81,9 @@ MultipleKinectApp::~MultipleKinectApp()
 
 void MultipleKinectApp::prepareSettings( Settings* settings )
 {
-#ifdef _WIN32 || _WIN64							// just open windows console if compiled for windows
-	FILE* f;
+// just open windows console if compiled for windows
+#ifdef _WIN32 || _WIN64							
+		FILE* f;
 	AllocConsole();
 	freopen_s( &f, "CON", "w", stdout );
 #endif
@@ -234,9 +235,12 @@ void MultipleKinectApp::drawSkeletons(int deviceID, ci::Rectf rect)
 					rotMat.m21 = skeletonOrientations[j].elements[7];
 					rotMat.m22 = skeletonOrientations[j].elements[8];
 					glLoadMatrixf(rotMat);		
+					gl::drawCoordinateFrame(fRadius);
 				}
-				
-				gl::drawColorCube( Vec3f( 0, 0, 0 ), Vec3f(fRadius,fRadius, fRadius) );
+				else
+				{
+					gl::drawSolidCircle( Vec2f( 0, 0 ), fRadius);
+				}
 			}
 			gl::popModelView();
 		}

@@ -81,14 +81,34 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 			checkError( m_Context.Init(), "_2RealIMplOpenNI::start Error: Could not Initialize kinect...?!\n" );
 			_2REAL_LOG(info) << "OK" << std::endl;
 
-			
-			//get number of devices -------------------------------------------------------------------------------->
-			
+			//creating container for nodes
+			xn::NodeInfoList deviceNodes, imageNodes, irNodes, depthNodes, userNodes;
+
+			//fetching all different node types, enumeration, getting/alloc devices -------------------------------->
 			//fetching all detected kinect devices
-			xn::NodeInfoList deviceNodes;
 			checkError( m_Context.EnumerateProductionTrees( XN_NODE_TYPE_DEVICE, NULL, deviceNodes, NULL ),
-					   "_2RealIMplOpenNI::start Error when enumerating device Nodes\n" );
-			
+						 "_2RealIMplOpenNI::start Error when enumerating device Nodes\n" );
+
+			//fetching all image generator-nodes
+			checkError( m_Context.EnumerateProductionTrees( XN_NODE_TYPE_IMAGE, NULL, imageNodes, NULL ),
+						 "_2RealIMplOpenNI::start Error when enumerating image nodes\n" );
+
+			//fetching all depthGen-nodes
+			checkError( m_Context.EnumerateProductionTrees( XN_NODE_TYPE_DEPTH, NULL, depthNodes, NULL ),
+						 "_2RealImplOpenNI::start Error when enumerating depth nodes\n" );
+
+			//fetching infrared-generator-nodes
+			checkError( m_Context.EnumerateProductionTrees( XN_NODE_TYPE_IR, NULL, irNodes, NULL ),
+						 "_2RealIMplOpenNI::start Error when enumerating infrared nodes\n" );
+
+			//fetching all user-generator-nodes
+			checkError( m_Context.EnumerateProductionTrees( XN_NODE_TYPE_USER, NULL, userNodes, NULL ),
+						 "_2RealIMplOpenNI::start Error when enumerating user nodes\n" );
+
+			_2REAL_LOG(info) << "_2Real: Enumeration of devices and nodes ...OK" << std::endl;
+
+
+			//get number of devices -------------------------------------------------------------------------------->
 			xn::NodeInfoList::Iterator deviceIter = deviceNodes.Begin();
 			for( ; deviceIter != deviceNodes.End(); ++deviceIter )
 				++m_NumDevices;
@@ -103,7 +123,6 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 
 			//allocating devices ----------------------------------------------------------------------------------->
 			m_Devices = new OpenNIDevice*[m_NumDevices];
-			
 			xn::NodeInfoList::Iterator devIter = deviceNodes.Begin();
 			for ( int i = 0; i < m_NumDevices; ++i, ++devIter )
 			{
@@ -118,11 +137,6 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 			//PROCESSING COLOR GENERATORS--------------------------------------------------------------------------->
 			if( startGenerators & COLORIMAGE )
 			{
-				//fetching all image generator-nodes
-				xn::NodeInfoList imageNodes;
-				checkError( m_Context.EnumerateProductionTrees( XN_NODE_TYPE_IMAGE, NULL, imageNodes, NULL ),
-						   "_2RealIMplOpenNI::start Error when enumerating image nodes\n" );
-				
 				//iterate through all image-generators
 				xn::NodeInfoList::Iterator iter = imageNodes.Begin();
 				for( int i = 0 ; iter != imageNodes.End(); ++iter, ++i )
@@ -130,9 +144,7 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 					//break if there are more image gen-nodes than devices in array
 					if( i >= m_NumDevices )
 						break;
-                    
-					xn::NodeInfo nodeinfo = *iter; //hmm...
-					// in theory this should work, but ...
+                    xn::NodeInfo nodeinfo = *iter;
 					m_Devices[i]->startupProcessingColorGenerator( nodeinfo, configureImages );
 				}
 			}
@@ -140,11 +152,6 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 			//PROCESSING DEPTH GENERATORS -------------------------------------------------------------------------->
 			if( startGenerators & DEPTHIMAGE )
 			{
-				//fetching all depthGen-nodes
-				xn::NodeInfoList depthNodes;
-				checkError( m_Context.EnumerateProductionTrees( XN_NODE_TYPE_DEPTH, NULL, depthNodes, NULL ),
-						   "_2RealImplOpenNI::start Error when enumerating depth nodes\n" );
-				
 				//iterate through all depth-generators
 				xn::NodeInfoList::Iterator iter = depthNodes.Begin();
 				for( int i = 0 ; iter != depthNodes.End(); ++iter, ++i )
@@ -163,11 +170,6 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 			//PROCESSING INFRARED GENERATORS------------------------------------------------------------------------>
 			if( !( startGenerators & COLORIMAGE ) && startGenerators & INFRAREDIMAGE )
 			{
-				//fetching infrared-generator-nodes
-				xn::NodeInfoList irNodes;
-				checkError( m_Context.EnumerateProductionTrees( XN_NODE_TYPE_IR, NULL, irNodes, NULL ),
-						   "_2RealIMplOpenNI::start Error when enumerating infrared nodes\n" );
-								
 				//iterate through all infrared-generators
 				xn::NodeInfoList::Iterator iter = irNodes.Begin();
 				for( int i = 0 ; iter != irNodes.End(); ++iter, ++i )
@@ -183,11 +185,6 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 			//PROCESSING USER GENERATORS --------------------------------------------------------------------------->
 			if( startGenerators & USERIMAGE || startGenerators & USERIMAGE_COLORED )
 			{
-				//fetching all user-generator-nodes
-				xn::NodeInfoList userNodes;
-				checkError( m_Context.EnumerateProductionTrees( XN_NODE_TYPE_USER, NULL, userNodes, NULL ),
-						   "_2RealIMplOpenNI::start Error when enumerating user nodes\n" );
-				
 				//iterate through all user-generators
 				xn::NodeInfoList::Iterator iter = userNodes.Begin();
 
@@ -199,6 +196,7 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
                     xn::NodeInfo nodeinfo = *iter;
 					m_Devices[i]->startupProcessingUserGenerator( nodeinfo, configureImages );
 				}
+
 			}
 
 			//finally starting all generators----------------------------------------------------------------------->

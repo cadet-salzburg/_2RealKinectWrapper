@@ -101,7 +101,7 @@ void ofMultipleKinectApp::drawKinectImages()
 
 void ofMultipleKinectApp::drawSkeletons(int deviceID, ofRectangle rect)
 {
-	float fRadius = 12.0;
+	float fRadius = 14.0;
 
 	glPushMatrix();
 
@@ -111,7 +111,6 @@ void ofMultipleKinectApp::drawSkeletons(int deviceID, ofRectangle rect)
 	_2RealPositionsVector2f::iterator iter;
 	int numberOfUsers = m_2RealKinect->getNumberOfUsers( deviceID );
 
-	ofNoFill();
 	for( int i = 0; i < numberOfUsers; ++i)
 	{		
 		glColor3f( 0, 1.0, 0.0 );				
@@ -133,19 +132,24 @@ void ofMultipleKinectApp::drawSkeletons(int deviceID, ofRectangle rect)
 				{
 					float modelview[16];
 					glGetFloatv(GL_MODELVIEW_MATRIX , modelview);
-				
+
 					modelview[0] = skeletonOrientations[j].elements[0];
-					modelview[1] = skeletonOrientations[j].elements[1];
-					modelview[2] = skeletonOrientations[j].elements[2];
-					modelview[4] = skeletonOrientations[j].elements[3];
+					modelview[1] = skeletonOrientations[j].elements[3];
+					modelview[2] = skeletonOrientations[j].elements[6];
+					modelview[4] = skeletonOrientations[j].elements[1];
 					modelview[5] = skeletonOrientations[j].elements[4];
-					modelview[6] = skeletonOrientations[j].elements[5];
-					modelview[8] = skeletonOrientations[j].elements[6];
-					modelview[9] = skeletonOrientations[j].elements[7];
+					modelview[6] = skeletonOrientations[j].elements[7];
+					modelview[8] = skeletonOrientations[j].elements[2];
+					modelview[9] = skeletonOrientations[j].elements[5];
 					modelview[10] = skeletonOrientations[j].elements[8];
+
 					glLoadMatrixf(modelview);		
+					ofDrawAxis(fRadius);
 				}
-				ofBox( 0, 0 , fRadius );
+				else
+				{
+					ofCircle(  0, 0, fRadius);
+				}
 			}
 			
 			glPopMatrix();
@@ -153,7 +157,6 @@ void ofMultipleKinectApp::drawSkeletons(int deviceID, ofRectangle rect)
 	}	
 	glPopMatrix();
 	
-	ofFill();
 	glColor3f( 1.0, 1.0, 1.0 );	// reset vertex color to white
 }
 

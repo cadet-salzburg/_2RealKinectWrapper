@@ -136,6 +136,12 @@ namespace _2Real
 
 	struct _2RealMatrix3x3
 	{
+		_2RealMatrix3x3()	// default constructor generates identity matrix
+		{
+			elements[0]=1; elements[3]=0; elements[6]=0;
+			elements[1]=0; elements[4]=1; elements[7]=0;
+			elements[2]=0; elements[5]=0; elements[8]=1;
+		}
 		float elements[9];
 	};
 

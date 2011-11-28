@@ -62,7 +62,7 @@ _2RealPositionsVector3f& _2RealTrackedUser::getSkeletonWorldPositions( const flo
 
 	for ( int i=0; i<size; ++i )
 	{		
-		m_JointWorldPositions[i] = m_Joints[i].getWorldPosition();
+		m_JointWorldPositions.push_back( getJointWorldPosition(m_Joints[i].getJointType(), confidence) );
 	}
 	return m_JointWorldPositions;
 }
@@ -74,7 +74,7 @@ _2RealPositionsVector2f& _2RealTrackedUser::getSkeletonScreenPositions( const fl
 
 	for ( int i=0; i<size; ++i )
 	{		
-		m_JointScreenPositions.push_back( m_Joints[i].getScreenPosition() );
+		m_JointScreenPositions.push_back( getJointScreenPosition(m_Joints[i].getJointType(), confidence) );
 	}
 	return m_JointScreenPositions;
 }
@@ -86,7 +86,7 @@ _2RealOrientationsMatrix3x3& _2RealTrackedUser::getSkeletonWorldOrientations( co
 
 	for ( int i=0; i<size; ++i )
 	{		
-		m_JointWorldOrientations.push_back( m_Joints[i].getWorldOrientation() );
+		m_JointWorldOrientations.push_back( getJointWorldOrientation(m_Joints[i].getJointType(), confidence));
 	}
 	return m_JointWorldOrientations;
 }
@@ -121,7 +121,7 @@ const _2RealVector2f _2RealTrackedUser::getJointScreenPosition( _2RealJointType 
 
 const _2RealMatrix3x3 _2RealTrackedUser::getJointWorldOrientation( _2RealJointType type, const float confidence ) const
 {
-	if( type < _2REAL_NUMBER_OF_JOINTS && type >= 0 && m_Joints[type].getOrientationConfidence() >= confidence)
+	if( type < _2REAL_NUMBER_OF_JOINTS && type >= 0 && m_Joints[type].getOrientationConfidence() > confidence)
 	{
 		return m_Joints[type].getWorldOrientation();
 	}
