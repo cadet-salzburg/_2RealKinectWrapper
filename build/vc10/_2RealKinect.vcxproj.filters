@@ -13,9 +13,6 @@
     <ClCompile Include="..\..\src\_2RealTypes.cpp">
       <Filter>_2RealKinectWrapper</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\_2RealVector2f.cpp">
-      <Filter>_2RealKinectWrapper</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\OpenNISpecific\OpenNIColorGenerator.cpp">
       <Filter>_2RealKinectWrapper\OpenNI</Filter>
     </ClCompile>
@@ -36,6 +33,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\_2RealLogger.cpp">
       <Filter>_2RealKinectWrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealVector2f.cpp">
+      <Filter>API Interface\Types</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

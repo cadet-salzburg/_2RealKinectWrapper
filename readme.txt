@@ -155,7 +155,6 @@ Todo
 	  * Change implementation to shared_ptr
 	  * Integrate Hand detector of OpenNi
 	  * MacOS (codeblocks/xcode4) / Linux (codeblocks)
-	  * Panasonic TOF SDK support
 	  * Tutorial
 	  * High Level Recording and Tracking Library (under development)
 	  * Multi device user tracking bug fixing

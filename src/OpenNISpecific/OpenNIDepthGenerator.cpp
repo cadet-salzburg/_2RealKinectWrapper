@@ -172,7 +172,6 @@ XnStatus OpenNIDepthGenerator::updateJoint( const XnSkeletonJoint type, _2RealTr
 	worldPos.Z = wPos.z;
 	XnStatus status = m_DepthGenerator.ConvertRealWorldToProjective(1, &worldPos, &screenPos);
 	joint->setScreenPosition( _2RealVector2f( screenPos.X, screenPos.Y ) );
-	//user.setJoint( _2RealJointType(type-1), *joint );
 
 	return (getErrorState() | status);
 }

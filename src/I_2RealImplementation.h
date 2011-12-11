@@ -61,6 +61,7 @@ class I_2RealImplementation
 		virtual const uint32_t						getNumberOfUsers( const uint32_t deviceID ) const = 0;
 		virtual const uint32_t						getNumberOfSkeletons( const uint32_t deviceID ) const = 0;
 
+
 		virtual bool								isMirrored( const uint32_t deviceID, _2RealGenerator type ) const = 0;
 		virtual void								setMirrored( const uint32_t deviceID, _2RealGenerator type, bool flag ) = 0;
 		virtual void								setAlignColorDepthImage( const uint32_t deviceID, bool flag ) = 0;

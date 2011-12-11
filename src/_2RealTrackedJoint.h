@@ -34,19 +34,10 @@ class _2RealTrackedJoint
 	public:
 		_2RealTrackedJoint( void );
 		_2RealTrackedJoint( const _2RealJointType jointType, const _2RealVector2f& screenPosition, const _2RealVector3f& worldPosition,
-							const _2RealMatrix3x3& worldOrientation, const float positionConfidence, const float orientationConfidence );
+							const _2RealMatrix3x3& worldOrientation );
 		virtual ~_2RealTrackedJoint(void);
 		_2RealTrackedJoint( const _2RealTrackedJoint& o );
 		_2RealTrackedJoint& operator=( const _2RealTrackedJoint& joint );
-
-
-		/*! /brief returns the confidence the tracking algorithm has in this joints' position
-		*/
-		float							getPositionConfidence() const;
-
-		/*! /brief returns the confidence the tracking algorithm has in this joints' orientation
-		*/
-		float							getOrientationConfidence() const;
 
 		/*! /brief returns the joints' position in world coordinates
 		*/
@@ -77,20 +68,11 @@ class _2RealTrackedJoint
 		_2RealVector3f							m_WorldPosition;
 		// orientation, represented by 3x3-Matrix
 		_2RealMatrix3x3							m_WorldOrientation;
-		// confidence the user tracker has in the position being correct
-		float									m_fPositionConfidence;
-		// confidence the user tracker has in the orientation being correct
-		float									m_fOrientationConfidence;
 
 		friend class _2RealTrackedUser;
 		friend class OpenNIDepthGenerator;
 
-		void			setPositionConfidence( const float confidence );
-		void			setOrientationConfidence( const float confidence );
-		void			setWorldPosition( const _2RealVector3f& position );
 		void			setScreenPosition( const _2RealVector2f& position );
-		void			setWorldOrientation( const _2RealMatrix3x3& orientation );
-
 };
 
 }

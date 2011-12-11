@@ -39,9 +39,6 @@ class OpenNIUserGenerator : public OpenNIGenerator
 {
 	public:
 
-		OpenNIUserGenerator();
-		~OpenNIUserGenerator();
-
 		XnStatus				startGenerating();
 		XnStatus				stopGenerating();	
 		bool					isGenerating() const;	

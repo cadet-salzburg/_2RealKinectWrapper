@@ -109,14 +109,6 @@ void XN_CALLBACK_TYPE calibrationCompleteCallback(xn::SkeletonCapability& rCapab
 	}
 }
 
-OpenNIUserGenerator::OpenNIUserGenerator()
-{
-}
-
-OpenNIUserGenerator::~OpenNIUserGenerator()
-{
-}
-
 XnStatus OpenNIUserGenerator::setSkeletonProfile( const XnSkeletonProfile profile )
 {
 	m_UserGenerator.LockedNodeStartChanges(m_UserLock);
@@ -304,20 +296,21 @@ _2RealTrackedJoint OpenNIUserGenerator::getUserJoint( const uint32_t userID, XnS
 	XnSkeletonJointTransformation joint;
 	XnStatus status = m_UserGenerator.GetSkeletonCap().GetSkeletonJoint( userID, type, joint );
 
-	_2RealVector3f worldPos = _2RealVector3f( joint.position.position.X, joint.position.position.Y, joint.position.position.Z );
+	//set position of joint
+	_2RealVector3f worldPos = _2RealVector3f( joint.position.position.X, joint.position.position.Y, joint.position.position.Z, joint.position.fConfidence);
 	XnPoint3D screenPos;
 	xnConvertRealWorldToProjective( m_UserGenerator.GetHandle(), 1, &joint.position.position, &screenPos ); //convert world to screen positon
 
+	//set orienation of joint
 	_2RealMatrix3x3 mat;
 	for( int i=0; i < 9; ++i )
 		mat.elements[i] = joint.orientation.orientation.elements[i];
-
+	mat.confidence = joint.orientation.fConfidence;
+	
 	return _2RealTrackedJoint(  (_2RealJointType) type,
-								_2RealVector2f( screenPos.X, screenPos.Y ),
+								_2RealVector2f( screenPos.X, screenPos.Y, joint.position.fConfidence ),
 								worldPos,
-								mat,
-								joint.position.fConfidence,
-								joint.orientation.fConfidence );
+								mat );
 }
 
 XnStatus OpenNIUserGenerator::getUserData( int iID, _2RealImageSource<uint16_t>& data ) const

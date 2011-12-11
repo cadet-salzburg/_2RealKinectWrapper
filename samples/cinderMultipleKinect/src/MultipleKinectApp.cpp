@@ -218,7 +218,7 @@ void MultipleKinectApp::drawSkeletons(int deviceID, ci::Rectf rect)
 		for(int j = 0; j < size; ++j)
 		{	
 			gl::pushModelView();
-			if( m_2RealKinect->isJointAvailable( (_2RealJointType)j ) )
+			if( m_2RealKinect->isJointAvailable( (_2RealJointType)j ) && skeletonPositions[j].confidence>0.0)
 			{
 				glTranslatef(Vec3f( skeletonPositions[j].x, skeletonPositions[j].y, 0 ));
 

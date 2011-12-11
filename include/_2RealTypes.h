@@ -123,14 +123,14 @@ namespace _2Real
 	struct _2RealVector3f
 	{
 		_2RealVector3f( void );
-		_2RealVector3f( float X, float Y, float Z );
+		_2RealVector3f( float X, float Y, float Z, float confidence=0.0 );
 		_2RealVector3f( const _2RealVector3f& o );
 		_2RealVector3f& operator=( const _2RealVector3f& o );
-
 
 		float x;
 		float y;
 		float z;
+		float confidence;
 	};
 
 
@@ -141,8 +141,10 @@ namespace _2Real
 			elements[0]=1; elements[3]=0; elements[6]=0;
 			elements[1]=0; elements[4]=1; elements[7]=0;
 			elements[2]=0; elements[5]=0; elements[8]=1;
+			confidence=0.0;
 		}
 		float elements[9];
+		float confidence;
 	};
 
 	class _2RealException : public std::exception

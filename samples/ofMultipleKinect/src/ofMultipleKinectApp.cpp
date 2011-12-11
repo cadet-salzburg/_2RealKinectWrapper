@@ -124,7 +124,7 @@ void ofMultipleKinectApp::drawSkeletons(int deviceID, ofRectangle rect)
 		for(int j = 0; j < size; ++j)
 		{	
 			glPushMatrix();
-			if( m_2RealKinect->isJointAvailable( (_2RealJointType)j ) )
+			if( m_2RealKinect->isJointAvailable( (_2RealJointType)j ) && skeletonPositions[j].confidence>0.0 )
 			{
 				glTranslatef(skeletonPositions[j].x, skeletonPositions[j].y, 0 );
 

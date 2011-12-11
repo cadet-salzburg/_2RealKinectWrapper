@@ -58,41 +58,35 @@ class _2RealTrackedUser
 		/*! /brief returns a vector containing the users' joint positions in world space; if confidence expectations aren't met position for joint will be (0,0,0)
 			Use _2RealJointType enum to return a specific joint through the operator[] ( getJointWorldPositions()[JOINT_HEAD] )
 			/param jointVertices a vector of floats where the xyz coordinates of the users' joints will be stored
-			/param confidence the minimum confidence the tracking algorithm must have in the positions' correctness
-		*/
-		_2RealPositionsVector3f&					getSkeletonWorldPositions( const float confidence=0.0f );
+			*/
+		_2RealPositionsVector3f&					getSkeletonWorldPositions( );
 
 		/*! /brief		returns a vector containing the users' joint positions in screen space; if confidence expectations aren't met position for joint will be (0,0,0)
 						Use _2RealJointType enum to return a specific joint through the operator[] ( getJointWorldPositions()[JOINT_HEAD] )
 			/param		jointVertices a vector of floats where the xyz coordinates of the users' joints will be stored
-			/param		confidence the minimum confidence the tracking algorithm must have in the positions' correctness
 		*/
-		_2RealPositionsVector2f&					getSkeletonScreenPositions( const float confidence=0.0f );
+		_2RealPositionsVector2f&					getSkeletonScreenPositions( );
 
 		/*! /brief		returns a vector containing the users' joint orientations; if confidence expectations aren't met position for joint will be (0,0,0)
 						Use _2RealJointType enum to return a specific joint through the operator[] ( getJointWorldPositions()[JOINT_HEAD] )
-			/param		confidence the minimum confidence the tracking algorithm must have in the positions' correctness
 		*/
-		_2RealOrientationsMatrix3x3& getSkeletonWorldOrientations( const float confidence=0.0f );
+		_2RealOrientationsMatrix3x3& getSkeletonWorldOrientations( );
 
 		/*! /brief     returns the world position of a specific user joint
-			/param     const float confidence - Type of the joint to be returned
 			/return    _2Real::_2RealVector3f
 		!*/
-		const _2RealVector3f					getJointWorldPosition( _2RealJointType type, const float confidence=0.0f ) const;
+		const _2RealVector3f					getJointWorldPosition( _2RealJointType type ) const;
 
 		/*! /brief     returns the screen position of a specific user joint
-			/param     const float confidence - Type of the joint to be returned
 			/return    _2Real::_2RealVector3f
 		!*/
-		const _2RealVector2f					getJointScreenPosition( _2RealJointType type, const float confidence=0.0f ) const;
+		const _2RealVector2f					getJointScreenPosition( _2RealJointType type ) const;
 
 		/*! /brief     returns the 3x3 orientation matrix of a specific user joint
 			/param     _2RealJointType type - Type of the joint to be returned (hand, ...)
-			/param	   const float confidence=0.0f - Set the confidence value, 1.0 means just return values if OpenNI is 100% percent sure it is an accurate calculation
 			/return    _2Real::_2RealVector3f
 		!*/
-		const _2RealMatrix3x3					getJointWorldOrientation( _2RealJointType type, const float confidence=0.0f ) const;
+		const _2RealMatrix3x3					getJointWorldOrientation( _2RealJointType type ) const;
 
 		/*! /brief     Return maximal number of joints available, Notice: There will be more entries in the joint vector created than used, for information
 					   see _2RealStructuresTypes.h

@@ -31,13 +31,14 @@ namespace _2Real
 struct _2RealVector2f
 {
 	_2RealVector2f( void );
-	_2RealVector2f( float X, float Y );
+	_2RealVector2f( float X, float Y, float Confidence=0.0 );
 	_2RealVector2f( const _2RealVector2f& o );
 	_2RealVector2f& operator=( const _2RealVector2f& o );
 	_2RealVector2f& operator=( const _2RealVector3f& o );
 
 	float x;
 	float y;
+	float confidence;
 };
 
 }

@@ -456,12 +456,14 @@ _2RealTrackedJoint WSDKDevice::GetJoint( _2RealJointType type, _NUI_SKELETON_POS
 	worldPos.x = data.SkeletonPositions[nuiType].x;
 	worldPos.y = data.SkeletonPositions[nuiType].y;
 	worldPos.z = data.SkeletonPositions[nuiType].z;
+	worldPos.confidence = 1.0;		//there is no confidence value so set to 1
 
 	/* screen pos multiplied with depth image resolution */
 	screenPos.x *= m_WidthImageDepthAndUser*2;
 	screenPos.y *= m_HeightImageDepthAndUser*2;
+	screenPos.confidence = 1.0;
 
-	return _2RealTrackedJoint( type, screenPos, worldPos, _2RealMatrix3x3(), 1, -1 );		// orientation cofidence set to -1 because it is not yet supported
+	return _2RealTrackedJoint( type, screenPos, worldPos, _2RealMatrix3x3() );		// orientation cofidence set to -1 because it is not yet supported
 }
 
 void WSDKDevice::ProcessSkeletonEvent()
@@ -524,19 +526,19 @@ void WSDKDevice::ProcessSkeletonEvent()
 		user->setJoint( JOINT_TORSO, GetJoint( JOINT_TORSO, NUI_SKELETON_POSITION_SPINE, nuiFrame.SkeletonData[i] ) );
 		user->setJoint( JOINT_WAIST, GetJoint( JOINT_WAIST, NUI_SKELETON_POSITION_HIP_CENTER, nuiFrame.SkeletonData[i] ) );
 
-		user->setJoint( JOINT_LEFT_COLLAR, _2RealTrackedJoint( JOINT_LEFT_COLLAR, _2RealVector2f(), _2RealVector3f(), _2RealMatrix3x3(), 0,0 ) );
+		user->setJoint( JOINT_LEFT_COLLAR, _2RealTrackedJoint( JOINT_LEFT_COLLAR, _2RealVector2f(), _2RealVector3f(), _2RealMatrix3x3() ) );
 		user->setJoint( JOINT_LEFT_SHOULDER, GetJoint( JOINT_LEFT_SHOULDER, NUI_SKELETON_POSITION_SHOULDER_LEFT, nuiFrame.SkeletonData[i] ) );
 		user->setJoint( JOINT_LEFT_ELBOW, GetJoint( JOINT_LEFT_ELBOW, NUI_SKELETON_POSITION_ELBOW_LEFT, nuiFrame.SkeletonData[i] ) );
 		user->setJoint( JOINT_LEFT_WRIST, GetJoint( JOINT_LEFT_WRIST, NUI_SKELETON_POSITION_WRIST_LEFT, nuiFrame.SkeletonData[i] ) );
 		user->setJoint( JOINT_LEFT_HAND, GetJoint( JOINT_LEFT_HAND, NUI_SKELETON_POSITION_HAND_LEFT, nuiFrame.SkeletonData[i] ) );
-		user->setJoint( JOINT_LEFT_FINGERTIP, _2RealTrackedJoint( JOINT_LEFT_FINGERTIP, _2RealVector2f(), _2RealVector3f(), _2RealMatrix3x3(), 0,0 ) );
+		user->setJoint( JOINT_LEFT_FINGERTIP, _2RealTrackedJoint( JOINT_LEFT_FINGERTIP, _2RealVector2f(), _2RealVector3f(), _2RealMatrix3x3() ) );
 
-		user->setJoint( JOINT_RIGHT_COLLAR, _2RealTrackedJoint( JOINT_LEFT_COLLAR, _2RealVector2f(), _2RealVector3f(), _2RealMatrix3x3(), 0,0 ) );
+		user->setJoint( JOINT_RIGHT_COLLAR, _2RealTrackedJoint( JOINT_LEFT_COLLAR, _2RealVector2f(), _2RealVector3f(), _2RealMatrix3x3()) );
 		user->setJoint( JOINT_RIGHT_SHOULDER, GetJoint( JOINT_RIGHT_SHOULDER, NUI_SKELETON_POSITION_SHOULDER_RIGHT, nuiFrame.SkeletonData[i] ) );
 		user->setJoint( JOINT_RIGHT_ELBOW, GetJoint( JOINT_RIGHT_ELBOW, NUI_SKELETON_POSITION_ELBOW_RIGHT, nuiFrame.SkeletonData[i] ) );
 		user->setJoint( JOINT_RIGHT_WRIST, GetJoint( JOINT_RIGHT_WRIST, NUI_SKELETON_POSITION_WRIST_RIGHT, nuiFrame.SkeletonData[i] ) );
 		user->setJoint( JOINT_RIGHT_HAND, GetJoint( JOINT_RIGHT_HAND, NUI_SKELETON_POSITION_HAND_RIGHT, nuiFrame.SkeletonData[i] ) );
-		user->setJoint( JOINT_RIGHT_FINGERTIP, _2RealTrackedJoint( JOINT_RIGHT_FINGERTIP, _2RealVector2f(), _2RealVector3f(), _2RealMatrix3x3(), 0,0 ) );
+		user->setJoint( JOINT_RIGHT_FINGERTIP, _2RealTrackedJoint( JOINT_RIGHT_FINGERTIP, _2RealVector2f(), _2RealVector3f(), _2RealMatrix3x3() ) );
 		
 		user->setJoint( JOINT_LEFT_HIP, GetJoint( JOINT_LEFT_HIP, NUI_SKELETON_POSITION_HIP_LEFT, nuiFrame.SkeletonData[i] ) );
 		user->setJoint( JOINT_LEFT_KNEE, GetJoint( JOINT_LEFT_KNEE, NUI_SKELETON_POSITION_KNEE_LEFT, nuiFrame.SkeletonData[i] ) );
