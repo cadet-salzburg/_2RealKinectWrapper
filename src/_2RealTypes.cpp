@@ -1,9 +1,4 @@
 #include "_2RealTypes.h"
-#include "XnCppWrapper.h"
-#include "XnOpenNI.h"
-#include "XnTypes.h"
-
-using namespace xn;
 
 namespace _2Real
 {

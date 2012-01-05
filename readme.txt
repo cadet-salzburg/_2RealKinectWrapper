@@ -26,7 +26,7 @@
 
    
    Version
-     0.9.1 (this is still a beta)
+     0.9.2 (this is still a beta)
    
    Bug reports, feature request or inquiries to:
 	support@cadet.at
@@ -41,6 +41,10 @@
 
 Version History
 ---------------
+0.9.2 Update release
+	+ ATTENTION MS SDK Users (the new installer of the MS Kinect SDK sets the environment variable wrong with a double backslash in the folder structure and this renders it unuseable for MS Visual Studio)
+	+ changed OpenNI to work with AutoCalibration so no needed akward calibration pose anymore
+
 0.9.1 Update release
 	+ small name changes in the interface class
 	+ added joint orientation methods (just works for OpenNI), use hasFeatureJointOrientation() to check
@@ -138,10 +142,10 @@ Known issues
 		* Right now all found devices will start with the nodes you entered in the start routine, if there is a use we will make an overloaded start for starting different nodes on different devices...
 		
 	OpenNI
+		* Hand and feet have orientation confidence of value 0.0 always (so OpenNI doesn't supply you with orientations for Hand and Feet) 
 		* Multi device user segmentation and skeletonizations are not working correctly yet (it mixes up the different devices, openni is strange)
 		* OpenNI with Kinect sensor only supports 640x480 resolution, Primesense sensor supports different resolutions
 		
-
 	Microsoft Kinect SDK
 		* MS SDK just supports user and skeleton tracking for a single device, depth and rgb go for multiple devices
 		* Color IDs of users can be different at start up (problem seems to be in the Microsoft Kinect SDK, which doesn't seem to do the ids right)
@@ -151,7 +155,6 @@ Known issues
 
 Todo
 ----
-	  * Fix confidence position issue (we need the user to know when a position is invalid right now it's draw to nirvana but that't not really a good solution)
 	  * Change implementation to shared_ptr
 	  * Integrate Hand detector of OpenNi
 	  * MacOS (codeblocks/xcode4) / Linux (codeblocks)

@@ -29,12 +29,9 @@ namespace _2Real
 void XN_CALLBACK_TYPE newUserCallback(xn::UserGenerator& rGenerator, XnUserID nID, void* pCookie)
 {
 	XnStatus status;
-	XnChar calibrationPose[20];
 	xn::UserGenerator *userGenerator = static_cast<xn::UserGenerator*>(pCookie);
-	
-	status = userGenerator->GetSkeletonCap().GetCalibrationPose(calibrationPose);
-	status = userGenerator->GetPoseDetectionCap().StartPoseDetection(calibrationPose, nID);
-	_2REAL_LOG(info) << "_2Real: New user " << nID << ", waiting for calibration pose... status: " << xnGetStatusString(status) << std::endl;
+	status = userGenerator->GetSkeletonCap().RequestCalibration(nID, TRUE);
+	_2REAL_LOG(info) << "_2Real: New user " << nID << ", requested calibration... status: " << xnGetStatusString(status) << std::endl;
 }
 
 void XN_CALLBACK_TYPE lostUserCallback(xn::UserGenerator& rGenerator, XnUserID nID, void* pCookie)
@@ -57,33 +54,12 @@ void XN_CALLBACK_TYPE userExitCallback(xn::UserGenerator& rGenerator, XnUserID n
 void XN_CALLBACK_TYPE userReentryCallback(xn::UserGenerator& rGenerator, XnUserID nID, void* pCookie)
 {
 	XnStatus status;
-	XnChar calibrationPose[20];
 	xn::UserGenerator *userGenerator = static_cast<xn::UserGenerator*>(pCookie);
 	
-	status = userGenerator->GetSkeletonCap().GetCalibrationPose(calibrationPose);
-	status = userGenerator->GetPoseDetectionCap().StartPoseDetection(calibrationPose, nID);
-	_2REAL_LOG(info) << "_2Real: User " << nID << " reentered, waiting for calibration pose... status: " << xnGetStatusString(status) << std::endl;
+	status = userGenerator->GetSkeletonCap().RequestCalibration(nID, TRUE);
+	_2REAL_LOG(info) << "_2Real: User " << nID << " reentered, request calibration... status: " << xnGetStatusString(status) << std::endl;
 }
 
-void XN_CALLBACK_TYPE poseDetectedCallback(xn::PoseDetectionCapability& rCapability, const XnChar* strPose, XnUserID nID, void* pCookie)
-{
-	XnStatus status;
-	xn::UserGenerator *userGenerator = static_cast<xn::UserGenerator*>(pCookie);
-	
-	status = userGenerator->GetPoseDetectionCap().StopPoseDetection(nID);
-	status = userGenerator->GetSkeletonCap().RequestCalibration(nID, true);
-	_2REAL_LOG(info) << "_2Real: Pose detected for user " <<nID << ", starting calibration... status: " << xnGetStatusString(status) << std::endl;
-}
-
-void XN_CALLBACK_TYPE outOfPoseCallback(xn::PoseDetectionCapability& rCapability, const XnChar* strPose, XnUserID nID, void* pCookie)
-{
-	XnStatus status;
-	XnChar calibrationPose[20];
-	xn::UserGenerator* userGenerator = static_cast<xn::UserGenerator*>(pCookie);
-	status = userGenerator->GetSkeletonCap().GetCalibrationPose(calibrationPose);
-	status = userGenerator->GetPoseDetectionCap().StartPoseDetection(calibrationPose, nID);
-	_2REAL_LOG(info) <<"\n_2Real: Out of pose, waiting for calibration pose of user " << nID << "... status: " << xnGetStatusString(status) << std::endl;
-}
 
 void XN_CALLBACK_TYPE calibrationStartCallback(xn::SkeletonCapability& rCapability, XnUserID nID, void* pCookie)
 {
@@ -181,9 +157,6 @@ XnStatus OpenNIUserGenerator::registerCallbacks()
 
 	XnCallbackHandle calibrationStartHandle;
 	XnCallbackHandle calibrationCompleteHandle;
-
-	XnCallbackHandle poseDetectedHandle;
-	XnCallbackHandle outOfPoseHandle;
 	
 	m_UserGenerator.RegisterUserCallbacks(newUserCallback, lostUserCallback, (xn::UserGenerator *)&m_UserGenerator, userHandle);
 	
@@ -192,9 +165,6 @@ XnStatus OpenNIUserGenerator::registerCallbacks()
 		
 	m_UserGenerator.GetSkeletonCap().RegisterToCalibrationStart(calibrationStartCallback, (xn::UserGenerator *)&m_UserGenerator, calibrationStartHandle);
 	m_UserGenerator.GetSkeletonCap().RegisterToCalibrationComplete(calibrationCompleteCallback, (xn::UserGenerator *)&m_UserGenerator, calibrationCompleteHandle);
-	
-	m_UserGenerator.GetPoseDetectionCap().RegisterToPoseDetected(poseDetectedCallback, (xn::UserGenerator *)&m_UserGenerator, poseDetectedHandle);
-	m_UserGenerator.GetPoseDetectionCap().RegisterToOutOfPose(outOfPoseCallback, (xn::UserGenerator *)&m_UserGenerator, outOfPoseHandle);
 
 	return getErrorState();
 }

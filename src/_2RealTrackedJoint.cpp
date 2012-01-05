@@ -1,5 +1,4 @@
 #include "_2RealTrackedJoint.h"
-#include "XnTypes.h"
 
 
 namespace _2Real

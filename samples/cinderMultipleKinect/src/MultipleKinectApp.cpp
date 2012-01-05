@@ -83,7 +83,7 @@ void MultipleKinectApp::prepareSettings( Settings* settings )
 {
 // just open windows console if compiled for windows
 #ifdef _WIN32 || _WIN64							
-		FILE* f;
+	FILE* f;
 	AllocConsole();
 	freopen_s( &f, "CON", "w", stdout );
 #endif
@@ -197,6 +197,7 @@ void MultipleKinectApp::drawSkeletons(int deviceID, ci::Rectf rect)
 {
 	float fRadius = 10.0;
 
+	glLineWidth(2.0);
 	glPushMatrix();
 	
 	glTranslatef( rect.getX1(), rect.getY1(), 0 );
@@ -222,7 +223,7 @@ void MultipleKinectApp::drawSkeletons(int deviceID, ci::Rectf rect)
 			{
 				glTranslatef(Vec3f( skeletonPositions[j].x, skeletonPositions[j].y, 0 ));
 
-				if(m_2RealKinect->hasFeatureJointOrientation())
+				if(m_2RealKinect->hasFeatureJointOrientation() && skeletonOrientations[j].confidence>0.0)
 				{
 					Matrix44<float> rotMat  = gl::getModelView();
 					rotMat.m00 = skeletonOrientations[j].elements[0];
@@ -246,6 +247,7 @@ void MultipleKinectApp::drawSkeletons(int deviceID, ci::Rectf rect)
 		}
 	}	
 	glPopMatrix();
+	glLineWidth(1.0);
 }
 
 void MultipleKinectApp::resize( ResizeEvent event)
