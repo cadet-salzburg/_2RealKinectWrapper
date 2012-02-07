@@ -88,6 +88,12 @@ class _2RealTrackedUser
 		!*/
 		const _2RealMatrix3x3					getJointWorldOrientation( _2RealJointType type ) const;
 
+		/*! /brief     returns the position and orientation condfidence of a joint
+			/param     _2RealJointType type - Type of the joint to be returned (hand, ...)
+			/return    _2RealConfidence
+		!*/
+	    _2RealConfidence					getJointConfidence( _2RealJointType type );
+
 		/*! /brief     Return maximal number of joints available, Notice: There will be more entries in the joint vector created than used, for information
 					   see _2RealStructuresTypes.h
 			/return    const uint32_t

@@ -82,15 +82,15 @@ void OpenNIDevice::update( void* instance )
 		devicePtr->m_MutexFetchUsers.lock();
 
 		checkError( devicePtr->m_Context.WaitNoneUpdateAll(),
-					"Error _2RealImplOpenNI::getUsers() in m_Context::WaitNoneUpdateAll\n" );
+					"_2Real: getUsers() in m_Context::WaitNoneUpdateAll\n" );
 
 		//filling users vector and getting position (world + screen)
 		if( devicePtr->GetOpenNIDepthGenerator().IsValid() && devicePtr->GetOpenNIUserGenerator().IsValid() )
 		{
 			checkError( devicePtr->m_UserGenerator.getTrackedUsers( devicePtr->m_TrackedUsersArray, devicePtr->m_TrackedUserArraySize ),
-						"Error _2RealImplOpenNI::getUsers() m_usergenerator::getTrackedUsers\n" );
+						"_2Real: getUsers() m_usergenerator::getTrackedUsers\n" );
 			checkError( devicePtr->m_DepthGenerator.getUserScreenPositions( devicePtr->m_TrackedUsersArray, devicePtr->m_TrackedUserArraySize ),
-						"Error _2RealImplOpenNI::getUsers() m_usergenerator::getscreenposition\n" );
+						"_2Real: getUsers() m_usergenerator::getscreenposition\n" );
 		}
 		devicePtr->m_MutexFetchUsers.unlock();
 
@@ -105,7 +105,7 @@ void OpenNIDevice::update( void* instance )
 			{
 				devicePtr->m_MutexFetchUsers.lock();
 				checkError( devicePtr->m_UserGenerator.getUserData( u, devicePtr->m_UserImage ),
-							"Error _2RealImplOpenNI::getImageData() type user image\n" );
+							"_2Real: Error getImageData() type user image\n" );
 				devicePtr->m_MutexFetchUsers.unlock();
 
 				_2RealVector2f v2Size = devicePtr->m_UserImage.getFullResolution();
@@ -140,14 +140,14 @@ void OpenNIDevice::update( void* instance )
 		if( devicePtr->GetOpenNIImageGenerator().IsValid() )
 		{
 			checkError( devicePtr->m_ColorGenerator.getData( devicePtr->m_ColorImage ),
-						"Error _2RealImplOpenNI::getImageData() type color image\n" );
+						"_2Real: Error getImageData() type color image\n" );
 		}
 
 		//depth
 		if( devicePtr->GetOpenNIDepthGenerator().IsValid() )
 		{
 			checkError( devicePtr->m_DepthGenerator.getData( devicePtr->m_DepthImage ),
-						"Error _2RealImplOpenNI::getImageData() type depth image\n" );
+						"_2Real: Error getImageData() type depth image\n" );
 
 			_2RealVector2f v2Size = devicePtr->m_DepthImage.getFullResolution();
 			convertImage_16_to_8( devicePtr->m_DepthImage.getData(), /*source 16bit image data*/
@@ -160,7 +160,7 @@ void OpenNIDevice::update( void* instance )
 		if( devicePtr->GetOpenNIInfraredGenertor().IsValid() )
 		{
 			checkError( devicePtr->m_InfraredGenerator.getData( devicePtr->m_InfraredImage ),
-						"Error _2RealImplOpenNI::getImageData() type infrared image\n" );
+						"_2Real: Error getImageData() type infrared image\n" );
 
 			_2RealVector2f v2Size = devicePtr->m_InfraredImage.getFullResolution();
 			convertImage_16_to_8( devicePtr->m_InfraredImage.getData(), /*source 16bit image data*/
@@ -205,8 +205,19 @@ void OpenNIDevice::startupProcessingColorGenerator( xn::NodeInfo& node, const ui
 	//configure image-generator output size
 	if( configureImages & IMAGE_COLOR_1280X1024 )
 	{
-		m_OutputModeColor.nXRes = 1280;
-		m_OutputModeColor.nYRes = 1024;
+		/*XN_RES_QVGA
+		XN_RES_VGA
+		XN_RES_SXGA
+		XN_RES_UXGA
+		XnMapOutputMode Mode;
+		pGenerator->GetMapOutputMode(Mode);
+		Mode.nXRes = Resolution((XnResolution)XN_RES_UXGA).GetXResolution();
+		Mode.nYRes = Resolution((XnResolution)XN_RES_UXGA).GetYResolution();
+		XnStatus nRetVal = pGenerator->SetMapOutputMode(Mode);
+*/
+		m_OutputModeColor.nXRes = xn::Resolution::Resolution((XnResolution)XN_RES_SXGA).GetXResolution();
+		m_OutputModeColor.nYRes = xn::Resolution::Resolution((XnResolution)XN_RES_SXGA).GetYResolution();
+		m_OutputModeColor.nFPS = 10;
 	}
 	else if( configureImages & IMAGE_COLOR_640X480 )
 	{
@@ -229,26 +240,21 @@ void OpenNIDevice::startupProcessingColorGenerator( xn::NodeInfo& node, const ui
 
 	//creating production tree for image generator
 	checkError( m_Context.CreateProductionTree( node, GetOpenNIImageGenerator() ),
-				"_2RealIMplOpenNI::start Error when creating production tree for >>image-generator<< \n" );
+				"_2Real: Error when creating production tree for >>image-generator<< \n" );
 
 	_2REAL_LOG(info) << "OK" << std::endl;
 	_2REAL_LOG(info) << "_2Real: Configuring output mode for color generator res: " << m_OutputModeColor.nXRes << "x" << m_OutputModeColor.nYRes << " fps: " << m_OutputModeColor.nFPS << std::endl;
 
-	//setting mirror capability
-	if( configureImages & IMAGE_MIRRORING )
-	{
-		checkError( m_ColorGenerator.setMirroring( true ),
-					"_2RealIMplOpenNI::start Error when setting mirror capability for >>image-generator<< \n" );
+	//setting mirror capability as default
+	checkError( m_ColorGenerator.setMirroring( true ),	"_2Real: Error when setting mirror capability for >>image-generator<< \n" );
 
-		_2REAL_LOG(info) << "\n_2Real: Enabling mirror capability on color generator: ...OK" << std::endl;
-	}
 	//setting output mode
 	checkError( m_ColorGenerator.setOutputMode( m_OutputModeColor ),
-				"_2RealIMplOpenNI::start Error when setting outputmode for >>image-generator<< \n" );
+				"_2Real: Error when setting outputmode for >>image-generator<< \n" );
 
 	//register callbacks
 	checkError( m_ColorGenerator.registerCallbacks(),
-				"_2RealIMplOpenNI::start Error when registering callbacks for >>image-generator<< \n" );
+				"_2Real: Error when registering callbacks for >>image-generator<< \n" );
 }
 
 void OpenNIDevice::startupProcessingDepthGenerator( xn::NodeInfo& node, const uint32_t configureImages )
@@ -281,7 +287,7 @@ void OpenNIDevice::startupProcessingDepthGenerator( xn::NodeInfo& node, const ui
 
 	//creating production tree for depthGenerator
 	checkError( m_Context.CreateProductionTree( node, GetOpenNIDepthGenerator() ),
-				"_2RealIMplOpenNI::start Error when creating production tree for >>depth-generator<< \n" );
+				"_2Real: Error when creating production tree for >>depth-generator<< \n" );
 
 	_2REAL_LOG(info) << "OK" << std::endl;
 
@@ -292,21 +298,17 @@ void OpenNIDevice::startupProcessingDepthGenerator( xn::NodeInfo& node, const ui
 
 	_2REAL_LOG(info) << "_2Real: Configuring output mode for depth generator res: " << m_OutputModeDepth.nXRes << "x" << m_OutputModeDepth.nYRes << " fps: " << m_OutputModeDepth.nFPS << std::endl;
 
-	//setting mirror capability
-	if( configureImages & IMAGE_MIRRORING )
-	{
-		checkError( m_DepthGenerator.setMirroring( true ),
-					"_2RealIMplOpenNI::start Error when setting mirror capability for >>depth-generator<< \n" );
-		_2REAL_LOG(info) << "\n_2Real: Enabling mirror capability on depth generator: ...OK" << std::endl;
-	}
+	// mirror camera
+	checkError( m_DepthGenerator.setMirroring( true ),	"_2Real: Error when setting mirror capability for >>depth-generator<< \n" );
+	
 
 	//setting output mode
 	checkError( m_DepthGenerator.setOutputMode( m_OutputModeDepth ),
-				"_2RealIMplOpenNI::start Error when setting outputmode for >>depth-generator<< \n" );
+				"_2Real: Error when setting outputmode for >>depth-generator<< \n" );
 
 	//fetching depth generator instance
 	checkError( m_DepthGenerator.registerCallbacks(),
-				"_2RealIMplOpenNI::start Error when registering callbacks for >>depth-generator<< \n" );
+				"_2Real: Error when registering callbacks for >>depth-generator<< \n" );
 }
 
 void OpenNIDevice::startupProcessingInfraredGenerator( xn::NodeInfo& node, const uint32_t configureImages )
@@ -332,7 +334,7 @@ void OpenNIDevice::startupProcessingInfraredGenerator( xn::NodeInfo& node, const
 
 	//creating production tree for infrared generator
 	checkError( m_Context.CreateProductionTree( node, GetOpenNIInfraredGenertor() ),
-				"_2RealIMplOpenNI::start Error when creating production tree for >>infrared-generator<< \n" );
+				"_2Real: Error when creating production tree for >>infrared-generator<< \n" );
 
 	_2REAL_LOG(info) << "OK" << std::endl;
 
@@ -343,21 +345,16 @@ void OpenNIDevice::startupProcessingInfraredGenerator( xn::NodeInfo& node, const
 
 	_2REAL_LOG(info) << "_2Real: Configuring output mode for infrared generator res: " << m_OutputModeInfrared.nXRes << "x" << m_OutputModeInfrared.nYRes << " fps: " << m_OutputModeInfrared.nFPS << std::endl;
 
-	//setting mirror capability
-	if( configureImages & IMAGE_MIRRORING )
-	{
-		checkError( m_InfraredGenerator.setMirroring( true ),
-					"_2RealIMplOpenNI::start Error when setting mirror capability for >>infrared-generator<< \n" );
+	//setting mirror as default
+	checkError( m_InfraredGenerator.setMirroring( true ), "_2Real: Error when setting mirror capability for >>infrared-generator<< \n" );
 
-		_2REAL_LOG(info) << "_2Real: Enabling mirror capability on infrared generator: ...OK" << std::endl;
-	}
 	//setting output mode
 	checkError( m_InfraredGenerator.setOutputMode( m_OutputModeInfrared ),
-				"_2RealIMplOpenNI::start Error when setting outputmode for >>infrared-generator<< \n" );
+				"_2Real: Error when setting outputmode for >>infrared-generator<< \n" );
 
 	//registering callbacks
 	checkError( m_InfraredGenerator.registerCallbacks(),
-				"_2RealIMplOpenNI::start Error when registering callbacks for >>infrared-generator<< \n" );
+				"_2Real: Error when registering callbacks for >>infrared-generator<< \n" );
 }
 
 void OpenNIDevice::startupProcessingUserGenerator( xn::NodeInfo& node, const uint32_t configureImages )
@@ -388,7 +385,7 @@ void OpenNIDevice::startupProcessingUserGenerator( xn::NodeInfo& node, const uin
 
 	//creating production tree for user-generator
 	checkError( m_Context.CreateProductionTree( node, GetOpenNIUserGenerator() ),
-				"_2RealIMplOpenNI::start Error when creating production tree for >>user-generator<< \n" );
+				"_2Real: Error when creating production tree for >>user-generator<< \n" );
 
 	_2REAL_LOG(info) << "OK" << std::endl;
 	
@@ -402,11 +399,11 @@ void OpenNIDevice::startupProcessingUserGenerator( xn::NodeInfo& node, const uin
 
 	//setting skeleton profile
 	checkError( m_UserGenerator.setSkeletonProfile( XN_SKEL_PROFILE_ALL ),
-				"_2RealIMplOpenNI::start Error when setting skeleton profile for >>user-generator<< \n" );
+				"_2Real: Error when setting skeleton profile for >>user-generator<< \n" );
 
 	//registering callbacks
 	checkError( m_UserGenerator.registerCallbacks(),
-				"_2RealIMplOpenNI::start Error when registering callbacks for >>user-generator<< \n" );
+				"_2Real: Error when registering callbacks for >>user-generator<< \n" );
 }
 
 bool OpenNIDevice::startGenerators( const uint32_t startGenerators )
@@ -424,7 +421,7 @@ bool OpenNIDevice::startGenerators( const uint32_t startGenerators )
 			if( startGenerators & COLORIMAGE )
 			{
 				_2REAL_LOG(info) << "_2Real: Starting image generator device " << m_InstanceName << std::endl;
-				std::string error = "_2RealIMplOpenNI::start Error when starting >>color-generator<< on device " + m_InstanceName + "\n";
+				std::string error = "_2Real: Error when starting >>color-generator<< on device " + m_InstanceName + "\n";
 				checkError( m_ColorGenerator.startGenerating(),
 							error.c_str() );
 				_2REAL_LOG(info) << " ...OK" << std::endl;
@@ -432,7 +429,7 @@ bool OpenNIDevice::startGenerators( const uint32_t startGenerators )
 			if( startGenerators & INFRAREDIMAGE )
 			{
 				_2REAL_LOG(info) << "_2Real: Starting infrared generator device " << m_InstanceName.c_str();
-				std::string error = "_2RealIMplOpenNI::start Error when starting >>infrared-generator<< on device " + m_InstanceName + "\n";
+				std::string error = "_2Real: Error when starting >>infrared-generator<< on device " + m_InstanceName + "\n";
 				checkError( m_InfraredGenerator.startGenerating(),
 							error.c_str() );
 				_2REAL_LOG(info) << " ...OK" << std::endl;
@@ -440,7 +437,7 @@ bool OpenNIDevice::startGenerators( const uint32_t startGenerators )
 			if( startGenerators & DEPTHIMAGE )
 			{
 				_2REAL_LOG(info) << "_2Real: Starting depth generator device " << m_InstanceName.c_str();
-				std::string error = "_2RealIMplOpenNI::start Error when starting >>depth-generator<< on device " + m_InstanceName + "\n";
+				std::string error = "_2Real: Error when starting >>depth-generator<< on device " + m_InstanceName + "\n";
 				checkError( GetOpenNIDepthGenerator().StartGenerating(),
 							error.c_str() );
 				_2REAL_LOG(info) << " ...OK" << std::endl;
@@ -448,7 +445,7 @@ bool OpenNIDevice::startGenerators( const uint32_t startGenerators )
 			if( startGenerators & USERIMAGE || startGenerators & USERIMAGE_COLORED )
 			{
 				_2REAL_LOG(info) << "_2Real: Starting user generator device " << m_InstanceName.c_str();
-				std::string error = "_2RealIMplOpenNI::start Error when starting >>user-generator<< on device " + m_InstanceName + "\n";
+				std::string error = "_2Real: Error when starting >>user-generator<< on device " + m_InstanceName + "\n";
 				checkError( m_UserGenerator.startGenerating(),
 							error.c_str() );
 				_2REAL_LOG(info) << " ...OK" << std::endl;
@@ -464,7 +461,7 @@ bool OpenNIDevice::startGenerators( const uint32_t startGenerators )
 		}
 		catch( std::exception& e )
 		{
-			_2REAL_LOG(info) << "_2Real: Error OpenNIImpl::OpenNIDevice::startGenerators() " << std::endl << e.what() << std::endl;
+			_2REAL_LOG(info) << "_2Real: Error startGenerators() " << std::endl << e.what() << std::endl;
 			return false;
 		}
 	}

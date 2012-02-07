@@ -30,7 +30,6 @@
 #include "_2RealImageSource.h"
 
 
-
 namespace _2Real
 {
 	struct _2RealVector3f;		// forward decls
@@ -100,21 +99,20 @@ namespace _2Real
 	*/
 	enum _2RealImages
 	{
-		IMAGE_COLOR_1280X1024		= 1,		//WSDK
-		IMAGE_COLOR_640X480			= 2,		//WSDK, OpenNI
-		IMAGE_COLOR_320X240			= 4,		//WSDK
-		IMAGE_USER_DEPTH_640X480	= 16,		//WSDK, OpenNI,	user image and depth image must have same resolution
-		IMAGE_USER_DEPTH_320X240	= 32,		//WSDK,	user image and depth image must have same resolution
-		IMAGE_USER_DEPTH_80X60		= 64,		//WSDK,	user image and depth image must have same resolution
-		IMAGE_INFRARED_640X480		= 128,		//OpenNI
-		IMAGE_INFRARED_320X240		= 256,		//OpenNI
-		IMAGE_MIRRORING				= 512,
-#ifndef TARGET_MSKINECTSDK
-		IMAGE_CONFIG_DEFAULT		= 530 //IMAGE_COLOR_640X480, IMAGE_DEPTH_640X480, IMAGE_MIRRORING
-#else
-		IMAGE_CONFIG_DEFAULT		= 546 //IMAGE_COLOR_640X480, IMAGE_DEPTH_320X240, IMAGE_MIRRORING
-#endif
+		IMAGE_CONFIG_DEFAULT		= 0,		//IMAGE_COLOR_640X480, IMAGE_DEPTH_640X480, IMAGE_MIRRORING
 
+		IMAGE_COLOR_320X240			= 1,		//WSDK
+		IMAGE_COLOR_640X480			= 2,		//WSDK, OpenNI
+		IMAGE_COLOR_1280X960		= 4,		//WSDK
+		IMAGE_COLOR_1280X1024		= 8,
+
+		IMAGE_USER_DEPTH_80X60		= 16,		//WSDK,	user image and depth image must have same resolution
+		IMAGE_USER_DEPTH_320X240	= 32,		//WSDK,	user image and depth image must have same resolution
+		IMAGE_USER_DEPTH_640X480	= 64,		//WSDK, OpenNI,	user image and depth image must have same resolution
+	
+		IMAGE_INFRARED_320X240		= 128,		//OpenNI
+		IMAGE_INFRARED_640X480		= 256		//OpenNI
+		
 	};
 
 	// Logger enums
@@ -123,14 +121,13 @@ namespace _2Real
 	struct _2RealVector3f
 	{
 		_2RealVector3f( void );
-		_2RealVector3f( float X, float Y, float Z, float confidence=0.0 );
+		_2RealVector3f( float X, float Y, float Z );
 		_2RealVector3f( const _2RealVector3f& o );
 		_2RealVector3f& operator=( const _2RealVector3f& o );
 
 		float x;
 		float y;
 		float z;
-		float confidence;
 	};
 
 
@@ -141,10 +138,24 @@ namespace _2Real
 			elements[0]=1; elements[3]=0; elements[6]=0;
 			elements[1]=0; elements[4]=1; elements[7]=0;
 			elements[2]=0; elements[5]=0; elements[8]=1;
-			confidence=0.0;
 		}
 		float elements[9];
-		float confidence;
+	};
+
+	struct _2RealConfidence
+	{
+		_2RealConfidence() : positionConfidence(0),  orientationConfidence(0)	{};	//default values
+		_2RealConfidence(float posConf, float oriConf) : positionConfidence(posConf),  orientationConfidence(oriConf)	{};	
+		_2RealConfidence( const _2RealConfidence& o ) : positionConfidence(o.positionConfidence), orientationConfidence(o.orientationConfidence) {};
+		_2RealConfidence& operator=( const _2RealConfidence& o )
+		{
+			if( this == &o )
+				return *this;
+			this->positionConfidence = o.positionConfidence; this->orientationConfidence = o.orientationConfidence; 
+			return *this;
+		}
+		float positionConfidence;
+		float orientationConfidence;
 	};
 
 	class _2RealException : public std::exception

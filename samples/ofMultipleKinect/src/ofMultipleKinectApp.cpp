@@ -105,56 +105,63 @@ void ofMultipleKinectApp::drawSkeletons(int deviceID, ofRectangle rect)
 
 	glPushMatrix();
 
-	glTranslatef( rect.x, rect.y, 0 );
-	glScalef( rect.width/(float)m_iKinectWidth, rect.height/(float)m_iKinectHeight, 1);
+	try {
+		glTranslatef( rect.x, rect.y, 0 );
+		glScalef( rect.width/(float)m_iKinectWidth, rect.height/(float)m_iKinectHeight, 1);
 
-	_2RealPositionsVector2f::iterator iter;
-	int numberOfUsers = m_2RealKinect->getNumberOfUsers( deviceID );
+		_2RealPositionsVector2f::iterator iter;
+		int numberOfUsers = m_2RealKinect->getNumberOfUsers( deviceID );
 
-	for( int i = 0; i < numberOfUsers; ++i)
-	{		
-		glColor3f( 0, 1.0, 0.0 );				
-		_2RealPositionsVector2f skeletonPositions = m_2RealKinect->getSkeletonScreenPositions( deviceID, i );
+		for( int i = 0; i < numberOfUsers; ++i)
+		{		
+			glColor3f( 0, 1.0, 0.0 );				
+			_2RealPositionsVector2f skeletonPositions = m_2RealKinect->getSkeletonScreenPositions( deviceID, i );
 
-		_2RealOrientationsMatrix3x3 skeletonOrientations;
-		if(m_2RealKinect->hasFeatureJointOrientation())
-			skeletonOrientations = m_2RealKinect->getSkeletonWorldOrientations( deviceID, i );
+			_2RealOrientationsMatrix3x3 skeletonOrientations;
+			if(m_2RealKinect->hasFeatureJointOrientation())
+				skeletonOrientations = m_2RealKinect->getSkeletonWorldOrientations( deviceID, i );
 
-		int size = skeletonPositions.size();		
-		for(int j = 0; j < size; ++j)
-		{	
-			glPushMatrix();
-			if( m_2RealKinect->isJointAvailable( (_2RealJointType)j ) && skeletonPositions[j].confidence>0.0 )
-			{
-				glTranslatef(skeletonPositions[j].x, skeletonPositions[j].y, 0 );
+			int size = skeletonPositions.size();		
+			for(int j = 0; j < size; ++j)
+			{	
+				_2RealConfidence jointConfidence = m_2RealKinect->getSkeletonJointConfidence(deviceID, i, _2RealJointType(j));
 
-				if(m_2RealKinect->hasFeatureJointOrientation() && skeletonOrientations[j].confidence>0.0 )
+				glPushMatrix();
+				if( m_2RealKinect->isJointAvailable( (_2RealJointType)j ) && jointConfidence.positionConfidence>0.0 )
 				{
-					float modelview[16];
-					glGetFloatv(GL_MODELVIEW_MATRIX , modelview);
+					glTranslatef(skeletonPositions[j].x, skeletonPositions[j].y, 0 );
 
-					modelview[0] = skeletonOrientations[j].elements[0];
-					modelview[1] = skeletonOrientations[j].elements[3];
-					modelview[2] = skeletonOrientations[j].elements[6];
-					modelview[4] = skeletonOrientations[j].elements[1];
-					modelview[5] = skeletonOrientations[j].elements[4];
-					modelview[6] = skeletonOrientations[j].elements[7];
-					modelview[8] = skeletonOrientations[j].elements[2];
-					modelview[9] = skeletonOrientations[j].elements[5];
-					modelview[10] = skeletonOrientations[j].elements[8];
+					if(m_2RealKinect->hasFeatureJointOrientation() && jointConfidence.orientationConfidence>0.0 )
+					{
+						float modelview[16];
+						glGetFloatv(GL_MODELVIEW_MATRIX , modelview);
 
-					glLoadMatrixf(modelview);		
-					ofDrawAxis(fRadius);
+						modelview[0] = skeletonOrientations[j].elements[0];
+						modelview[1] = skeletonOrientations[j].elements[3];
+						modelview[2] = skeletonOrientations[j].elements[6];
+						modelview[4] = skeletonOrientations[j].elements[1];
+						modelview[5] = skeletonOrientations[j].elements[4];
+						modelview[6] = skeletonOrientations[j].elements[7];
+						modelview[8] = skeletonOrientations[j].elements[2];
+						modelview[9] = skeletonOrientations[j].elements[5];
+						modelview[10] = skeletonOrientations[j].elements[8];
+
+						glLoadMatrixf(modelview);		
+						ofDrawAxis(fRadius);
+					}
+					else
+					{
+						ofCircle(  0, 0, fRadius);
+					}
 				}
-				else
-				{
-					ofCircle(  0, 0, fRadius);
-				}
-			}
 			
-			glPopMatrix();
-		}
-	}	
+				glPopMatrix();
+			}
+		}	
+	}
+	catch(...)
+	{
+	}
 	glPopMatrix();
 	
 	glColor3f( 1.0, 1.0, 1.0 );	// reset vertex color to white

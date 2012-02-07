@@ -29,10 +29,9 @@
 #include "I_2RealImplementation.h"
 #include "_2RealUtility.h"
 #include <Windows.h>
-#include "MSR_NuiApi.h" // enumerate devices, access multiple devices
-#include "MSR_NuiImageCamera.h" //adjust camera angle, open streams, read image frames
-#include "MSR_NuiProps.h" //defines api properties enumerators
-#include "MSR_NuiSkeleton.h" //enable skeleton tracking, skeleton data, transforming skeleton
+#include "NuiApi.h" // enumerate devices, access multiple devices
+#include "NuiImageCamera.h" //adjust camera angle, open streams, read image frames
+#include "NuiSkeleton.h" //enable skeleton tracking, skeleton data, transforming skeleton
 #include <iostream>
 #include <vector>
 #include "WSDKDevice.h"
@@ -84,12 +83,12 @@ public:
 		m_ImageConfig = configureImages;
 
 		//initialization --------------------------------------------------------->
-		_2REAL_LOG(info) << "_2Real: Initializing" << std::endl;
+		_2REAL_LOG(info) << "_2Real: Initializing Microsoft Kinect SDK" << std::endl;
 		
 		HRESULT status = 0;
 		//get number of devices
 		int deviceCount = 0;
-		if( FAILED( status = MSR_NUIGetDeviceCount( &deviceCount ) ) )
+		if( FAILED( status = NuiGetSensorCount( &deviceCount ) ) )
 		{
 			throwError( "_2Real: Error when trying to enumerate devices\n" );
 		}
@@ -105,11 +104,11 @@ public:
 		std::stringstream ss;
 
 		//initialization putting device instances to m_devices vector
-		INuiInstance* devicePtr;
+		INuiSensor* devicePtr;
 		for( int i = 0; i < deviceCount; ++i )
 		{
 			//creating instance
-			if( FAILED( status = MSR_NuiCreateInstanceByIndex( i, &devicePtr ) ) )
+			if( FAILED( status = NuiCreateSensorByIndex( i, &devicePtr ) ) )
 			{
 				throwError(("_2Real: Error when trying to create device: " + i));
 			}
@@ -189,6 +188,16 @@ public:
 		if( userID >= users.size() )
 			throwError( "_2RealImplWSDK::getSkeletonWorldOrientations() Error, userID out of bounds!" );
 		return users[userID].getSkeletonWorldOrientations();
+	}
+
+	virtual const _2RealConfidence getSkeletonJointConfidence(const uint32_t deviceID, const uint8_t userID, _2RealJointType type)
+	{
+		checkDeviceRunning(deviceID, "_2RealImplWSDK::getJointConfidence()" );
+
+		_2RealTrackedUserVector& users = m_Devices[deviceID]->GetUsers( 0 ); 
+		if( userID >= users.size() )
+			throwError( "_2RealImplWSDK::getJointConfidence() Error, userID out of bounds!" );
+		return users[userID].getJointConfidence(type);
 	}
 
 	virtual const uint32_t getNumberOfUsers( const uint32_t deviceID ) const
@@ -472,7 +481,7 @@ public:
 		Vector4 out;
 		for( uint32_t i=0; i < coordinateCount; ++i )
 		{
-			out = NuiTransformDepthImageToSkeletonF( inProjective[i].x, inProjective[i].y, (USHORT)inProjective[i].z );
+			out = NuiTransformDepthImageToSkeleton( (LONG)inProjective[i].x, (LONG)inProjective[i].y, (USHORT)inProjective[i].z );
 			outWorld[i].x = out.x;
 			outWorld[i].y = out.y;
 			outWorld[i].z = out.z;
@@ -491,9 +500,22 @@ public:
 			in.x = inWorld[i].x;
 			in.y = inWorld[i].y;
 			in.z = inWorld[i].z;
-			NuiTransformSkeletonToDepthImageF( in, &outProjective[i].x, &outProjective[i].y, &depth );
+			LONG x,y;
+			NuiTransformSkeletonToDepthImage( in, &x, &y, &depth );
+			outProjective[i].x = (float)x;
+			outProjective[i].y = (float)y;
 			outProjective[i].z = depth;
 		}
+	}
+
+	virtual bool setMotorAngle(int deviceID, int angle)
+	{
+		return m_Devices[deviceID]->SetMotorAngle(angle);
+	}
+
+	virtual int getMotorAngle(int deviceID)
+	{
+		return m_Devices[deviceID]->GetMotorAngle();
 	}
 
 	virtual void setLogLevel(_2RealLogLevel iLevel) 

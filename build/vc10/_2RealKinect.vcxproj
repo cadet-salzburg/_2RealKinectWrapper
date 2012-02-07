@@ -279,7 +279,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>TARGET_MSKINECTSDK;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(SolutionDir)\..\..\include;$(SolutionDir)\..\..\src;$(OPEN_NI_INCLUDE);$(KINECTSDK_DIR)\inc;$(SolutionDir)\..\..\externalLibs\boost</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\..\..\include;$(SolutionDir)\..\..\src;$(OPEN_NI_INCLUDE);$(KINECTSDK10_DIR)\inc;$(SolutionDir)\..\..\externalLibs\boost</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -303,7 +303,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>TARGET_MSKINECTSDK;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(SolutionDir)\..\..\include;$(SolutionDir)\..\..\src;$(OPEN_NI_INCLUDE);$(KINECTSDK_DIR)\inc;$(SolutionDir)\..\..\externalLibs\boost</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\..\..\include;$(SolutionDir)\..\..\src;$(OPEN_NI_INCLUDE);$(KINECTSDK10_DIR)\inc;$(SolutionDir)\..\..\externalLibs\boost</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -328,7 +328,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>TARGET_MSKINECTSDK;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)\..\..\include;$(SolutionDir)\..\..\src;$(OPEN_NI_INCLUDE);$(KINECTSDK_DIR)\inc;$(SolutionDir)\..\..\externalLibs\boost</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\..\..\include;$(SolutionDir)\..\..\src;$(OPEN_NI_INCLUDE);$(KINECTSDK10_DIR)\inc;$(SolutionDir)\..\..\externalLibs\boost</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -357,7 +357,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>TARGET_MSKINECTSDK;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)\..\..\include;$(SolutionDir)\..\..\src;$(OPEN_NI_INCLUDE);$(KINECTSDK_DIR)\inc;$(SolutionDir)\..\..\externalLibs\boost</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\..\..\include;$(SolutionDir)\..\..\src;$(OPEN_NI_INCLUDE);$(KINECTSDK10_DIR)\inc;$(SolutionDir)\..\..\externalLibs\boost</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -415,7 +415,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>TARGET_OPENNI;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)\..\..\include;$(SolutionDir)\..\..\src;$(OPEN_NI_INCLUDE);$(MSKINECTSDK_DIR)\inc;$(SolutionDir)\..\..\externalLibs\boost</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\..\..\include;$(SolutionDir)\..\..\src;$(OPEN_NI_INCLUDE);$(SolutionDir)\..\..\externalLibs\boost</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>

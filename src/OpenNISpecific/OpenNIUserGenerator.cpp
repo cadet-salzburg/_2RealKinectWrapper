@@ -81,7 +81,6 @@ void XN_CALLBACK_TYPE calibrationCompleteCallback(xn::SkeletonCapability& rCapab
 		XnChar calibrationPose[20];
 		status = userGenerator->GetSkeletonCap().GetCalibrationPose(calibrationPose);
 		status = userGenerator->GetPoseDetectionCap().StartPoseDetection(calibrationPose, nID);
-		_2REAL_LOG(info) << "_2Real: Calibration failure for user " << nID << ", waiting for calibration pose... status: " << xnGetStatusString(status) << std::endl;
 	}
 }
 
@@ -267,20 +266,22 @@ _2RealTrackedJoint OpenNIUserGenerator::getUserJoint( const uint32_t userID, XnS
 	XnStatus status = m_UserGenerator.GetSkeletonCap().GetSkeletonJoint( userID, type, joint );
 
 	//set position of joint
-	_2RealVector3f worldPos = _2RealVector3f( joint.position.position.X, joint.position.position.Y, joint.position.position.Z, joint.position.fConfidence);
+	_2RealVector3f worldPos = _2RealVector3f( joint.position.position.X, joint.position.position.Y, joint.position.position.Z);
 	XnPoint3D screenPos;
 	xnConvertRealWorldToProjective( m_UserGenerator.GetHandle(), 1, &joint.position.position, &screenPos ); //convert world to screen positon
-
+	
 	//set orienation of joint
 	_2RealMatrix3x3 mat;
 	for( int i=0; i < 9; ++i )
 		mat.elements[i] = joint.orientation.orientation.elements[i];
-	mat.confidence = joint.orientation.fConfidence;
-	
+
+	_2RealConfidence confidence((float)joint.position.fConfidence, (float)joint.orientation.fConfidence);
+
 	return _2RealTrackedJoint(  (_2RealJointType) type,
-								_2RealVector2f( screenPos.X, screenPos.Y, joint.position.fConfidence ),
+								_2RealVector2f( screenPos.X, screenPos.Y ),
 								worldPos,
-								mat );
+								mat,
+								confidence);
 }
 
 XnStatus OpenNIUserGenerator::getUserData( int iID, _2RealImageSource<uint16_t>& data ) const

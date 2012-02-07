@@ -28,8 +28,7 @@
 #include "_2RealTypes.h"
 #include "_2RealUtility.h"
 #include <Windows.h>
-#include "MSR_NuiApi.h"
-#include "MSR_NuiProps.h"
+#include "NuiApi.h"
 #include <iostream>
 #include <stdint.h>
 #include <boost/thread/shared_mutex.hpp>
@@ -46,7 +45,7 @@ namespace _2Real
 class WSDKDevice
 {
 	public:
-		WSDKDevice( INuiInstance* devicePtr, const uint32_t configSensor, const uint32_t configImage, const std::string& name );
+		WSDKDevice( INuiSensor* devicePtr, const uint32_t configSensor, const uint32_t configImage, const std::string& name );
 		virtual ~WSDKDevice(void);
 
 		struct BGRX
@@ -71,6 +70,8 @@ class WSDKDevice
 		uchar*						GetUserImageBuffer( bool waitForNewData );
 		uchar*						GetColoredUserImageBuffer( bool waitForNewData );
 		uint16_t*					GetDepthImageBuffer16Bit( bool waitForNewData );
+		bool						SetMotorAngle(int angle);
+		int							GetMotorAngle();
 
 		//image measure
 		const uint32_t				m_WidthImageColor, m_WidthImageDepthAndUser;
@@ -85,7 +86,7 @@ class WSDKDevice
 		_2RealTrackedJoint			GetJoint( _2RealJointType type, _NUI_SKELETON_POSITION_INDEX nuiType, const NUI_SKELETON_DATA& data );
 								
 
-		INuiInstance*				m_NUIDevice;
+		INuiSensor*					m_pNuiSensor;
 		std::string					m_name;
 		//events
 		HANDLE						m_EventColorImage;

@@ -58,9 +58,9 @@ class I_2RealImplementation
 		virtual const _2RealPositionsVector2f&		getSkeletonScreenPositions( const uint32_t deviceID, const uint8_t userID ) = 0;
 		virtual const _2RealMatrix3x3				getJointWorldOrientation( const uint32_t deviceID, const uint8_t userID, _2RealJointType type ) = 0;
 		virtual const _2RealOrientationsMatrix3x3&	getSkeletonWorldOrientations( const uint32_t deviceID, const uint8_t userID ) = 0;
+		virtual const _2RealConfidence				getSkeletonJointConfidence(const uint32_t deviceID, const uint8_t userID, _2RealJointType type) = 0;
 		virtual const uint32_t						getNumberOfUsers( const uint32_t deviceID ) const = 0;
 		virtual const uint32_t						getNumberOfSkeletons( const uint32_t deviceID ) const = 0;
-
 
 		virtual bool								isMirrored( const uint32_t deviceID, _2RealGenerator type ) const = 0;
 		virtual void								setMirrored( const uint32_t deviceID, _2RealGenerator type, bool flag ) = 0;
@@ -74,6 +74,9 @@ class I_2RealImplementation
 
 		virtual void								convertProjectiveToWorld( const uint32_t deviceID, const uint32_t coordinateCount, const _2RealVector3f* inProjective, _2RealVector3f* outWorld ) = 0;
 		virtual void								convertWorldToProjective( const uint32_t deviceID, const uint32_t coordinateCount, const _2RealVector3f* inWorld, _2RealVector3f* outProjective ) = 0;
+
+		virtual bool								setMotorAngle(int deviceID, int angle) = 0;
+		virtual int									getMotorAngle(int deviceID) = 0;
 
 		virtual void								setLogLevel(_2RealLogLevel iLevel) = 0;
 		virtual void								setLogOutputStream(std::ostream* outStream) = 0;

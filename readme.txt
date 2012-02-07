@@ -26,7 +26,7 @@
 
    
    Version
-     0.9.2 (this is still a beta)
+     0.9.3 (this is still a beta)
    
    Bug reports, feature request or inquiries to:
 	support@cadet.at
@@ -41,6 +41,11 @@
 
 Version History
 ---------------
+0.9.3 Update release
+	+ Updated to newest MS kinect SDK 1.0 (microsoft changed their api quite a bit, it is tested so far with single kinect, and all works fine)
+	+ Updated to newest boost library 1.48.0 (be aware of that when linking against our wrapper, the necessary libs and header are to be found in the external libs folders)
+	+ still todo, add new highres mode to wrapper 1280x960
+
 0.9.2 Update release
 	+ ATTENTION MS SDK Users (the new installer of the MS Kinect SDK sets the environment variable wrong with a double backslash in the folder structure and this renders it unuseable for MS Visual Studio)
 	+ changed OpenNI to work with AutoCalibration so no needed akward calibration pose anymore
@@ -55,7 +60,7 @@ Info
 ----
 	_2RealKinectWrapper is an API built as a static library which simplifies the usage of multiple Kinect sensors (PrimeSense, Microsoft) for C++ programmers. 
 	It supports both major SDKs (OpenNI and Microsoft's Kinect SDK) with one easy to use programming interface. It is multithreaded for maximum performance.
-	Simple examples for libCinder, OpenFrameworks and plain OpenGL/GLUT  accompany the release to demonstrate it's capabilities and usage. 
+	Simple examples for libCinder, OpenFrameworks and plain OpenGL accompanies the release to demonstrate it's capabilities and usage. 
 	The programming interface shouldn't change in the future in terms of breaking your code, new functions nevertheless might be added.
 	We tried to test the software as good as possible. However if you find bugs or issues we are happy if you send us a report or a solution to support@cadet.at, or use github ...
 	You can acquire different images (Depth, RGB, IR,...) of different Kinects at the same time. 
@@ -81,18 +86,18 @@ Prerequistites
 
 	You need to:
 		if you want to use OpenNI
-			* install newest unstable OpenNI lib --> http://openni.org/downloadfiles/opennimodules/openni-binaries/20-latest-unstable
-			* install newest unstable NITE SDK --> http://openni.org/downloadfiles/opennimodules/openni-compliant-middleware-binaries/33-latest-unstable
+			* install newest unstable OpenNI lib --> http://openni.org/
+			* install newest unstable NITE SDK --> http://openni.org/
 		or for Microsoft's Kinect SDK
-			* install newest MS Kinect SDK --> http://research.microsoft.com/en-us/um/redmond/projects/kinectsdk/download.aspx
+			* install newest MS Kinect SDK --> http://www.microsoft.com/en-us/kinectforwindows/develop/
 		
-	Note if you want to use both SDKs on your system (Win7), you can install all of the above libs. 
+	Note if you want to use both SDKs on your system (Win7), you can install all of the above libs. And switch the driver in the device manager of windows
 
 Build
 -----
 	Add environment variables:
 		You have to set the following environment variables in your system ( http://www.windows7hacker.com/index.php/2010/05/how-to-addedit-environment-variables-in-windows-7/ ) :
-			No need anymore with the new MS Kinect SDK to set a manual environment variable. The installer automaically sets KINECTSDK_DIR as env var
+			No need anymore with the new MS Kinect SDK to set a manual environment variable. The installer automaically sets KINECTSDK10_DIR as env var (be aware that before it was KINECTSDK_DIR)
 			
 		If you want to build the cinder sample add:
 			CINDER_DIR		your drive\your base path where you installed cinder (e.g. c:\sdk\cinder)
@@ -142,7 +147,7 @@ Known issues
 		* Right now all found devices will start with the nodes you entered in the start routine, if there is a use we will make an overloaded start for starting different nodes on different devices...
 		
 	OpenNI
-		* Hand and feet have orientation confidence of value 0.0 always (so OpenNI doesn't supply you with orientations for Hand and Feet) 
+		* Hand and feet have orientation confidence of value 0.0 always (so OpenNI doesn't supply you with orientations for hand and feet) 
 		* Multi device user segmentation and skeletonizations are not working correctly yet (it mixes up the different devices, openni is strange)
 		* OpenNI with Kinect sensor only supports 640x480 resolution, Primesense sensor supports different resolutions
 		
@@ -159,7 +164,7 @@ Todo
 	  * Integrate Hand detector of OpenNi
 	  * MacOS (codeblocks/xcode4) / Linux (codeblocks)
 	  * Tutorial
-	  * High Level Recording and Tracking Library (under development)
+	  * High Level Recording and Tracking Library 
 	  * Multi device user tracking bug fixing
   
 Additional notes on the implementation

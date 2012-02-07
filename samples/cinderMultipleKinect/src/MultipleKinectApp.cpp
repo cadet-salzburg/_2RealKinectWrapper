@@ -35,7 +35,7 @@
 #include "cinder/Camera.h"
 
 // _2RealKinect Include
-//#define TARGET_MSKINECTSDK		// use this for MS Kinect SDK, comment it or just not define it for using OpenNI
+#define TARGET_MSKINECTSDK		// use this for MS Kinect SDK, comment it or just not define it for using OpenNI
 #include "_2RealKinect.h"
 
 // Namespaces
@@ -72,6 +72,7 @@ class MultipleKinectApp : public AppBasic
 		int							m_iNumberOfDevices;
 		ci::Vec2f					m_ImageSize;
 		ci::Font					m_Font;
+		int							m_iMotorValue;
 };
 
 MultipleKinectApp::~MultipleKinectApp()
@@ -82,7 +83,7 @@ MultipleKinectApp::~MultipleKinectApp()
 void MultipleKinectApp::prepareSettings( Settings* settings )
 {
 // just open windows console if compiled for windows
-#ifdef _WIN32 || _WIN64							
+#if defined(_WIN32) || defined(_WIN64)				
 	FILE* f;
 	AllocConsole();
 	freopen_s( &f, "CON", "w", stdout );
@@ -98,17 +99,19 @@ void MultipleKinectApp::setup()
 	m_iKinectHeight = 480;
 	m_iScreenWidth = 1024;
 	m_iScreenHeight = 768;
-	m_bIsMirroring = true;	// generators are mirrored by default
+	m_bIsMirroring = true;	
+	m_iMotorValue = 0;
 
 	try
 	{
 		m_2RealKinect = _2RealKinect::getInstance();
 		std::cout << "_2RealKinectWrapper Version: " << m_2RealKinect->getVersion() << std::endl;
-		bool bResult = m_2RealKinect->start( COLORIMAGE | USERIMAGE | DEPTHIMAGE );
+		bool bResult = m_2RealKinect->start( COLORIMAGE | DEPTHIMAGE | USERIMAGE );
 		if( bResult )
 			std::cout << "\n\n_2RealKinectWrapper started successfully!...";
 		
 		m_iNumberOfDevices = m_2RealKinect->getNumberOfDevices();
+		m_iMotorValue = m_2RealKinect->getMotorAngle(0);	// just make motor device 0 controllable
 		resizeImages();
 	}
 	catch ( std::exception& e )
@@ -144,6 +147,8 @@ void MultipleKinectApp::drawKinectImages()
 {			
 	unsigned char* imgRef;
 	int numberChannels = 0;
+
+	cout << m_iMotorValue << std::endl;
 	for( int i = 0; i < m_iNumberOfDevices; ++i)
 	{
 		ci::Rectf destinationRectangle( m_ImageSize.x * i, 0, m_ImageSize.x * (i+1), m_ImageSize.y);
@@ -197,57 +202,66 @@ void MultipleKinectApp::drawSkeletons(int deviceID, ci::Rectf rect)
 {
 	float fRadius = 10.0;
 
-	glLineWidth(2.0);
-	glPushMatrix();
-	
-	glTranslatef( rect.getX1(), rect.getY1(), 0 );
-	glScalef( rect.getWidth()/(float)m_iKinectWidth, rect.getHeight()/(float)m_iKinectHeight, 1);
-
-	_2RealPositionsVector2f::iterator iter;
-	int numberOfUsers = m_2RealKinect->getNumberOfUsers( deviceID );
-
-	for( int i = 0; i < numberOfUsers; ++i)
-	{		
-		glColor3f( 0, 1.0, 0.0 );				
-		_2RealPositionsVector2f skeletonPositions = m_2RealKinect->getSkeletonScreenPositions( deviceID, i );
+	gl::pushMatrices();
+	try
+	{
+		glLineWidth(2.0);
 		
-		_2RealOrientationsMatrix3x3 skeletonOrientations;
-		if(m_2RealKinect->hasFeatureJointOrientation())
-			skeletonOrientations = m_2RealKinect->getSkeletonWorldOrientations( deviceID, i );
+	
+		glTranslatef( rect.getX1(), rect.getY1(), 0 );
+		glScalef( rect.getWidth()/(float)m_iKinectWidth, rect.getHeight()/(float)m_iKinectHeight, 1);
 
-		int size = skeletonPositions.size();		
-		for(int j = 0; j < size; ++j)
-		{	
-			gl::pushModelView();
-			if( m_2RealKinect->isJointAvailable( (_2RealJointType)j ) && skeletonPositions[j].confidence>0.0)
-			{
-				glTranslatef(Vec3f( skeletonPositions[j].x, skeletonPositions[j].y, 0 ));
+		_2RealPositionsVector2f::iterator iter;
+	
 
-				if(m_2RealKinect->hasFeatureJointOrientation() && skeletonOrientations[j].confidence>0.0)
+		for( unsigned int i = 0; i < m_2RealKinect->getNumberOfUsers( deviceID ); ++i)
+		{		
+			glColor3f( 0, 1.0, 0.0 );				
+			_2RealPositionsVector2f skeletonPositions = m_2RealKinect->getSkeletonScreenPositions( deviceID, i );
+		
+			_2RealOrientationsMatrix3x3 skeletonOrientations;
+			if(m_2RealKinect->hasFeatureJointOrientation())
+				skeletonOrientations = m_2RealKinect->getSkeletonWorldOrientations( deviceID, i );
+
+			int size = skeletonPositions.size();		
+			for(int j = 0; j < size; ++j)
+			{	
+				_2RealConfidence jointConfidence = m_2RealKinect->getSkeletonJointConfidence(deviceID, i, _2RealJointType(j));
+				gl::pushModelView();
+				if( m_2RealKinect->isJointAvailable( (_2RealJointType)j ) && jointConfidence.positionConfidence > 0.0)
 				{
-					Matrix44<float> rotMat  = gl::getModelView();
-					rotMat.m00 = skeletonOrientations[j].elements[0];
-					rotMat.m01 = skeletonOrientations[j].elements[1];
-					rotMat.m02 = skeletonOrientations[j].elements[2];
-					rotMat.m10 = skeletonOrientations[j].elements[3];
-					rotMat.m11 = skeletonOrientations[j].elements[4];
-					rotMat.m12 = skeletonOrientations[j].elements[5];
-					rotMat.m20 = skeletonOrientations[j].elements[6];
-					rotMat.m21 = skeletonOrientations[j].elements[7];
-					rotMat.m22 = skeletonOrientations[j].elements[8];
-					glLoadMatrixf(rotMat);		
-					gl::drawCoordinateFrame(fRadius);
+					glTranslatef(Vec3f( skeletonPositions[j].x, skeletonPositions[j].y, 0 ));
+
+					if(m_2RealKinect->hasFeatureJointOrientation() && jointConfidence.orientationConfidence > 0.0)
+					{
+						Matrix44<float> rotMat  = gl::getModelView();
+						rotMat.m00 = skeletonOrientations[j].elements[0];
+						rotMat.m01 = skeletonOrientations[j].elements[1];
+						rotMat.m02 = skeletonOrientations[j].elements[2];
+						rotMat.m10 = skeletonOrientations[j].elements[3];
+						rotMat.m11 = skeletonOrientations[j].elements[4];
+						rotMat.m12 = skeletonOrientations[j].elements[5];
+						rotMat.m20 = skeletonOrientations[j].elements[6];
+						rotMat.m21 = skeletonOrientations[j].elements[7];
+						rotMat.m22 = skeletonOrientations[j].elements[8];
+						glLoadMatrixf(rotMat);		
+						gl::drawCoordinateFrame(fRadius);
+					}
+					else
+					{
+						gl::drawSolidCircle( Vec2f( 0, 0 ), fRadius);
+					}
 				}
-				else
-				{
-					gl::drawSolidCircle( Vec2f( 0, 0 ), fRadius);
-				}
+				gl::popModelView();
 			}
-			gl::popModelView();
-		}
-	}	
-	glPopMatrix();
-	glLineWidth(1.0);
+		}	
+		glPopMatrix();
+		glLineWidth(1.0);
+	}
+	catch(...)
+	{
+	}
+	gl::popMatrices();
 }
 
 void MultipleKinectApp::resize( ResizeEvent event)
@@ -283,7 +297,25 @@ void MultipleKinectApp::keyDown( KeyEvent event )
 		m_iNumberOfDevices = m_2RealKinect->getNumberOfDevices();
 	}
 	if( event.getChar() == 'u' )	// reset all calibrated users (OpenNI only)
+	{
 		m_2RealKinect->resetAllSkeletons();
+	}
+	if( event.getCode() == ci::app::KeyEvent::KEY_UP )	
+	{
+		m_iMotorValue+=3;
+		if(m_2RealKinect->setMotorAngle(0, m_iMotorValue))
+			m_iMotorValue = m_2RealKinect->getMotorAngle(0);
+		else
+			m_iMotorValue-=3;
+	}
+	if( event.getCode() == ci::app::KeyEvent::KEY_DOWN )	
+	{
+		m_iMotorValue-=3;
+		if(m_2RealKinect->setMotorAngle(0, m_iMotorValue))
+			m_iMotorValue = m_2RealKinect->getMotorAngle(0);
+		else
+			m_iMotorValue+=3;
+	}
 }
 
 void MultipleKinectApp::mirrorImages()

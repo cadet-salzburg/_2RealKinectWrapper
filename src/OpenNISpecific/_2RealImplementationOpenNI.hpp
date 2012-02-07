@@ -60,7 +60,6 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 			m_GeneratorConfig( CONFIG_DEFAULT ),
 			m_ImageConfig( IMAGE_CONFIG_DEFAULT )
 		{
-
 		}
 
 		~_2RealImplementationOpenNI()
@@ -77,9 +76,8 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 			m_ImageConfig = configureImages;
 
 			//INITIALIZING!!!
-			_2REAL_LOG(info) << "\n_2Real: Initialized context...";
-			checkError( m_Context.Init(), "_2RealIMplOpenNI::start Error: Could not Initialize kinect...?!\n" );
-			_2REAL_LOG(info) << "OK" << std::endl;
+			_2REAL_LOG(info) << "\n_2Real: Initialized OpenNI SDK " + std::string(XN_VERSION_STRING);
+			checkError( m_Context.Init(), "_2Real: Error Could not Initialize kinect...\n" );
 
 			//creating container for nodes
 			xn::NodeInfoList deviceNodes, imageNodes, irNodes, depthNodes, userNodes;
@@ -87,23 +85,23 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 			//fetching all different node types, enumeration, getting/alloc devices -------------------------------->
 			//fetching all detected kinect devices
 			checkError( m_Context.EnumerateProductionTrees( XN_NODE_TYPE_DEVICE, NULL, deviceNodes, NULL ),
-						 "_2RealIMplOpenNI::start Error when enumerating device Nodes\n" );
+						 "_2Real: Error when enumerating device Nodes\n" );
 
 			//fetching all image generator-nodes
 			checkError( m_Context.EnumerateProductionTrees( XN_NODE_TYPE_IMAGE, NULL, imageNodes, NULL ),
-						 "_2RealIMplOpenNI::start Error when enumerating image nodes\n" );
+						 "_2Real: Error when enumerating image nodes\n" );
 
 			//fetching all depthGen-nodes
 			checkError( m_Context.EnumerateProductionTrees( XN_NODE_TYPE_DEPTH, NULL, depthNodes, NULL ),
-						 "_2RealImplOpenNI::start Error when enumerating depth nodes\n" );
+						 "_2Real: Error when enumerating depth nodes\n" );
 
 			//fetching infrared-generator-nodes
 			checkError( m_Context.EnumerateProductionTrees( XN_NODE_TYPE_IR, NULL, irNodes, NULL ),
-						 "_2RealIMplOpenNI::start Error when enumerating infrared nodes\n" );
+						 "_2Real: Error when enumerating infrared nodes\n" );
 
 			//fetching all user-generator-nodes
 			checkError( m_Context.EnumerateProductionTrees( XN_NODE_TYPE_USER, NULL, userNodes, NULL ),
-						 "_2RealIMplOpenNI::start Error when enumerating user nodes\n" );
+						 "_2Real: Error when enumerating user nodes\n" );
 
 			_2REAL_LOG(info) << "_2Real: Enumeration of devices and nodes ...OK" << std::endl;
 
@@ -212,36 +210,36 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 
 		virtual void setMirrored( const uint32_t deviceID, _2RealGenerator type, bool flag )
 		{
-			checkDeviceRunning(deviceID, "_2RealImplOpenNI::setMirrored() Error, deviceID out of bounds!" );
+			checkDeviceRunning(deviceID);
 
 			switch( type )
 			{
 			case COLORIMAGE:
 				if( !m_Devices[deviceID]->GetOpenNIImageGenerator().IsValid() )
 				{
-					_2REAL_LOG(warn) << "_2Real: Error OpenNIImpl::setMirrored() cannot set capability due non activated color generator..." << std::endl;
+					_2REAL_LOG(warn) << "_2Real: Error setMirrored() cannot set capability due non activated color generator..." << std::endl;
 					return;
 				}
 				checkError( m_Devices[deviceID]->m_ColorGenerator.setMirroring( flag ),
-							"Error _2RealImplOpenNI::setMirrored() Error when trying to set mirroring for color image\n" );
+							"Error setMirrored() Error when trying to set mirroring for color image\n" );
 				break;
 			case DEPTHIMAGE:
 				if( !m_Devices[deviceID]->GetOpenNIDepthGenerator().IsValid() )
 				{
-					_2REAL_LOG(warn) << "_2Real: Error OpenNIImpl::setMirrored() cannot set capability due non activated depth generator..." << std::endl;
+					_2REAL_LOG(warn) << "_2Real: Error setMirrored() cannot set capability due non activated depth generator..." << std::endl;
 					return;
 				}
 				checkError( m_Devices[deviceID]->m_DepthGenerator.setMirroring( flag ),
-							"Error _2RealImplOpenNI::setMirrored() Error when trying to set mirroring for color image\n" );
+							"Error setMirrored() Error when trying to set mirroring for color image\n" );
 				break;
 			case INFRAREDIMAGE:
 				if( !m_Devices[deviceID]->GetOpenNIInfraredGenertor().IsValid() )
 				{
-					_2REAL_LOG(warn) << "_2Real: Error OpenNIImpl::setMirrored() cannot set capability due non activated infrared generator..." << std::endl;
+					_2REAL_LOG(warn) << "_2Real: Error setMirrored() cannot set capability due non activated infrared generator..." << std::endl;
 					return;
 				}
 				checkError( m_Devices[deviceID]->m_InfraredGenerator.setMirroring( flag ),
-							"Error _2RealImplOpenNI::setMirrored() Error when trying to set mirroring for color image\n" );
+							"Error setMirrored() Error when trying to set mirroring for color image\n" );
 				break;
 			case USERIMAGE_COLORED:
 			case USERIMAGE:
@@ -253,7 +251,7 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 
 		virtual bool isMirrored( const uint32_t deviceID, _2RealGenerator type ) const
 		{
-			checkDeviceRunning(deviceID, "_2RealImplOpenNI::isMirrored() Error, deviceID out of bounds!" );
+			checkDeviceRunning(deviceID);
 
 			bool flag = true;
 			switch( type )
@@ -316,7 +314,7 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 
 		virtual void resetSkeleton( const uint32_t deviceID, const uint32_t id )
 		{
-			checkDeviceRunning(deviceID, "_2RealImplOpenNI::resetSkeleton() Error, deviceID out of bounds!" );
+			checkDeviceRunning(deviceID);
 
 			if ( m_Devices[deviceID]->m_UserGenerator.isGenerating() )
 			{
@@ -371,7 +369,7 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 
 		virtual unsigned char* getImageData( const uint32_t deviceID, _2RealGenerator type, bool waitAndBlock, const uint8_t userId )
 		{
-			checkDeviceRunning(deviceID, "_2RealImplOpenNI::getImageData() error, deviceID out of bounds!" );
+			checkDeviceRunning(deviceID);
 
 			bool colorUserImage = false;
 			//refreshing user data
@@ -430,7 +428,7 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 
 		virtual uint16_t* getImageDataDepth16Bit( const uint32_t deviceID, bool waitAndBlock=false)
 		{
-			checkDeviceRunning(deviceID, "_2RealImplOpenNI::getDepthImageData16Bit() Error, deviceID out of bounds!" );
+			checkDeviceRunning(deviceID);
 			if( !m_Devices[deviceID]->GetOpenNIDepthGenerator().IsValid() )
 			{
 				_2REAL_LOG(warn) << "_2Real: OpenNIImpl::getDepthImageData16Bit() depth generator is not activated! Cannot fetch image..." << std::endl;
@@ -449,7 +447,7 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 
 		virtual uint32_t getImageWidth( const uint32_t deviceID, _2RealGenerator type )
 		{
-			checkDeviceRunning(deviceID, "_2RealImplOpenNI::getImageWidth Error, deviceID out of bounds!" );
+			checkDeviceRunning(deviceID);
 
 			switch( type )
 			{
@@ -478,7 +476,7 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 
 		virtual uint32_t getImageHeight( const uint32_t deviceID, _2RealGenerator type )
 		{
-			checkDeviceRunning(deviceID, "_2RealImplOpenNI::getImageHeight() Error, deviceID out of bounds!" );
+			checkDeviceRunning(deviceID);
 
 			switch( type )
 			{
@@ -512,97 +510,124 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 
 		virtual const _2RealVector3f getJointWorldPosition( const uint32_t deviceID, const uint8_t userID, _2RealJointType type )
 		{
-			checkDeviceRunning(deviceID, "_2RealImplOpenNI::getJointWorldPosition() Error, deviceID out of bounds!" );
+			checkDeviceRunning(deviceID);
 
 			//fetching user -> always nonblocking
 			m_TrackedUserVector = m_Devices[deviceID]->getUsers();
 
 			//check userid
-			if( userID < m_TrackedUserVector.size() )
-				return m_TrackedUserVector[userID].getJointWorldPosition( type );
-			throwError( "_2RealImplOpenNI:getJointWorldPosition() Error, userID out of bounds!");
+			if( userID >= m_TrackedUserVector.size() )
+			{
+				throwError( "_2RealImplOpenNI:getJointWorldPosition() Error, userID out of bounds!");
+			}
+			return m_TrackedUserVector[userID].getJointWorldPosition( type );
 		}
 
 		virtual const _2RealPositionsVector3f& getSkeletonWorldPositions( const uint32_t deviceID, const uint8_t userID )
 		{
-			checkDeviceRunning(deviceID, "_2RealImplOpenNI::getSkeletonWorldPositions() Error, deviceID out of bounds!" );
+			checkDeviceRunning(deviceID);
 
 			//fetching user -> always nonblocking
 			m_TrackedUserVector = m_Devices[deviceID]->getUsers();
 
 			//check userid
-			if( userID < m_TrackedUserVector.size() )
-				return m_TrackedUserVector[userID].getSkeletonWorldPositions();
-			throwError( "_2RealImplOpenNI:getSkeletonWorldPositions() Error, userID out of bounds!");
+			if( userID >= m_TrackedUserVector.size() )
+			{
+				throwError( "_2RealImplOpenNI:getSkeletonWorldPositions() Error, userID out of bounds!");
+			}
+			return m_TrackedUserVector[userID].getSkeletonWorldPositions();
 		}
 
 		virtual const _2RealVector2f getJointScreenPosition( const uint32_t deviceID, const uint8_t userID, _2RealJointType type )
 		{
-			checkDeviceRunning(deviceID, "_2RealImplOpenNI::getJointScreenPosition() Error, deviceID out of bounds!" );
+			checkDeviceRunning(deviceID);
 
 			//fetching user -> always nonblocking
 			m_TrackedUserVector = m_Devices[deviceID]->getUsers();
 
 			//check userid
-			if( userID < m_TrackedUserVector.size() )
-				return m_TrackedUserVector[userID].getJointScreenPosition( type );
-			throwError( "_2RealImplOpenNI:getJointScreenPosition() Error, userID out of bounds!");
+			if( userID >= m_TrackedUserVector.size() )
+			{
+				throwError( "_2RealImplOpenNI:getJointScreenPosition() Error, userID out of bounds!");
+			}
+			return m_TrackedUserVector[userID].getJointScreenPosition( type );
 		}
 
 		virtual const _2RealPositionsVector2f& getSkeletonScreenPositions( const uint32_t deviceID, const uint8_t userID )
 		{
-			checkDeviceRunning(deviceID, "_2RealImplOpenNI::getSkeletonScreenPositions() Error, deviceID out of bounds!" );
+			checkDeviceRunning(deviceID);
 
 			//fetching user -> always nonblocking
 			m_TrackedUserVector = m_Devices[deviceID]->getUsers();
 
 			//check userid
-			if( userID < m_TrackedUserVector.size() )
-				return m_TrackedUserVector[userID].getSkeletonScreenPositions();
-			throwError( "_2RealImplOpenNI:getSkeletonScreenPositions() error, userID out of bounds!");
+			if( userID >= m_TrackedUserVector.size() )
+			{
+				throwError( "_2RealImplOpenNI:getSkeletonScreenPositions() error, userID out of bounds!");
+			}
+			return m_TrackedUserVector[userID].getSkeletonScreenPositions();
 		}
 
 		virtual const _2RealOrientationsMatrix3x3& getSkeletonWorldOrientations( const uint32_t deviceID, const uint8_t userID )
 		{
-			checkDeviceRunning(deviceID, "_2RealImplOpenNI::getSkeletonWorldOrientations() Error, deviceID out of bounds!" );
+			checkDeviceRunning(deviceID);
 
 			//fetching user -> always nonblocking
 			m_TrackedUserVector = m_Devices[deviceID]->getUsers();
 
 			//check userid
-			if( userID < m_TrackedUserVector.size() )
-				return m_TrackedUserVector[userID].getSkeletonWorldOrientations();
-			throwError( "_2RealImplOpenNI:getSkeletonWorldOrientations() error, userID out of bounds!");
+			if( userID >= m_TrackedUserVector.size() )
+			{
+				throwError( "_2RealImplOpenNI:getSkeletonWorldOrientations() error, userID out of bounds!");
+			}
+			return m_TrackedUserVector[userID].getSkeletonWorldOrientations();
 		}
 
 		virtual const _2RealMatrix3x3 getJointWorldOrientation( const uint32_t deviceID, const uint8_t userID, _2RealJointType type )
 		{
-			checkDeviceRunning(deviceID, "_2RealImplOpenNI::getJointWorldOrientation() Error, deviceID out of bounds!" );
+			checkDeviceRunning(deviceID);
 
 			//fetching user -> always nonblocking
 			m_TrackedUserVector = m_Devices[deviceID]->getUsers();
 
 			//check userid
-			if( userID < m_TrackedUserVector.size() )
-				return m_TrackedUserVector[userID].getJointWorldOrientation( type );
-			throwError( "_2RealImplOpenNI:getJointWorldOrientation() Error, userID out of bounds!");
+			if( userID >= m_TrackedUserVector.size() )
+			{
+				throwError( "_2RealImplOpenNI:getJointWorldOrientation() Error, userID out of bounds!");
+			}
+			return m_TrackedUserVector[userID].getJointWorldOrientation( type );
+		}
+
+		virtual const _2RealConfidence getSkeletonJointConfidence(const uint32_t deviceID, const uint8_t userID, _2RealJointType type)
+		{
+			checkDeviceRunning(deviceID);
+
+			//fetching user -> always nonblocking
+			m_TrackedUserVector = m_Devices[deviceID]->getUsers();
+
+			//check userid
+			if( userID >= m_TrackedUserVector.size() )
+			{
+				throwError( "getJointConfidence() Error, userID out of bounds!");
+			}
+			return m_TrackedUserVector[userID].getJointConfidence( type );
 		}
 
 		virtual const uint32_t getNumberOfUsers( const uint32_t deviceID ) const
 		{
-			checkDeviceRunning(deviceID, "2RealImplOpenNI::getNumberOfUsers()");
+			checkDeviceRunning(deviceID);
 			return m_Devices[deviceID]->getUsers().size(); //awesome!!! :) -> terror by robz
 		}
 
 		virtual const uint32_t getNumberOfSkeletons( const uint32_t deviceID ) const
 		{
-			checkDeviceRunning(deviceID, "_2RealImplOpenNI::setAlignColorDepthImage()");
+			checkDeviceRunning(deviceID);
 			return m_Devices[deviceID]->getUsers().size(); //awesome!!! :) -> terror by robz
 		}
 
 		virtual void setAlignColorDepthImage( const uint32_t deviceID, bool flag )
 		{
-			checkDeviceRunning(deviceID, "_2RealImplOpenNI::setAlignColorDepthImage()");
+			checkDeviceRunning(deviceID);
 			xn::DepthGenerator& dg = m_Devices[deviceID]->GetOpenNIDepthGenerator();
 			if( dg.IsValid() &&
 				m_Devices[deviceID]->GetOpenNIImageGenerator().IsValid() &&
@@ -611,16 +636,16 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 				if( flag ) //enabling
 				{
 					checkError( dg.GetAlternativeViewPointCap().ResetViewPoint(),
-								 "Error _2RealImplOpenNI::setAlignColorDepthImage() Error when trying to set color to depth alignment\n" );
+								 "_2Real: Error _2RealImplOpenNI::setAlignColorDepthImage() Error when trying to set color to depth alignment\n" );
 
 					checkError( dg.GetAlternativeViewPointCap().SetViewPoint( m_Devices[deviceID]->GetOpenNIImageGenerator() ),
-								 "Error _2RealImplOpenNI::setAlignColorDepthImage() Error when trying to set color to depth alignment\n" );
+								 "_2Real: Error _2RealImplOpenNI::setAlignColorDepthImage() Error when trying to set color to depth alignment\n" );
 				}
 				else
 					checkError( dg.GetAlternativeViewPointCap().ResetViewPoint(),
-								 "Error _2RealImplOpenNI::setAlignColorDepthImage() Error when trying to set color to depth alignment\n" );
+								 "_2Real: Erro setAlignColorDepthImage() Error when trying to set color to depth alignment\n" );
 			}
-			_2REAL_LOG(warn) << "_2Real: _2RealOpenNI::setAlignColorDepthImage() cannot execute, because depth or colorgenerator isnt initialized properly!" << std::endl;
+			_2REAL_LOG(warn) << "_2Real: Error setAlignColorDepthImage() cannot execute, because depth or colorgenerator isnt initialized properly!" << std::endl;
 		}
 
 		virtual bool hasFeatureJointOrientation() const
@@ -639,9 +664,8 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 
 		virtual void convertProjectiveToWorld( const uint32_t deviceID, const uint32_t coordinateCount, const _2RealVector3f* inProjective, _2RealVector3f* outWorld )
 		{
-			checkDeviceRunning(deviceID, "_2RealImplOpenNI::convertWorldToProjective()");
-				throwError( "_2RealImplOpenNI::convertProjectiveToWorld() Error, deviceID out of bounds!" );
-
+			checkDeviceRunning(deviceID);
+				
 			if( m_Devices[deviceID]->GetOpenNIDepthGenerator().IsValid() )
 				xnConvertProjectiveToRealWorld( m_Devices[deviceID]->GetOpenNIDepthGenerator().GetHandle(), coordinateCount, (XnPoint3D*)inProjective, (XnPoint3D*)outWorld );
 			else
@@ -650,12 +674,24 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 
 		virtual void convertWorldToProjective( const uint32_t deviceID, const uint32_t coordinateCount, const _2RealVector3f* inWorld, _2RealVector3f* outProjective )
 		{
-			checkDeviceRunning(deviceID, "_2RealImplOpenNI::convertWorldToProjective()" );
+			checkDeviceRunning(deviceID);
 
 			if( m_Devices[deviceID]->GetOpenNIDepthGenerator().IsValid() )
 				xnConvertRealWorldToProjective( m_Devices[deviceID]->GetOpenNIDepthGenerator().GetHandle(), coordinateCount, (XnPoint3D*)inWorld, (XnPoint3D*)outProjective );
 			else
 				_2REAL_LOG(warn) << "_2Real: ConvertWorldToProjective, depth generator of device id: " << deviceID << " is not enabled!" << std::endl;
+		}
+
+		virtual bool setMotorAngle(int deviceID, int angle)
+		{
+			_2REAL_LOG(warn) << "_2Real: Motor feature not available for OpenNI" << std::endl;
+			return false;
+		}
+
+		virtual int getMotorAngle(int deviceID)
+		{
+			_2REAL_LOG(warn) << "_2Real: Motor feature not available for OpenNI" << std::endl;
+			return 0;
 		}
 
 		virtual void setLogLevel(_2RealLogLevel iLevel)
@@ -676,11 +712,11 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 				throwError( strError );
 		}
 
-		void checkDeviceRunning(uint8_t deviceID, std::string strError) const
+		void checkDeviceRunning(uint8_t deviceID) const
 		{
 			//checking id
 			if ( deviceID > (m_NumDevices - 1) )
-				throwError(strError + " error, deviceID out of bounds!\n");
+				throwError("_2Real: Error, deviceID out of bounds!\n");
 		}
 };
 

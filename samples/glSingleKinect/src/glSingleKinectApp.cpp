@@ -33,13 +33,13 @@ GlSingleKinectApp::GlSingleKinectApp(void)
 	: m_2Real( _2RealKinect::getInstance() ),
 	m_IsInitialized( 0 )
 {
-	LoadTextures();
 	try
 	{
 		if( m_IsInitialized = m_2Real->start( COLORIMAGE | DEPTHIMAGE ) )
 			std::cout << std::endl << "_2Real: Initialization successful!" << std::endl;
 		else
-			std::cout << std::endl << "_2Real: Initialization unsuccessful!" << std::endl;			
+			std::cout << std::endl << "_2Real: Initialization unsuccessful!" << std::endl;		
+		LoadTextures();
 	}
 	catch( std::exception& e )
 	{
@@ -95,7 +95,7 @@ void GlSingleKinectApp::Draw()
 		glTexCoord2f(1.0f, 1.0f); glVertex3f( 2.0f,  2.0f,  0.0f);
 		glTexCoord2f(0.0f, 1.0f); glVertex3f(0.0f,  2.0f,  0.0f);
 	glEnd();
-
+	
 	glBindTexture( GL_TEXTURE_2D, m_Texture[1] );
 	glTranslatef(2.0f,0.0f,0.0f);
 	glBegin(GL_QUADS);

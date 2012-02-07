@@ -128,6 +128,15 @@ const _2RealMatrix3x3 _2RealTrackedUser::getJointWorldOrientation( _2RealJointTy
 	return _2RealMatrix3x3();
 }
 
+_2RealConfidence _2RealTrackedUser::getJointConfidence( _2RealJointType type )
+{
+	if( type < _2REAL_NUMBER_OF_JOINTS && type >= 0 )
+	{
+		return m_Joints[type].getConfidence();
+	}
+	return _2RealConfidence();
+}
+
 uint32_t _2RealTrackedUser::getUserID() const
 {
 	return m_ID;

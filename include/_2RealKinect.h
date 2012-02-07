@@ -162,6 +162,13 @@ class _2RealKinect
 		!*/
 		const _2RealOrientationsMatrix3x3 getSkeletonWorldOrientations( const uint32_t deviceID, const uint8_t userID );
 
+		/*! /brief		Returns position and orientation confidence for a joint on a device for a specific userID
+			/param		const uint32_t deviceID for choosing specific device
+			/param		const uint8_t userID
+			/return		const _2RealConfidence
+		!*/
+		const _2RealConfidence getSkeletonJointConfidence(const uint32_t deviceID, const uint8_t userID, _2RealJointType type);
+
 		/*! /brief		Returns all joints of the skeleton
 			/param		const uint32_t deviceID for choosing specific device
 			/return		const _2RealVector3f
@@ -229,6 +236,20 @@ class _2RealKinect
 		void								convertProjectiveToWorld( const uint32_t deviceID, const uint32_t coordinateCount, const _2RealVector3f* inProjective, _2RealVector3f* outWorld );
 		void								convertWorldToProjective( const uint32_t deviceID, const uint32_t coordinateCount, const _2RealVector3f* inWorld, _2RealVector3f* outProjective );
 
+
+		/*! /brief     Sets elevation of camera via built in motor
+			/param	   device number
+			/param     angle between -27 and 27 for kinect device, 0 is the middle and normal position
+			/return    could angle value be set ?
+		!*/
+		bool								setMotorAngle(int deviceID, int angle);
+
+		/*! /brief     Sets elevation of camera via built in motor
+			/param	   device number
+			/return    angle between -27 and 27 for kinect device, 0 is the middle and normal position
+		!*/
+		int									getMotorAngle(int deviceID);
+
 		/*! /brief     Sets level of verbosity of the integrated logger, ranging from fully verbose (iLevel = debug) to nonverbose (iLevel = none)
 			/param     _2RealLogLevel level enum for loglevel to be set
 			/return    void
@@ -273,7 +294,7 @@ class _2RealKinect
             #endif
         #endif
     #else
-        #pragma comment( lib, "MSRKinectNUI.lib" )
+        #pragma comment( lib, "Kinect10.lib" )
         #ifdef _DEBUG
             #ifdef _DLL
                 #pragma comment( lib, "_2RealKinectMicrosoftSDK_mtd_d.lib")		// Debug MS SDK

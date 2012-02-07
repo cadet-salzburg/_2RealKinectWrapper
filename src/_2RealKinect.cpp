@@ -164,6 +164,11 @@ const _2RealOrientationsMatrix3x3 _2RealKinect::getSkeletonWorldOrientations( co
 	return m_Implementation->getSkeletonWorldOrientations( deviceID, userID );
 }
 
+const _2RealConfidence _2RealKinect::getSkeletonJointConfidence( const uint32_t deviceID, const uint8_t userID, _2RealJointType type  )
+{
+	return m_Implementation->getSkeletonJointConfidence( deviceID, userID, type );
+}
+
 const uint32_t _2RealKinect::getNumberOfSkeletons( const uint32_t deviceID ) const
 {
 	return m_Implementation->getNumberOfSkeletons( deviceID );
@@ -182,6 +187,16 @@ bool _2RealKinect::isJointAvailable( _2RealJointType type ) const
 bool _2RealKinect::hasFeatureJointOrientation() const
 {
 	return m_Implementation->hasFeatureJointOrientation();
+}
+
+bool _2RealKinect::setMotorAngle(int deviceID, int angle)
+{
+	return m_Implementation->setMotorAngle(deviceID, angle);
+}
+
+int _2RealKinect::getMotorAngle(int deviceID)
+{
+	return m_Implementation->getMotorAngle(deviceID);
 }
 
 void _2RealKinect::setLogLevel(_2RealLogLevel iLevel) 

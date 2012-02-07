@@ -34,7 +34,7 @@ class _2RealTrackedJoint
 	public:
 		_2RealTrackedJoint( void );
 		_2RealTrackedJoint( const _2RealJointType jointType, const _2RealVector2f& screenPosition, const _2RealVector3f& worldPosition,
-							const _2RealMatrix3x3& worldOrientation );
+							const _2RealMatrix3x3& worldOrientation, const _2RealConfidence& confidence );
 		virtual ~_2RealTrackedJoint(void);
 		_2RealTrackedJoint( const _2RealTrackedJoint& o );
 		_2RealTrackedJoint& operator=( const _2RealTrackedJoint& joint );
@@ -52,6 +52,10 @@ class _2RealTrackedJoint
 		*/
 		_2RealMatrix3x3					getWorldOrientation() const;
 
+		/*! /brief returns the joints' confidence for position and orientation 
+		*/
+		_2RealConfidence				getConfidence();
+
 		/*! /brief     returns the type of the joint
 			/return    _2Real::JointType
 		!*/
@@ -68,6 +72,8 @@ class _2RealTrackedJoint
 		_2RealVector3f							m_WorldPosition;
 		// orientation, represented by 3x3-Matrix
 		_2RealMatrix3x3							m_WorldOrientation;
+		// orientation, position confidence 
+		_2RealConfidence						m_Confidence;
 
 		friend class _2RealTrackedUser;
 		friend class OpenNIDepthGenerator;

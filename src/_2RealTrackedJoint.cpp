@@ -5,7 +5,7 @@ namespace _2Real
 {
 
 _2RealTrackedJoint::_2RealTrackedJoint( const _2RealJointType jointType, const _2RealVector2f& screenPosition, const _2RealVector3f& worldPosition,
-	const _2RealMatrix3x3& worldOrientation)
+	const _2RealMatrix3x3& worldOrientation, const _2RealConfidence& confidence)
 	: 
 #ifdef TARGET_MSKINECTSDK
 	m_JointType( jointType ),							// MS Kinect
@@ -14,10 +14,9 @@ _2RealTrackedJoint::_2RealTrackedJoint( const _2RealJointType jointType, const _
 #endif	
 	m_ScreenPosition( screenPosition ),
 	m_WorldPosition( worldPosition ),
-	m_WorldOrientation( worldOrientation )
+	m_WorldOrientation( worldOrientation ),
+	m_Confidence ( confidence )
 {
-
-
 }
 
 _2RealTrackedJoint::_2RealTrackedJoint(void)
@@ -28,9 +27,9 @@ _2RealTrackedJoint::_2RealTrackedJoint( const _2RealTrackedJoint& o )
 	: m_JointType( o.m_JointType ),
 	m_WorldPosition( o.m_WorldPosition ),
 	m_ScreenPosition( o.m_ScreenPosition ),
-	m_WorldOrientation( o.m_WorldOrientation )
+	m_WorldOrientation( o.m_WorldOrientation ),
+	m_Confidence ( o.m_Confidence )
 {
-
 }
 
 
@@ -47,6 +46,7 @@ _2RealTrackedJoint &_2RealTrackedJoint::operator=( const _2RealTrackedJoint &joi
 	this->m_WorldPosition = joint.m_WorldPosition;
 	this->m_ScreenPosition = joint.m_ScreenPosition;
 	this->m_WorldOrientation = joint.m_WorldOrientation;
+	this->m_Confidence = joint.m_Confidence;
 
 	return *this;
 }
@@ -83,6 +83,10 @@ _2RealMatrix3x3 _2RealTrackedJoint::getWorldOrientation() const
 	return m_WorldOrientation;
 }
 
+_2RealConfidence _2RealTrackedJoint::getConfidence()
+{
+	return m_Confidence;
+}
 
 //<------------------------------
 
