@@ -33,7 +33,7 @@
 #include <boost/thread/mutex.hpp>
 
 
-namespace _2Real
+namespace _2RealKinectWrapper
 {
 	#define _2REAL_LOG(level)	_2RealLogger::getInstance().setLogLevelForMsg(level); _2RealLogger::getInstance() 
 

@@ -2,7 +2,7 @@
 #include "_2RealConfig.h"
 #include "_2RealUtility.h"
 
-namespace _2Real
+namespace _2RealKinectWrapper
 {
 
 _2RealTrackedUser::_2RealTrackedUser( const _2RealTrackedUser& o )
@@ -20,19 +20,13 @@ _2RealTrackedUser::_2RealTrackedUser( uint32_t id )
 	: m_ID( id )
 {
 	m_Joints.resize( _2REAL_NUMBER_OF_JOINTS );
-	for( int i = 0; i < _2REAL_NUMBER_OF_JOINTS; ++i )
-	{
-		m_Joints[i] = _2RealTrackedJoint();
-	}
+	
 }
 
 _2RealTrackedUser::_2RealTrackedUser()
 {
 	m_Joints.resize( _2REAL_NUMBER_OF_JOINTS );
-	for( int i = 0; i < _2REAL_NUMBER_OF_JOINTS; ++i )
-	{
-		m_Joints[i] = _2RealTrackedJoint();
-	}
+	
 }
 
 _2RealTrackedUser& _2RealTrackedUser::operator=( const _2RealTrackedUser& o )
@@ -62,19 +56,19 @@ _2RealPositionsVector3f& _2RealTrackedUser::getSkeletonWorldPositions()
 
 	for ( int i=0; i<size; ++i )
 	{		
-		m_JointWorldPositions.push_back( getJointWorldPosition(m_Joints[i].getJointType()) );
+		m_JointWorldPositions.push_back( getJointWorldPosition(m_Joints[i]->getJointType()) );
 	}
 	return m_JointWorldPositions;
 }
 
-_2RealPositionsVector2f& _2RealTrackedUser::getSkeletonScreenPositions()
+_2RealPositionsVector3f& _2RealTrackedUser::getSkeletonScreenPositions()
 {
 	m_JointScreenPositions.clear(); //empty world position vector
 	int size = (int)m_Joints.size();
 
 	for ( int i=0; i<size; ++i )
 	{		
-		m_JointScreenPositions.push_back( getJointScreenPosition(m_Joints[i].getJointType()));
+		m_JointScreenPositions.push_back( getJointScreenPosition(m_Joints[i]->getJointType()));
 	}
 	return m_JointScreenPositions;
 }
@@ -86,17 +80,17 @@ _2RealOrientationsMatrix3x3& _2RealTrackedUser::getSkeletonWorldOrientations()
 
 	for ( int i=0; i<size; ++i )
 	{		
-		m_JointWorldOrientations.push_back( getJointWorldOrientation(m_Joints[i].getJointType()));
+		m_JointWorldOrientations.push_back( getJointWorldOrientation(m_Joints[i]->getJointType()));
 	}
 	return m_JointWorldOrientations;
 }
 
-const _2RealTrackedJoint* _2RealTrackedUser::getJoint( const _2RealJointType jointType ) const
+boost::shared_ptr<_2RealTrackedJoint> _2RealTrackedUser::getJoint( const _2RealJointType jointType ) const
 {
 	//checking if joint type is in between 0 and max of bones-1 (24-1)
 	if( jointType < _2REAL_NUMBER_OF_JOINTS && jointType >= 0 )
-		return &m_Joints[jointType];
-	return NULL;
+		return m_Joints[jointType];
+	return boost::shared_ptr<_2RealTrackedJoint>();
 }
 
 const _2RealVector3f _2RealTrackedUser::getJointWorldPosition( _2RealJointType type ) const
@@ -104,48 +98,63 @@ const _2RealVector3f _2RealTrackedUser::getJointWorldPosition( _2RealJointType t
 	//checking if joint type is in between 1 and max of bones (24)
 	if( type < _2REAL_NUMBER_OF_JOINTS && type >= 0  )
 	{
-		return m_Joints[type].getWorldPosition();
+		return m_Joints[type]->getWorldPosition();
 	}
 	return _2RealVector3f();
 }
 
-const _2RealVector2f _2RealTrackedUser::getJointScreenPosition( _2RealJointType type ) const
+const _2RealVector3f _2RealTrackedUser::getJointScreenPosition( _2RealJointType type ) const
 {
 	//checking if joint type is in between 1 and max of bones (24)
 	if( type < _2REAL_NUMBER_OF_JOINTS && type >= 0 )
 	{
-		return m_Joints[type].getScreenPosition();
+		return m_Joints[type]->getScreenPosition();
 	}
-	return _2RealVector2f();
+	return _2RealVector3f();
 }
 
 const _2RealMatrix3x3 _2RealTrackedUser::getJointWorldOrientation( _2RealJointType type ) const
 {
 	if( type < _2REAL_NUMBER_OF_JOINTS && type >= 0 )
 	{
-		return m_Joints[type].getWorldOrientation();
+		return m_Joints[type]->getWorldOrientation();
 	}
 	return _2RealMatrix3x3();
 }
 
-_2RealConfidence _2RealTrackedUser::getJointConfidence( _2RealJointType type )
+_2RealJointConfidence _2RealTrackedUser::getJointConfidence( _2RealJointType type )
 {
 	if( type < _2REAL_NUMBER_OF_JOINTS && type >= 0 )
 	{
-		return m_Joints[type].getConfidence();
+		return m_Joints[type]->getConfidence();
 	}
-	return _2RealConfidence();
+	return _2RealJointConfidence();
 }
+
+
+_2RealJointConfidences _2RealTrackedUser::getJointConfidences()
+{
+	m_JointConfidences.clear(); //empty 
+	int size = (int)m_Joints.size();
+
+	for ( int i=0; i<size; ++i )
+	{		
+		m_JointConfidences.push_back( getJointConfidence(m_Joints[i]->getJointType()));
+	}
+	return m_JointConfidences;
+}
+
+
 
 uint32_t _2RealTrackedUser::getUserID() const
 {
 	return m_ID;
 }
 
-void _2RealTrackedUser::setJoint( const _2RealJointType jointType, const _2RealTrackedJoint& joint )
+void _2RealTrackedUser::setJoint( const _2RealJointType jointType, boost::shared_ptr<_2RealTrackedJoint> joint )
 {
 	if( jointType < 0 || jointType >= (int)m_Joints.size() )
-		throwError( "_2Real: OpenNIImpl::_2RealTrackedUser::setJoint() jointType out of bounds!" );
+		throwError( "_2Real: _2RealTrackedUser::setJoint() jointType out of bounds!" );
 	m_Joints[jointType] = joint;
 }
 

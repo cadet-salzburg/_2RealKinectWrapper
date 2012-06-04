@@ -4,17 +4,18 @@
 #include <boost/interprocess/sync/scoped_lock.hpp>
 #include <stdint.h>
 
+
 #ifndef TARGET_MSKINECTSDK
 	#include "OpenNISpecific/_2RealImplementationOpenNI.hpp"
 #else
 	#include "WinSDKSpecific/_2RealImplementationWinSDK.hpp"
 #endif
 
-namespace _2Real
+namespace _2RealKinectWrapper
 {
 
 boost::mutex _global_2RealMutex;
-_2Real::_2RealKinect* _2RealKinect::m_Instance = NULL;
+_2RealKinectWrapper::_2RealKinect* _2RealKinect::m_Instance = NULL;
 
 _2RealKinect* _2RealKinect::getInstance()
 {
@@ -50,13 +51,19 @@ _2RealKinect::~_2RealKinect()
 {
 	//shutdown && freeing memory
 	shutdown();
-	delete m_Implementation;
 	delete m_Instance;
 }
-
-bool _2RealKinect::start( uint32_t startGenerators, uint32_t configureImages )
+void _2RealKinect::update()
 {
-	return m_Implementation->start( startGenerators, configureImages );
+	m_Implementation->update();
+}
+bool _2RealKinect::configure( const uint32_t deviceID, uint32_t startGenerators, uint32_t configureImages )
+{
+	return m_Implementation->configureDevice( deviceID, startGenerators, configureImages );
+}
+void _2RealKinect::startGenerator( const uint32_t deviceID, uint32_t configureGenerators )
+{
+	m_Implementation->startGenerator( deviceID, configureGenerators );
 }
 
 bool _2RealKinect::shutdown()
@@ -64,14 +71,24 @@ bool _2RealKinect::shutdown()
 	return m_Implementation->shutdown();
 }
 
+const bool _2RealKinect::isNewData(const uint32_t deviceID, _2RealGenerator type) const
+{
+	return m_Implementation->isNewData(deviceID, type);
+}
+
 uint32_t _2RealKinect::getBytesPerPixel( _2RealGenerator type ) const
 {
 	return m_Implementation->getBytesPerPixel( type );
 }
 
-unsigned char* _2RealKinect::getImageData( const uint32_t deviceID, _2RealGenerator type, bool waitAndBlock, const uint8_t userId)
+boost::shared_array<unsigned char> _2RealKinect::getImageData( const uint32_t deviceID, _2RealGenerator type, bool waitAndBlock, const uint8_t userId)
 {
 	return m_Implementation->getImageData( deviceID, type, waitAndBlock, userId );
+}
+
+boost::shared_array<uint16_t> _2RealKinect::getImageDataDepth16Bit( const uint32_t deviceID, bool waitAndBlock/*=false*/ )
+{
+	return m_Implementation->getImageDataDepth16Bit( deviceID, waitAndBlock );
 }
 
 bool _2RealKinect::isMirrored( const uint32_t deviceID, _2RealGenerator type ) const
@@ -119,11 +136,6 @@ bool _2RealKinect::restart()
 	return m_Implementation->restart();
 }
 
-uint16_t* _2RealKinect::getImageDataDepth16Bit( const uint32_t deviceID, bool waitAndBlock/*=false*/ )
-{
-	return m_Implementation->getImageDataDepth16Bit( deviceID, waitAndBlock );
-}
-
 void _2RealKinect::convertProjectiveToWorld( const uint32_t deviceID, const uint32_t coordinateCount, const _2RealVector3f* inProjective, _2RealVector3f* outWorld )
 {
 	m_Implementation->convertProjectiveToWorld( deviceID, coordinateCount, inProjective, outWorld );
@@ -144,12 +156,12 @@ const _2RealPositionsVector3f _2RealKinect::getSkeletonWorldPositions( const uin
 	return m_Implementation->getSkeletonWorldPositions( deviceID, userID );
 }
 
-const _2RealVector2f _2RealKinect::getSkeletonJointScreenPosition( const uint32_t deviceID, const uint8_t userID, _2RealJointType type )
+const _2RealVector3f _2RealKinect::getSkeletonJointScreenPosition( const uint32_t deviceID, const uint8_t userID, _2RealJointType type )
 {
 	return m_Implementation->getJointScreenPosition( deviceID, userID, type );
 }
 
-const _2RealPositionsVector2f _2RealKinect::getSkeletonScreenPositions( const uint32_t deviceID, const uint8_t userID )
+const _2RealPositionsVector3f _2RealKinect::getSkeletonScreenPositions( const uint32_t deviceID, const uint8_t userID )
 {
 	return m_Implementation->getSkeletonScreenPositions( deviceID, userID );
 }
@@ -164,9 +176,14 @@ const _2RealOrientationsMatrix3x3 _2RealKinect::getSkeletonWorldOrientations( co
 	return m_Implementation->getSkeletonWorldOrientations( deviceID, userID );
 }
 
-const _2RealConfidence _2RealKinect::getSkeletonJointConfidence( const uint32_t deviceID, const uint8_t userID, _2RealJointType type  )
+const _2RealJointConfidence _2RealKinect::getSkeletonJointConfidence( const uint32_t deviceID, const uint8_t userID, _2RealJointType type  )
 {
 	return m_Implementation->getSkeletonJointConfidence( deviceID, userID, type );
+}
+
+const _2RealJointConfidences _2RealKinect::getSkeletonJointConfidences(const uint32_t deviceID, const uint8_t userID)
+{
+	return m_Implementation->getSkeletonJointConfidences( deviceID, userID);
 }
 
 const uint32_t _2RealKinect::getNumberOfSkeletons( const uint32_t deviceID ) const
@@ -177,6 +194,16 @@ const uint32_t _2RealKinect::getNumberOfSkeletons( const uint32_t deviceID ) con
 const uint32_t _2RealKinect::getNumberOfUsers( const uint32_t deviceID ) const
 {
 	return m_Implementation->getNumberOfUsers( deviceID );
+}
+
+const _2RealVector3f _2RealKinect::getUsersWorldCenterOfMass(const uint32_t deviceID, const uint8_t userID) 
+{
+	return m_Implementation->getUsersWorldCenterOfMass(deviceID, userID);
+}
+
+const _2RealVector3f _2RealKinect::getUsersScreenCenterOfMass(const uint32_t deviceID, const uint8_t userID)
+{
+	return m_Implementation->getUsersScreenCenterOfMass(deviceID, userID);
 }
 
 bool _2RealKinect::isJointAvailable( _2RealJointType type ) const

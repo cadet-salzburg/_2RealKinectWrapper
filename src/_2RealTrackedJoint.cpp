@@ -1,11 +1,11 @@
 #include "_2RealTrackedJoint.h"
 
 
-namespace _2Real
+namespace _2RealKinectWrapper
 {
 
-_2RealTrackedJoint::_2RealTrackedJoint( const _2RealJointType jointType, const _2RealVector2f& screenPosition, const _2RealVector3f& worldPosition,
-	const _2RealMatrix3x3& worldOrientation, const _2RealConfidence& confidence)
+_2RealTrackedJoint::_2RealTrackedJoint( const _2RealJointType jointType, const _2RealVector3f& screenPosition, const _2RealVector3f& worldPosition,
+	const _2RealMatrix3x3& worldOrientation, const _2RealJointConfidence& confidence)
 	: 
 #ifdef TARGET_MSKINECTSDK
 	m_JointType( jointType ),							// MS Kinect
@@ -53,10 +53,11 @@ _2RealTrackedJoint &_2RealTrackedJoint::operator=( const _2RealTrackedJoint &joi
 
 ////-------------------> Setter
 
-void _2RealTrackedJoint::setScreenPosition( const _2RealVector2f& position )
+void _2RealTrackedJoint::setScreenPosition( const _2RealVector3f& position )
 {
 	m_ScreenPosition.x = position.x;
 	m_ScreenPosition.y = position.y;
+	m_ScreenPosition.z = position.z;
 }
 
 
@@ -73,7 +74,7 @@ _2RealVector3f _2RealTrackedJoint::getWorldPosition() const
 	return m_WorldPosition;
 }
 
-_2RealVector2f _2RealTrackedJoint::getScreenPosition() const
+_2RealKinectWrapper::_2RealVector3f _2RealTrackedJoint::getScreenPosition() const
 {
 	return m_ScreenPosition;
 }
@@ -83,7 +84,7 @@ _2RealMatrix3x3 _2RealTrackedJoint::getWorldOrientation() const
 	return m_WorldOrientation;
 }
 
-_2RealConfidence _2RealTrackedJoint::getConfidence()
+_2RealJointConfidence _2RealTrackedJoint::getConfidence()
 {
 	return m_Confidence;
 }

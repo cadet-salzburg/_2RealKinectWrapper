@@ -1,0 +1,24 @@
+﻿Build started 21.05.2012 17:48:48.
+     1>Project "D:\Work\CADET\Repository\cadet\trunk\projects\_2RealKinectWrapper_New\build\vc10\_2RealKinect.vcxproj" on node 2 (build target(s)).
+     1>InitializeBuildStatus:
+         Creating ".\obj\Release MTD (OpenNI)\_2RealKinect.unsuccessfulbuild" because "AlwaysCreate" was specified.
+       ClCompile:
+         All outputs are up-to-date.
+       Lib:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\Lib.exe /OUT:"D:\Work\CADET\Repository\cadet\trunk\projects\_2RealKinectWrapper_New\build\vc10\\..\..\lib\_2RealKinectOpenNI_mtd.lib" /LIBPATH:D:\Work\CADET\Repository\cadet\trunk\projects\_2RealKinectWrapper_New\build\vc10\\..\..\lib /LIBPATH:"C:\Program Files (x86)\OpenNI\Lib" /LIBPATH:"C:\Program Files\Microsoft SDKs\Kinect\v1.0\\lib" /NOLOGO /LTCG ".\obj\Release MTD (OpenNI)\OpenNIDevice.obj"
+         ".\obj\Release MTD (OpenNI)\WSDKDevice.obj"
+         ".\obj\Release MTD (OpenNI)\_2RealKinect.obj"
+         ".\obj\Release MTD (OpenNI)\_2RealLogger.obj"
+         ".\obj\Release MTD (OpenNI)\_2RealTrackedJoint.obj"
+         ".\obj\Release MTD (OpenNI)\_2RealTrackedUser.obj"
+         ".\obj\Release MTD (OpenNI)\_2RealTypes.obj"
+         ".\obj\Release MTD (OpenNI)\_2RealVector2f.obj"
+         _2RealKinect.vcxproj -> D:\Work\CADET\Repository\cadet\trunk\projects\_2RealKinectWrapper_New\build\vc10\\..\..\lib\_2RealKinectOpenNI_mtd.lib
+       FinalizeBuildStatus:
+         Deleting file ".\obj\Release MTD (OpenNI)\_2RealKinect.unsuccessfulbuild".
+         Touching ".\obj\Release MTD (OpenNI)\_2RealKinect.lastbuildstate".
+     1>Done Building Project "D:\Work\CADET\Repository\cadet\trunk\projects\_2RealKinectWrapper_New\build\vc10\_2RealKinect.vcxproj" (build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.75

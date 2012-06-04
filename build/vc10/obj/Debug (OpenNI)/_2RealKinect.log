@@ -1,0 +1,31 @@
+﻿Build started 31.05.2012 11:56:56.
+     1>Project "D:\Work\CADET\Repository\cadet\trunk\projects\_2RealKinectWrapper_New\build\vc10\_2RealKinect.vcxproj" on node 2 (build target(s)).
+     1>InitializeBuildStatus:
+         Creating ".\obj\Debug (OpenNI)\_2RealKinect.unsuccessfulbuild" because "AlwaysCreate" was specified.
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ID:\Work\CADET\Repository\cadet\trunk\projects\_2RealKinectWrapper_New\build\vc10\\..\..\include /ID:\Work\CADET\Repository\cadet\trunk\projects\_2RealKinectWrapper_New\build\vc10\\..\..\src /ID:\Libraries\boost_1_48_0 /I"C:\Program Files (x86)\OpenNI\Include" /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo".\obj\Debug (OpenNI)\\" /Fd".\obj\Debug (OpenNI)\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt ..\..\src\OpenNISpecific\OpenNIDevice.cpp
+         OpenNIDevice.cpp
+     1>d:\work\cadet\repository\cadet\trunk\projects\_2realkinectwrapper_new\src\opennispecific\opennidevice.cpp(434): warning C4244: 'initializing' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>d:\work\cadet\repository\cadet\trunk\projects\_2realkinectwrapper_new\src\opennispecific\opennidevice.cpp(443): warning C4244: 'initializing' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>d:\work\cadet\repository\cadet\trunk\projects\_2realkinectwrapper_new\src\opennispecific\opennidevice.cpp(452): warning C4244: 'initializing' : conversion from 'float' to 'size_t', possible loss of data
+     1>d:\work\cadet\repository\cadet\trunk\projects\_2realkinectwrapper_new\src\opennispecific\opennidevice.cpp(473): warning C4715: '_2RealKinectWrapper::OpenNIDevice::getBuffer' : not all control paths return a value
+     1>d:\work\cadet\repository\cadet\trunk\projects\_2realkinectwrapper_new\src\opennispecific\opennidevice.cpp(534): warning C4715: '_2RealKinectWrapper::OpenNIDevice::getBuffer16' : not all control paths return a value
+     1>d:\work\cadet\repository\cadet\trunk\projects\_2realkinectwrapper_new\src\opennispecific\opennidevice.cpp(637): warning C4715: '_2RealKinectWrapper::OpenNIDevice::getSkeletonJoint' : not all control paths return a value
+       Lib:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\Lib.exe /OUT:"D:\Work\CADET\Repository\cadet\trunk\projects\_2RealKinectWrapper_New\build\vc10\\..\..\lib\_2RealKinectOpenNI_d.lib" /LIBPATH:D:\Work\CADET\Repository\cadet\trunk\projects\_2RealKinectWrapper_New\build\vc10\\..\..\lib /LIBPATH:"C:\Program Files (x86)\OpenNI\Lib" /LIBPATH:"C:\Program Files\Microsoft SDKs\Kinect\v1.0\\lib" /NOLOGO ".\obj\Debug (OpenNI)\OpenNIDevice.obj"
+         ".\obj\Debug (OpenNI)\WSDKDevice.obj"
+         ".\obj\Debug (OpenNI)\_2RealKinect.obj"
+         ".\obj\Debug (OpenNI)\_2RealLogger.obj"
+         ".\obj\Debug (OpenNI)\_2RealTrackedJoint.obj"
+         ".\obj\Debug (OpenNI)\_2RealTrackedUser.obj"
+         ".\obj\Debug (OpenNI)\_2RealTypes.obj"
+         ".\obj\Debug (OpenNI)\_2RealVector2f.obj"
+         _2RealKinect.vcxproj -> D:\Work\CADET\Repository\cadet\trunk\projects\_2RealKinectWrapper_New\build\vc10\\..\..\lib\_2RealKinectOpenNI_d.lib
+       FinalizeBuildStatus:
+         Deleting file ".\obj\Debug (OpenNI)\_2RealKinect.unsuccessfulbuild".
+         Touching ".\obj\Debug (OpenNI)\_2RealKinect.lastbuildstate".
+     1>Done Building Project "D:\Work\CADET\Repository\cadet\trunk\projects\_2RealKinectWrapper_New\build\vc10\_2RealKinect.vcxproj" (build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:02.12

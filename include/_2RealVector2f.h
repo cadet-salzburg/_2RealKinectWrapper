@@ -24,7 +24,7 @@
 
 #pragma once
 
-namespace _2Real
+namespace _2RealKinectWrapper
 {
 	struct _2RealVector3f;
 

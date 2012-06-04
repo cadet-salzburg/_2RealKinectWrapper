@@ -13,9 +13,11 @@
 				<Option type="2" />
 				<Option compiler="gcc" />
 				<Compiler>
+					<Add option="-std=c++0x" />
 					<Add option="-g" />
 					<Add option="-DUNIX" />
 					<Add option="-DLINUX" />
+					<Add option="-Dlinux" />
 					<Add directory="../../externalLibs/boost" />
 				</Compiler>
 			</Target>
@@ -26,6 +28,7 @@
 				<Option type="3" />
 				<Option compiler="gcc" />
 				<Compiler>
+					<Add option="-std=c++0x" />
 					<Add option="-g" />
 					<Add option="-DUNIX" />
 					<Add option="-DLINUX" />
@@ -39,6 +42,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add option="-std=c++0x" />
 					<Add option="-DUNIX" />
 					<Add option="-DLINUX" />
 				</Compiler>
@@ -54,6 +58,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add option="-std=c++0x" />
 					<Add option="-DUNIX" />
 					<Add option="-DLINUX" />
 				</Compiler>
@@ -118,16 +123,35 @@
 			</Target>
 		</Build>
 		<Compiler>
+			<Add option="-std=c++0x" />
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
+			<Add option="-Dlinux" />
 			<Add directory="../../include" />
 			<Add directory="../../src" />
 			<Add directory="/usr/include/ni" />
+			<Add directory="../../externalLibs/boost" />
 		</Compiler>
 		<Linker>
 			<Add library="OpenNI" />
 		</Linker>
+		<Unit filename="../../include/_2RealImageSource.h" />
+		<Unit filename="../../include/_2RealKinect.h" />
+		<Unit filename="../../include/_2RealTypes.h" />
+		<Unit filename="../../include/_2RealVector2f.h" />
 		<Unit filename="../../src/I_2RealImplementation.h" />
+		<Unit filename="../../src/OpenNISpecific/OpenNIColorGenerator.cpp" />
+		<Unit filename="../../src/OpenNISpecific/OpenNIColorGenerator.h" />
+		<Unit filename="../../src/OpenNISpecific/OpenNIDepthGenerator.cpp" />
+		<Unit filename="../../src/OpenNISpecific/OpenNIDepthGenerator.h" />
+		<Unit filename="../../src/OpenNISpecific/OpenNIDevice.cpp" />
+		<Unit filename="../../src/OpenNISpecific/OpenNIDevice.h" />
+		<Unit filename="../../src/OpenNISpecific/OpenNIGenerator.h" />
+		<Unit filename="../../src/OpenNISpecific/OpenNIInfraredGenerator.cpp" />
+		<Unit filename="../../src/OpenNISpecific/OpenNIInfraredGenerator.h" />
+		<Unit filename="../../src/OpenNISpecific/OpenNIUserGenerator.cpp" />
+		<Unit filename="../../src/OpenNISpecific/OpenNIUserGenerator.h" />
+		<Unit filename="../../src/OpenNISpecific/_2RealImplementationOpenNI.hpp" />
 		<Unit filename="../../src/_2RealConfig.h" />
 		<Unit filename="../../src/_2RealKinect.cpp" />
 		<Unit filename="../../src/_2RealLogger.cpp" />

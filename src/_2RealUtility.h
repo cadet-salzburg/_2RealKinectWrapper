@@ -30,12 +30,11 @@
 #include <string>
 #include "_2RealLogger.h"
 
-namespace _2Real
+namespace _2RealKinectWrapper
 {
 	void inline throwError(std::string strError)
 	{
-		_2REAL_LOG(error) << strError;
+		_2REAL_LOG(error) << " " << strError << std::endl;
 		throw( _2RealException(strError) );
 	}
 }
-

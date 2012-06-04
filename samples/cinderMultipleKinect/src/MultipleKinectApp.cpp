@@ -1,6 +1,6 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
-	Copyright 2011 University of Applied Science Salzburg / MultiMediaTechnology
+	Copy01right 2011 University of Applied Science Salzburg / MultiMediaTechnology
 
 	http://www.cadet.at
 	http://multimediatechnology.at/
@@ -35,33 +35,36 @@
 #include "cinder/Camera.h"
 
 // _2RealKinect Include
-#define TARGET_MSKINECTSDK		// use this for MS Kinect SDK, comment it or just not define it for using OpenNI
+//#define TARGET_MSKINECTSDK		// use this for MS Kinect SDK, comment it or just not define it for using OpenNI
 #include "_2RealKinect.h"
 
 // Namespaces
 using namespace ci;
 using namespace ci::app;
 using namespace std;
-using namespace _2Real;
+using namespace _2RealKinectWrapper;
 
 
 class MultipleKinectApp : public AppBasic
 {
 	public:
+		MultipleKinectApp();
 		~MultipleKinectApp();
 
 		void	setup();
+		void	update();
 		void	draw();
 		void	resize( ResizeEvent event);
 		void	keyDown( KeyEvent event );
 		void	prepareSettings( Settings* settings );
 
 	private:
-		void			drawKinectImages();
-		void			drawSkeletons(int deviceID, ci::Rectf rect);
-		void			resizeImages();
-		void			mirrorImages();
-		unsigned char*	getImageData( int deviceID, _2RealGenerator imageType, int& imageWidth, int& imageHeight, int& bytePerPixel );
+		void								drawKinectImages();
+		void								drawSkeletons(int deviceID, ci::Rectf rect);
+		void								drawCenterOfMasses(int deviceID, ci::Rectf destRect);
+		void								resizeImages();
+		void								mirrorImages();
+		boost::shared_array<unsigned char>	getImageData( int deviceID, _2RealGenerator imageType, int& imageWidth, int& imageHeight, int& bytePerPixel );
 
 		_2RealKinect*				m_2RealKinect;
 		bool						m_bIsMirroring;
@@ -74,6 +77,11 @@ class MultipleKinectApp : public AppBasic
 		ci::Font					m_Font;
 		int							m_iMotorValue;
 };
+
+MultipleKinectApp::MultipleKinectApp() : m_iScreenWidth(1280), m_iScreenHeight(1024)
+{
+
+}
 
 MultipleKinectApp::~MultipleKinectApp()
 {
@@ -90,15 +98,13 @@ void MultipleKinectApp::prepareSettings( Settings* settings )
 #endif
 
 	settings->setTitle("CADET | http://www.cadet.at | MultipleKinectSample");
-	settings->setWindowSize( 1024, 768 );
+	settings->setWindowSize( m_iScreenWidth, m_iScreenHeight );
 }
 
 void MultipleKinectApp::setup()
 {
 	m_iKinectWidth = 640;
 	m_iKinectHeight = 480;
-	m_iScreenWidth = 1024;
-	m_iScreenHeight = 768;
 	m_bIsMirroring = true;	
 	m_iMotorValue = 0;
 
@@ -106,12 +112,18 @@ void MultipleKinectApp::setup()
 	{
 		m_2RealKinect = _2RealKinect::getInstance();
 		std::cout << "_2RealKinectWrapper Version: " << m_2RealKinect->getVersion() << std::endl;
-		bool bResult = m_2RealKinect->start( COLORIMAGE | DEPTHIMAGE | USERIMAGE );
-		if( bResult )
-			std::cout << "\n\n_2RealKinectWrapper started successfully!...";
-		
+		bool bResult = false;
 		m_iNumberOfDevices = m_2RealKinect->getNumberOfDevices();
-		m_iMotorValue = m_2RealKinect->getMotorAngle(0);	// just make motor device 0 controllable
+		for ( int devIdx=0; devIdx < m_iNumberOfDevices ; ++devIdx )
+		{
+			bResult = m_2RealKinect->configure( devIdx,  COLORIMAGE | DEPTHIMAGE | USERIMAGE, IMAGE_COLOR_640X480  );
+			if( bResult )
+			{
+				std::cout << "_2RealKinectWrapper Device " << devIdx << " started successfully!..." << std::endl;
+			}
+			m_iMotorValue = m_2RealKinect->getMotorAngle( devIdx );	// just make motor device 0 controllable
+			m_2RealKinect->startGenerator( devIdx,  DEPTHIMAGE | COLORIMAGE | USERIMAGE );
+		}
 		resizeImages();
 	}
 	catch ( std::exception& e )
@@ -129,13 +141,18 @@ void MultipleKinectApp::setup()
 	m_Font = Font("Arial", 24);
 }
 
+void MultipleKinectApp::update()
+{
+
+}
+
 void MultipleKinectApp::draw()
 {
 	try
 	{
 		gl::clear();
 		gl::color( Color(1,1,1) );
-		drawKinectImages();				//oututs all connected kinect devices generators (depth, rgb, user imgage, skeletons)			
+		drawKinectImages();		
 	}
 	catch( std::exception& e )
 	{
@@ -145,57 +162,68 @@ void MultipleKinectApp::draw()
 
 void MultipleKinectApp::drawKinectImages()
 {			
-	unsigned char* imgRef;
+	boost::shared_array<unsigned char> imgRef;
 	int numberChannels = 0;
 
-	cout << m_iMotorValue << std::endl;
 	for( int i = 0; i < m_iNumberOfDevices; ++i)
 	{
+		//---------------Color Image---------------------//
 		ci::Rectf destinationRectangle( m_ImageSize.x * i, 0, m_ImageSize.x * (i+1), m_ImageSize.y);
-		
-		//rgb image
 		imgRef = getImageData( i, COLORIMAGE, m_iKinectWidth, m_iKinectHeight, numberChannels);
-		Surface8u color( imgRef, m_iKinectWidth, m_iKinectHeight, m_iKinectWidth*numberChannels, SurfaceChannelOrder::RGB );
-		gl::draw( gl::Texture( color ), destinationRectangle);
-		
-		//depth image		
+		Surface8u color( imgRef.get(), m_iKinectWidth, m_iKinectHeight, m_iKinectWidth*numberChannels, SurfaceChannelOrder::RGB );
+		gl::draw( gl::Texture( color ), destinationRectangle );
+
+		//---------------Depth Image---------------------//
 		imgRef = getImageData( i, DEPTHIMAGE, m_iKinectWidth, m_iKinectHeight, numberChannels);
-		Channel depth( m_iKinectWidth, m_iKinectHeight, m_iKinectWidth, numberChannels, imgRef );
+		Channel depth( m_iKinectWidth, m_iKinectHeight, m_iKinectWidth, numberChannels, imgRef.get() );
 		destinationRectangle.offset( ci::Vec2f( 0, m_ImageSize.y) );
-		gl::draw( gl::Texture( depth ),  destinationRectangle );		
-		
-		//user image
+		gl::draw( gl::Texture( depth ),  destinationRectangle );
+
+		//---------------User Image---------------------//
 #ifdef TARGET_MSKINECTSDK
 		if( i == 0 )						
 #endif
 		{
-			imgRef = getImageData( i, USERIMAGE_COLORED, m_iKinectWidth, m_iKinectHeight, numberChannels);
-			Surface8u userColored( imgRef, m_iKinectWidth, m_iKinectHeight, m_iKinectWidth*3, SurfaceChannelOrder::RGB );
-			destinationRectangle.offset( ci::Vec2f( 0, m_ImageSize.y) );			
-			gl::draw( gl::Texture( userColored ), destinationRectangle );
+		 imgRef = getImageData( i, USERIMAGE, m_iKinectWidth, m_iKinectHeight, numberChannels);
+			if( imgRef )
+			{
+				Surface8u userColored( imgRef.get(), m_iKinectWidth, m_iKinectHeight, m_iKinectWidth*3, SurfaceChannelOrder::RGB );
+				destinationRectangle.offset( ci::Vec2f( 0, m_ImageSize.y) );			
+				gl::draw( gl::Texture( userColored ), destinationRectangle );
+#ifndef		TARGET_MSKINECTSDK
+				drawCenterOfMasses(i, destinationRectangle);
+#endif
+			}
+			// draw nrOfUsers with font
+			gl::disableDepthRead();
+			gl::drawString( "Users: "+ toString(m_2RealKinect->getNumberOfUsers(i)), Vec2f( destinationRectangle.x1 + 20 , destinationRectangle.y1 ), Color( 1.0f, 0.0f, 0.0f ), m_Font );	
+			gl::enableDepthRead();
 		}
-		
-		//skeleton		
-		m_iKinectWidth = m_2RealKinect->getImageWidth( i, COLORIMAGE );		
-		m_iKinectHeight = m_2RealKinect->getImageHeight( i, COLORIMAGE );
+		//---------------Skeletons---------------------//	
 		destinationRectangle.offset( ci::Vec2f( 0, m_ImageSize.y) );
 		drawSkeletons(i, destinationRectangle );
-		
+
+		gl::disableDepthRead();
+		gl::drawString( "Skeletons: "+ toString(m_2RealKinect->getNumberOfSkeletons(i)), Vec2f( destinationRectangle.x1 + 20 , destinationRectangle.y1 ), Color( 1.0f, 0.0f, 0.0f ), m_Font );	
+		gl::enableDepthRead();
+
 		//drawing debug strings for devices
+
 		gl::disableDepthRead();
 		gl::color(Color( 1.0, 1.0, 1.0 ));	
 		gl::drawString( "Device "+ toString(i), Vec2f( m_ImageSize.x * i + 20 , 0 ), Color( 1.0f, 0.0f, 0.0f ), m_Font );		
+		//draw fps
+		gl::drawString( "fps: " + toString(getAverageFps()), Vec2f( float(getWindowWidth() - 120), 10.0 ), Color(1,0,0), m_Font);	
 		gl::enableDepthRead();
 	}
 }
 
-unsigned char* MultipleKinectApp::getImageData( int deviceID, _2RealGenerator imageType, int& imageWidth, int& imageHeight, int& bytePerPixel )
+boost::shared_array<unsigned char> MultipleKinectApp::getImageData( int deviceID, _2RealGenerator imageType, int& imageWidth, int& imageHeight, int& bytePerPixel )
 {
 	bytePerPixel = m_2RealKinect->getBytesPerPixel( imageType );
 	imageWidth = m_2RealKinect->getImageWidth( deviceID, imageType );		
 	imageHeight = m_2RealKinect->getImageHeight( deviceID, imageType );
-
-	return m_2RealKinect->getImageData( deviceID, imageType);
+	return m_2RealKinect->getImageData( deviceID, imageType );
 }
 
 void MultipleKinectApp::drawSkeletons(int deviceID, ci::Rectf rect)
@@ -206,27 +234,25 @@ void MultipleKinectApp::drawSkeletons(int deviceID, ci::Rectf rect)
 	try
 	{
 		glLineWidth(2.0);
-		
-	
+
 		glTranslatef( rect.getX1(), rect.getY1(), 0 );
-		glScalef( rect.getWidth()/(float)m_iKinectWidth, rect.getHeight()/(float)m_iKinectHeight, 1);
+		glScalef( rect.getWidth()/(float)m_2RealKinect->getImageWidth(deviceID, DEPTHIMAGE), rect.getHeight()/(float)m_2RealKinect->getImageHeight(deviceID, DEPTHIMAGE), 1);
 
 		_2RealPositionsVector2f::iterator iter;
-	
 
-		for( unsigned int i = 0; i < m_2RealKinect->getNumberOfUsers( deviceID ); ++i)
-		{		
-			glColor3f( 0, 1.0, 0.0 );				
-			_2RealPositionsVector2f skeletonPositions = m_2RealKinect->getSkeletonScreenPositions( deviceID, i );
-		
+		for( unsigned int i = 0; i < m_2RealKinect->getNumberOfSkeletons( deviceID ); ++i)
+		{
+			glColor3f( 0, 1.0, 0.0 );
+			_2RealPositionsVector3f skeletonPositions = m_2RealKinect->getSkeletonScreenPositions( deviceID, i );
+
 			_2RealOrientationsMatrix3x3 skeletonOrientations;
 			if(m_2RealKinect->hasFeatureJointOrientation())
 				skeletonOrientations = m_2RealKinect->getSkeletonWorldOrientations( deviceID, i );
 
-			int size = skeletonPositions.size();		
-			for(int j = 0; j < size; ++j)
+			int size = skeletonPositions.size();
+			for( int j = 0; j < size; ++j )
 			{	
-				_2RealConfidence jointConfidence = m_2RealKinect->getSkeletonJointConfidence(deviceID, i, _2RealJointType(j));
+				_2RealJointConfidence jointConfidence = m_2RealKinect->getSkeletonJointConfidence(deviceID, i, _2RealJointType(j));
 				gl::pushModelView();
 				if( m_2RealKinect->isJointAvailable( (_2RealJointType)j ) && jointConfidence.positionConfidence > 0.0)
 				{
@@ -260,8 +286,29 @@ void MultipleKinectApp::drawSkeletons(int deviceID, ci::Rectf rect)
 	}
 	catch(...)
 	{
+		
 	}
 	gl::popMatrices();
+}
+
+void MultipleKinectApp::drawCenterOfMasses(int deviceID, ci::Rectf destRect)
+{
+	int nrOfUsers = m_2RealKinect->getNumberOfUsers(deviceID);
+	//std::cout << "The number of users is: " << nrOfUsers << std::endl;
+	if ( nrOfUsers > 0 )
+	{
+		gl::color(1,0,0);
+		for ( int i=0; i<nrOfUsers; i++ )
+		{
+			_2RealKinectWrapper::_2RealVector3f center = m_2RealKinect->getUsersScreenCenterOfMass(deviceID, i);	
+			center.x = (center.x / (float)m_iKinectWidth) * (destRect.x2 - destRect.x1) + destRect.x1;
+			center.y = (center.y / (float)m_iKinectHeight) * (destRect.y2 - destRect.y1) + destRect.y1;
+			gl::disableDepthRead();
+			gl::drawStrokedRect(Rectf(center.x, center.y, center.x + 5, center.y + 5));
+			gl::enableDepthRead();
+		}
+		gl::color(1,1,1);
+	}
 }
 
 void MultipleKinectApp::resize( ResizeEvent event)
@@ -270,6 +317,7 @@ void MultipleKinectApp::resize( ResizeEvent event)
 	m_iScreenHeight = getWindowHeight();
 	resizeImages();
 }
+
 
 void MultipleKinectApp::resizeImages()
 {
@@ -293,7 +341,7 @@ void MultipleKinectApp::keyDown( KeyEvent event )
 	{
 		bool bResult = m_2RealKinect->restart();
 		if( bResult )
-			std::cout << "\n\n_2Real started successfully!...";
+			std::cout << "\n\n_2Real started successfully!..." << std::endl;
 		m_iNumberOfDevices = m_2RealKinect->getNumberOfDevices();
 	}
 	if( event.getChar() == 'u' )	// reset all calibrated users (OpenNI only)
@@ -303,18 +351,20 @@ void MultipleKinectApp::keyDown( KeyEvent event )
 	if( event.getCode() == ci::app::KeyEvent::KEY_UP )	
 	{
 		m_iMotorValue+=3;
-		if(m_2RealKinect->setMotorAngle(0, m_iMotorValue))
-			m_iMotorValue = m_2RealKinect->getMotorAngle(0);
-		else
-			m_iMotorValue-=3;
+		m_2RealKinect->setMotorAngle(0, m_iMotorValue);
+//		if(m_2RealKinect->setMotorAngle(0, m_iMotorValue))
+		//	m_iMotorValue = m_2RealKinect->getMotorAngle(0);
+		//else
+		//	m_iMotorValue-=3;
 	}
 	if( event.getCode() == ci::app::KeyEvent::KEY_DOWN )	
 	{
 		m_iMotorValue-=3;
-		if(m_2RealKinect->setMotorAngle(0, m_iMotorValue))
-			m_iMotorValue = m_2RealKinect->getMotorAngle(0);
-		else
-			m_iMotorValue+=3;
+		m_2RealKinect->setMotorAngle(0, m_iMotorValue);
+		//if(m_2RealKinect->setMotorAngle(0, m_iMotorValue))
+		//	m_iMotorValue = m_2RealKinect->getMotorAngle(0);
+		//else
+		//	m_iMotorValue+=3;
 	}
 }
 

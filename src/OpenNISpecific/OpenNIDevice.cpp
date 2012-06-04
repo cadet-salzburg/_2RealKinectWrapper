@@ -1,13 +1,16 @@
-#ifndef TARGET_MSKINECTSDK
+#include "OpenNIDevice.h"
+#include "_2RealUtility.h"
+#include "_2RealTypes.h"
+#include "OpenNiUtils.hpp"
 #include "_2RealConfig.h"
-#include <OpenNISpecific/OpenNIDevice.h>
-#include <iostream>
-#include <sstream>
 
-namespace _2Real
-{
+namespace  _2RealKinectWrapper {
+	
+	XnBool g_bNeedPose = FALSE;
+	XnChar g_strPose[20] = "";
+
 	unsigned char Colors[][3] =
-	{		
+	{
 		{0,255,255},
 		{0,0,255},
 		{0,255,0},
@@ -20,602 +23,767 @@ namespace _2Real
 		{255,255,127},
 		{255,255,255}
 	};
-
-	boost::mutex						m_MutexSyncProcessUsers;
-
-OpenNIDevice::OpenNIDevice( const int id, const std::string& name, xn::Context& context, xn::NodeInfo& deviceInfo )
-	: m_ID( id ),
-	m_DepthImage_8bit( NULL ),
-	m_InfraredImage_8bit( NULL ),
-	m_UserImage_8bit( NULL ),
-	m_UserImageColor_8bit( NULL ),
-	m_InstanceName( name ),
-	m_IsInitialized( false ),
-	m_IsProcessingThread( false ),
-	m_Context( context ),
-	m_DeviceInfo( deviceInfo ),
-	m_IsFetchingData( true ),
-	m_CurrentBuffer( 0 ),
-	m_TrackedUserArraySize( 10 ),
-	m_TrackedUsersArray( NULL )
-{
-	//output node for configuring generators
-	m_OutputModeColor.nFPS = m_OutputModeDepth.nFPS = m_OutputModeInfrared.nFPS = m_OutputModeUser.nFPS = 30; 
-
-	deviceInfo.SetInstanceName( name.c_str() );
-
-	//writing infos
-	std::stringstream ss;
-	ss << "_2Real: Initialized: " << m_InstanceName << ":\nInfo:\nDescription: "
-		<< deviceInfo.GetDescription().strName << "\nCreation-Info: "
-		<< deviceInfo.GetCreationInfo();
-	_2REAL_LOG(info) << ss << std::endl;
-}
-
-
-OpenNIDevice::~OpenNIDevice(void)
-{
-	shutdown();
-}
-
-
-void OpenNIDevice::update( void* instance )
-{
-	OpenNIDevice* devicePtr = static_cast<OpenNIDevice*>( instance );
-
-	while( devicePtr->m_IsProcessingThread )
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+	void XN_CALLBACK_TYPE newUserCb( xn::UserGenerator& generator, XnUserID nId, void* pCookie )
 	{
-		int buffer = devicePtr->m_CurrentBuffer; //taking not to buffer for readout
-
-		//updating generators blocking or non-blocking
-		/*if( waitAndBlock )
+		xn::UserGenerator *userGenerator = static_cast<xn::UserGenerator*>(pCookie);
+		//// New user found
+		if ( g_bNeedPose )
 		{
-		checkError( m_Context.WaitAndUpdateAll(),
-		"Error _2RealImplOpenNI::getUsers() in m_Context::WaitAndUpdateAll\n" );
-		}*/
-
-		//only thread 0 updating openni context
-		//if( !devicePtr->m_ID )
-		
-		// FETCHING USER ----------------------------------------------------------------------------->
-		m_MutexSyncProcessUsers.lock();
-		devicePtr->m_MutexFetchUsers.lock();
-
-		checkError( devicePtr->m_Context.WaitNoneUpdateAll(),
-					"_2Real: getUsers() in m_Context::WaitNoneUpdateAll\n" );
-
-		//filling users vector and getting position (world + screen)
-		if( devicePtr->GetOpenNIDepthGenerator().IsValid() && devicePtr->GetOpenNIUserGenerator().IsValid() )
-		{
-			checkError( devicePtr->m_UserGenerator.getTrackedUsers( devicePtr->m_TrackedUsersArray, devicePtr->m_TrackedUserArraySize ),
-						"_2Real: getUsers() m_usergenerator::getTrackedUsers\n" );
-			checkError( devicePtr->m_DepthGenerator.getUserScreenPositions( devicePtr->m_TrackedUsersArray, devicePtr->m_TrackedUserArraySize ),
-						"_2Real: getUsers() m_usergenerator::getscreenposition\n" );
+			std::cout << "Need Pose: " << nId << std::endl;
+			userGenerator->GetPoseDetectionCap().StartPoseDetection( "", nId );
 		}
-		devicePtr->m_MutexFetchUsers.unlock();
-
-		
-		//user
-		if( devicePtr->GetOpenNIUserGenerator().IsValid() )
+		else
 		{
-			int colors = 11;	// max users for openni
-			int sizeUser = devicePtr->m_UserGenerator.getNrOfUsers();
-
-			for( int u=0; u<sizeUser; ++u )
+			_2REAL_LOG(info) << "_2Real: New user " << nId << ", requested calibration... "<< std::endl;
+			if ( userGenerator )
 			{
-				devicePtr->m_MutexFetchUsers.lock();
-				checkError( devicePtr->m_UserGenerator.getUserData( u, devicePtr->m_UserImage ),
-							"_2Real: Error getImageData() type user image\n" );
-				devicePtr->m_MutexFetchUsers.unlock();
-
-				_2RealVector2f v2Size = devicePtr->m_UserImage.getFullResolution();
-
-				const uint16_t* source = devicePtr->m_UserImage.getData(); /*source 16bit image data*/
-				uint32_t size = int( v2Size.x * v2Size.y );
-
-				//fetching pixel buffer
-				for( uint32_t i=0; i < size; ++i )
-				{
-					devicePtr->m_UserImage_8bit[buffer][i] = (uint8_t)source[i]; //writing "normal" pixel data
-					
-					devicePtr->m_UserImageColor_8bit[buffer][i*3] = 0;
-					devicePtr->m_UserImageColor_8bit[buffer][i*3+1] = 0;
-					devicePtr->m_UserImageColor_8bit[buffer][i*3+2] = 0;
-
-					//writing colored user image
-					if(source[i]%colors != 0)
-					{			
-						devicePtr->m_UserImageColor_8bit[buffer][i*3] = Colors[source[i]%colors][0];
-						devicePtr->m_UserImageColor_8bit[buffer][i*3+1] = Colors[source[i]%colors][1];
-						devicePtr->m_UserImageColor_8bit[buffer][i*3+2] = Colors[source[i]%colors][2];
-					}
-				}
+				userGenerator->GetSkeletonCap().RequestCalibration( nId, TRUE );
 			}
-
 		}
-		m_MutexSyncProcessUsers.unlock();
+	}
 
-		// FETCHING IMAGE DATA ----------------------------------------------------------------------->
-		//color
-		if( devicePtr->GetOpenNIImageGenerator().IsValid() )
+	//-----------------------------------------//
+	void XN_CALLBACK_TYPE lostUserCb(xn::UserGenerator& generator, XnUserID nId, void* pCookie )
+	{
+		std::cout << "Lost user with ID: " << nId << std::endl;
+	}
+
+	//-----------------------------------------//
+
+	void XN_CALLBACK_TYPE userExitCb(xn::UserGenerator& rGenerator, XnUserID nID, void* pCookie)
+	{
+		XnStatus status;
+		xn::UserGenerator *userGenerator = static_cast<xn::UserGenerator*>(pCookie);
+		status = userGenerator->GetSkeletonCap().Reset(nID);
+		_2REAL_LOG(info) << "_2Real: User " << nID << " exited - resetting skeleton data... status: " << xnGetStatusString(status) << std::endl;
+	}
+	//-----------------------------------------//
+
+	void XN_CALLBACK_TYPE userReentryCb(xn::UserGenerator& rGenerator, XnUserID nID, void* pCookie)
+	{
+		XnStatus status;
+		xn::UserGenerator *userGenerator = static_cast<xn::UserGenerator*>(pCookie);	
+		status = userGenerator->GetSkeletonCap().RequestCalibration(nID, TRUE);
+		_2REAL_LOG(info) << "_2Real: User " << nID << " reentered, request calibration... status: " << xnGetStatusString(status) << std::endl;
+	}
+	//-----------------------------------------//
+
+	// Callback: Detected a pose
+	void XN_CALLBACK_TYPE poseDetectedCb( xn::PoseDetectionCapability& capability, const XnChar* strPose, XnUserID nId, void* pCookie )
+	{
+		xn::UserGenerator *userGenerator = static_cast<xn::UserGenerator*>(pCookie);
+		userGenerator->GetPoseDetectionCap().StopPoseDetection(nId);
+		userGenerator->GetSkeletonCap().RequestCalibration(nId, TRUE);
+		std::cout << "Pose detected" << std::endl;
+	}
+
+	//-----------------------------------------//
+
+	void XN_CALLBACK_TYPE userCalibrationStartedCb(xn::SkeletonCapability& capability, XnUserID nId, void* pCookie )
+	{
+		std::cout << "Calibrartion started for ID: " << nId << std::endl;
+	}
+
+	//-----------------------------------------//
+	void XN_CALLBACK_TYPE userCalibrationCompletedCb(xn::SkeletonCapability& capability, XnUserID nId, XnCalibrationStatus eStatus, void* pCookie )
+	{
+		xn::UserGenerator *userGenerator = static_cast<xn::UserGenerator*>(pCookie);
+
+		if ( eStatus == XN_CALIBRATION_STATUS_OK )
 		{
-			checkError( devicePtr->m_ColorGenerator.getData( devicePtr->m_ColorImage ),
-						"_2Real: Error getImageData() type color image\n" );
+			// Calibration succeeded
+			std::cout << "Calibration Completed. Start Tracking User: " << nId << std::endl;
+			userGenerator->GetSkeletonCap().StartTracking( nId );
+		} else {
+			// Calibration failed
+			std::cout << "Calibration failed for user: " << nId << std::endl;
+
+			if( eStatus==XN_CALIBRATION_STATUS_MANUAL_ABORT )
+			{
+				std::cout << "Manual calibration abort occured" << std::endl;
+				return;
+			}
+			if ( g_bNeedPose )
+			{
+				userGenerator->GetPoseDetectionCap().StartPoseDetection( g_strPose, nId);
+			}
+			else
+			{
+				userGenerator->GetSkeletonCap().RequestCalibration(nId, TRUE);
+			}
 		}
-
-		//depth
-		if( devicePtr->GetOpenNIDepthGenerator().IsValid() )
-		{
-			checkError( devicePtr->m_DepthGenerator.getData( devicePtr->m_DepthImage ),
-						"_2Real: Error getImageData() type depth image\n" );
-
-			_2RealVector2f v2Size = devicePtr->m_DepthImage.getFullResolution();
-			convertImage_16_to_8( devicePtr->m_DepthImage.getData(), /*source 16bit image data*/
-								  devicePtr->m_DepthImage_8bit[buffer], /*converted 8bit image*/
-								  int( v2Size.x * v2Size.y ), /*amount of pixels*/
-								  _2REAL_OPENNI_DEPTH_NORMALIZATION_16_TO_8 ); /* highest possible value 3bits reserved of 16bit buffer*/
-		}
-
-		//infrared
-		if( devicePtr->GetOpenNIInfraredGenertor().IsValid() )
-		{
-			checkError( devicePtr->m_InfraredGenerator.getData( devicePtr->m_InfraredImage ),
-						"_2Real: Error getImageData() type infrared image\n" );
-
-			_2RealVector2f v2Size = devicePtr->m_InfraredImage.getFullResolution();
-			convertImage_16_to_8( devicePtr->m_InfraredImage.getData(), /*source 16bit image data*/
-								  devicePtr->m_InfraredImage_8bit[buffer], /*converted 8bit image*/
-								  int( v2Size.x * v2Size.y ), /*amount of pixels*/
-								  255 ); /*no normalization 255 / 255*/
-		}
-
-		//at the and swap buffers
-		devicePtr->m_CurrentBuffer = !devicePtr->m_CurrentBuffer;
 	}
+	//-----------------------------------------//
+
+OpenNIDevice::OpenNIDevice()
+	:m_Context( xn::Context() ),
+	 m_DeviceInfo( NodeInfoRef() ),
+	 m_DeviceName("Device"),
+	 m_DepthImage_8bit( NULL ),
+	 m_InfraredImage_8bit( NULL ),
+	 m_UserImage_8bit( NULL ),
+	 m_UserImageColor_8bit( NULL )
+{
+
 }
 
-void OpenNIDevice::checkError( XnStatus status, std::string error )
+OpenNIDevice::OpenNIDevice( const xn::Context context,  NodeInfoRef deviceInfo, const std::string deviceName )
+	:m_Context( context ),
+	 m_DeviceInfo( deviceInfo ),
+	 m_DeviceName( deviceName ),
+	 m_DepthImage_8bit( NULL ),
+	 m_InfraredImage_8bit( NULL ),
+	 m_UserImage_8bit( NULL ),
+	 m_UserImageColor_8bit( NULL )
 {
-	if ( status != XN_STATUS_OK )
-		throwError( ( error += xnGetStatusString( status ) ).c_str() );	
+
 }
 
-xn::DepthGenerator& OpenNIDevice::GetOpenNIDepthGenerator()
+void OpenNIDevice::addDeviceToContext()
 {
-	return m_DepthGenerator.m_DepthGenerator;
-}
-
-xn::UserGenerator& OpenNIDevice::GetOpenNIUserGenerator()
-{
-	return m_UserGenerator.m_UserGenerator;
-}
-
-xn::ImageGenerator& OpenNIDevice::GetOpenNIImageGenerator()
-{
-	return m_ColorGenerator.m_ColorGenerator;
-}
-
-xn::IRGenerator& OpenNIDevice::GetOpenNIInfraredGenertor()
-{
-	return m_InfraredGenerator.m_InfraredGenerator;
-}
-
-void OpenNIDevice::startupProcessingColorGenerator( xn::NodeInfo& node, const uint32_t configureImages )
-{
-	//configure image-generator output size
-	if( configureImages & IMAGE_COLOR_1280X1024 )
-	{
-		/*XN_RES_QVGA
-		XN_RES_VGA
-		XN_RES_SXGA
-		XN_RES_UXGA
-		XnMapOutputMode Mode;
-		pGenerator->GetMapOutputMode(Mode);
-		Mode.nXRes = Resolution((XnResolution)XN_RES_UXGA).GetXResolution();
-		Mode.nYRes = Resolution((XnResolution)XN_RES_UXGA).GetYResolution();
-		XnStatus nRetVal = pGenerator->SetMapOutputMode(Mode);
-*/
-		m_OutputModeColor.nXRes = xn::Resolution::Resolution((XnResolution)XN_RES_SXGA).GetXResolution();
-		m_OutputModeColor.nYRes = xn::Resolution::Resolution((XnResolution)XN_RES_SXGA).GetYResolution();
-		m_OutputModeColor.nFPS = 10;
-	}
-	else if( configureImages & IMAGE_COLOR_640X480 )
-	{
-		m_OutputModeColor.nXRes = 640;
-		m_OutputModeColor.nYRes = 480;
-	}
-	else if( configureImages & IMAGE_COLOR_320X240 )
-	{
-		m_OutputModeColor.nXRes = 320;
-		m_OutputModeColor.nYRes = 240;
-	}
-	else //default
-	{
-		m_OutputModeColor.nXRes = 640;
-		m_OutputModeColor.nYRes = 480;
-	}
-
-	_2REAL_LOG(info) << "_2Real: Processing color node for device " << m_InstanceName.c_str() << " ...OK" << std::endl;
-	_2REAL_LOG(info) << "_2Real: Creating color generator production tree...";
-
-	//creating production tree for image generator
-	checkError( m_Context.CreateProductionTree( node, GetOpenNIImageGenerator() ),
-				"_2Real: Error when creating production tree for >>image-generator<< \n" );
-
-	_2REAL_LOG(info) << "OK" << std::endl;
-	_2REAL_LOG(info) << "_2Real: Configuring output mode for color generator res: " << m_OutputModeColor.nXRes << "x" << m_OutputModeColor.nYRes << " fps: " << m_OutputModeColor.nFPS << std::endl;
-
-	//setting mirror capability as default
-	checkError( m_ColorGenerator.setMirroring( true ),	"_2Real: Error when setting mirror capability for >>image-generator<< \n" );
-
-	//setting output mode
-	checkError( m_ColorGenerator.setOutputMode( m_OutputModeColor ),
-				"_2Real: Error when setting outputmode for >>image-generator<< \n" );
-
-	//register callbacks
-	checkError( m_ColorGenerator.registerCallbacks(),
-				"_2Real: Error when registering callbacks for >>image-generator<< \n" );
-}
-
-void OpenNIDevice::startupProcessingDepthGenerator( xn::NodeInfo& node, const uint32_t configureImages )
-{
-	//configuring image size
-	if ( configureImages & IMAGE_USER_DEPTH_640X480 )
-	{
-		m_OutputModeDepth.nXRes = 640;
-		m_OutputModeDepth.nYRes = 480;
-	}
-	else if ( configureImages & IMAGE_USER_DEPTH_320X240 )
-	{
-		m_OutputModeDepth.nXRes = 320;
-		m_OutputModeDepth.nYRes = 240;
-	}
-	else if ( configureImages & IMAGE_USER_DEPTH_80X60 )
-	{
-		m_OutputModeDepth.nXRes = 80;
-		m_OutputModeDepth.nYRes = 60;
-	}
-	else //default
-	{
-		m_OutputModeDepth.nXRes = 640;
-		m_OutputModeDepth.nYRes = 480;
-	}
-
+	xn::Device m_Device;
+    m_DeviceInfo->SetInstanceName( m_DeviceName.c_str() );
 	
-	_2REAL_LOG(info) << "_2Real: Processing depth node for device " << m_InstanceName.c_str() << " ...OK" << std::endl;
-	_2REAL_LOG(info) << "_2Real: Creating depth generator production tree...";
+	//ToDo: There is a verified bug in the unstable version of OpenNi that prevents adding a user generator after a device.
+	// for more info see:  http://groups.google.com/group/openni-dev/browse_thread/thread/96331acca1ed7ce3?pli=1
+	//For this reason, we are not forcing the creation of a device node at start, but let it be handled by openni behind the scenes,
+	// when a production node of the device is requested.
 
-	//creating production tree for depthGenerator
-	checkError( m_Context.CreateProductionTree( node, GetOpenNIDepthGenerator() ),
-				"_2Real: Error when creating production tree for >>depth-generator<< \n" );
-
-	_2REAL_LOG(info) << "OK" << std::endl;
-
-	//allocating memory for image buffers
-	m_DepthImage_8bit = new unsigned char*[2]();
-	m_DepthImage_8bit[0] = new unsigned char[m_OutputModeDepth.nXRes*m_OutputModeDepth.nYRes]();
-	m_DepthImage_8bit[1] = new unsigned char[m_OutputModeDepth.nXRes*m_OutputModeDepth.nYRes]();
-
-	_2REAL_LOG(info) << "_2Real: Configuring output mode for depth generator res: " << m_OutputModeDepth.nXRes << "x" << m_OutputModeDepth.nYRes << " fps: " << m_OutputModeDepth.nFPS << std::endl;
-
-	// mirror camera
-	checkError( m_DepthGenerator.setMirroring( true ),	"_2Real: Error when setting mirror capability for >>depth-generator<< \n" );
-	
-
-	//setting output mode
-	checkError( m_DepthGenerator.setOutputMode( m_OutputModeDepth ),
-				"_2Real: Error when setting outputmode for >>depth-generator<< \n" );
-
-	//fetching depth generator instance
-	checkError( m_DepthGenerator.registerCallbacks(),
-				"_2Real: Error when registering callbacks for >>depth-generator<< \n" );
+	checkError( m_Context.CreateProductionTree( *m_DeviceInfo, m_Device ), " Error when creating production tree for device" );
+	m_Device.AddRef();
 }
 
-void OpenNIDevice::startupProcessingInfraredGenerator( xn::NodeInfo& node, const uint32_t configureImages )
+void OpenNIDevice::addGenerator( const XnPredefinedProductionNodeType &nodeType, uint32_t configureImages )
 {
-	if ( configureImages & IMAGE_INFRARED_640X480 )
+	if ( !hasGenerator( nodeType ) )
 	{
-		m_OutputModeInfrared.nXRes = 640;
-		m_OutputModeInfrared.nYRes = 480;
-	}
-	else if ( configureImages & IMAGE_INFRARED_320X240 )
-	{
-		m_OutputModeInfrared.nXRes = 320;
-		m_OutputModeInfrared.nYRes = 240;
-	}
-	else //default
-	{
-		m_OutputModeInfrared.nXRes = 640;
-		m_OutputModeInfrared.nYRes = 480;
-	}
-
-	_2REAL_LOG(info) << "_2Real: Processing infrared node for device " << m_InstanceName.c_str() << " ...OK" << std::endl;
-	_2REAL_LOG(info) << "_2Real: Creating infrared generator production tree...";
-
-	//creating production tree for infrared generator
-	checkError( m_Context.CreateProductionTree( node, GetOpenNIInfraredGenertor() ),
-				"_2Real: Error when creating production tree for >>infrared-generator<< \n" );
-
-	_2REAL_LOG(info) << "OK" << std::endl;
-
-	//allocating pixel buffer
-	m_InfraredImage_8bit = new unsigned char*[2]();
-	m_InfraredImage_8bit[0] = new unsigned char[m_OutputModeInfrared.nXRes*m_OutputModeInfrared.nYRes*3]();
-	m_InfraredImage_8bit[1] = new unsigned char[m_OutputModeInfrared.nXRes*m_OutputModeInfrared.nYRes*3]();
-
-	_2REAL_LOG(info) << "_2Real: Configuring output mode for infrared generator res: " << m_OutputModeInfrared.nXRes << "x" << m_OutputModeInfrared.nYRes << " fps: " << m_OutputModeInfrared.nFPS << std::endl;
-
-	//setting mirror as default
-	checkError( m_InfraredGenerator.setMirroring( true ), "_2Real: Error when setting mirror capability for >>infrared-generator<< \n" );
-
-	//setting output mode
-	checkError( m_InfraredGenerator.setOutputMode( m_OutputModeInfrared ),
-				"_2Real: Error when setting outputmode for >>infrared-generator<< \n" );
-
-	//registering callbacks
-	checkError( m_InfraredGenerator.registerCallbacks(),
-				"_2Real: Error when registering callbacks for >>infrared-generator<< \n" );
-}
-
-void OpenNIDevice::startupProcessingUserGenerator( xn::NodeInfo& node, const uint32_t configureImages )
-{
-	if ( configureImages & IMAGE_USER_DEPTH_640X480 )
-	{
-		m_OutputModeUser.nXRes = 640;
-		m_OutputModeUser.nYRes = 480;
-	}
-	else if ( configureImages & IMAGE_USER_DEPTH_320X240 )
-	{
-		m_OutputModeUser.nXRes = 320;
-		m_OutputModeUser.nYRes = 240;
-	}
-	else if ( configureImages & IMAGE_USER_DEPTH_80X60 )
-	{
-		m_OutputModeUser.nXRes = 80;
-		m_OutputModeUser.nYRes = 60;
-	}
-	else //default
-	{
-		m_OutputModeUser.nXRes = 640;
-		m_OutputModeUser.nYRes = 480;
-	}
-	
-	_2REAL_LOG(info) << "_2Real: Processing user generator node for device " << m_InstanceName.c_str() << " ...OK" << std::endl;
-	_2REAL_LOG(info) << "_2Real: Creating user generator production tree...";
-
-	//creating production tree for user-generator
-	checkError( m_Context.CreateProductionTree( node, GetOpenNIUserGenerator() ),
-				"_2Real: Error when creating production tree for >>user-generator<< \n" );
-
-	_2REAL_LOG(info) << "OK" << std::endl;
-	
-	//creating pixel buffer
-	m_UserImage_8bit = new unsigned char*[2](); 
-	m_UserImageColor_8bit = new unsigned char*[2]();
-	m_UserImage_8bit[0] = new unsigned char[m_OutputModeUser.nXRes*m_OutputModeUser.nYRes](); //user image -> ids, () is for default 0 initialization
-	m_UserImage_8bit[1] = new unsigned char[m_OutputModeUser.nXRes*m_OutputModeUser.nYRes](); //user image -> ids, () is for default 0 initialization
-	m_UserImageColor_8bit[0] = new unsigned char[m_OutputModeUser.nXRes*m_OutputModeUser.nYRes*3](); //user image -> colored contours, () is for default 0 initialization
-	m_UserImageColor_8bit[1] = new unsigned char[m_OutputModeUser.nXRes*m_OutputModeUser.nYRes*3](); //user image -> colored contours, () is for default 0 initialization
-
-	//setting skeleton profile
-	checkError( m_UserGenerator.setSkeletonProfile( XN_SKEL_PROFILE_ALL ),
-				"_2Real: Error when setting skeleton profile for >>user-generator<< \n" );
-
-	//registering callbacks
-	checkError( m_UserGenerator.registerCallbacks(),
-				"_2Real: Error when registering callbacks for >>user-generator<< \n" );
-}
-
-bool OpenNIDevice::startGenerators( const uint32_t startGenerators )
-{
-	if( !m_IsInitialized )
-	{
-		//allocating buffer for users
-		m_TrackedUsersArray = new _2RealTrackedUser*[m_TrackedUserArraySize];
-		//init with null values
-		for( int i=0; i < m_TrackedUserArraySize; ++i )
-			m_TrackedUsersArray[i] = NULL;
-
-		try
+		xn::NodeInfoList nodeList;
+		xn::Query query;
+		query.AddNeededNode( m_DeviceInfo->GetInstanceName() );
+		checkError( m_Context.EnumerateProductionTrees( nodeType, &query, nodeList, NULL ), "Error when enumerating production trees" );
+		if ( nodeList.IsEmpty() )
 		{
-			if( startGenerators & COLORIMAGE )
+            _2RealKinectWrapper::throwError("Requested NodeType is not supported by the device");
+		}
+		xn::NodeInfo node = *nodeList.Begin();
+		//Give a name to the generator
+		std::string nodeName =  xnNodeTypeToString( nodeType ) + "_" + m_DeviceName;
+		node.SetInstanceName( nodeName.c_str() );
+
+		if ( nodeType == XN_NODE_TYPE_IMAGE )
+		{
+			checkError( m_Context.CreateProductionTree( node, m_ImageGenerator ), "Error while creating production tree." );
+			XnMapOutputMode mode = getRequestedOutputMode( nodeType, configureImages );
+			checkError( m_ImageGenerator.SetMapOutputMode( mode ), "_2Real: Error when setting outputmode \n" );
+		} 
+		else if ( nodeType == XN_NODE_TYPE_DEPTH )
+		{
+			checkError( m_Context.CreateProductionTree( node, m_DepthGenerator ), "Error while creating production tree." );
+			XnMapOutputMode mode = getRequestedOutputMode( nodeType, configureImages );
+			checkError( m_DepthGenerator.SetMapOutputMode( mode ), "_2Real: Error when setting outputmode \n" );
+			if ( !m_DepthImage_8bit )
 			{
-				_2REAL_LOG(info) << "_2Real: Starting image generator device " << m_InstanceName << std::endl;
-				std::string error = "_2Real: Error when starting >>color-generator<< on device " + m_InstanceName + "\n";
-				checkError( m_ColorGenerator.startGenerating(),
-							error.c_str() );
-				_2REAL_LOG(info) << " ...OK" << std::endl;
+				m_DepthImage_8bit = ImageDataRef( new unsigned char[mode.nXRes*mode.nYRes]);
 			}
-			if( startGenerators & INFRAREDIMAGE )
+		} 
+		else if ( nodeType == XN_NODE_TYPE_IR )
+		{
+			checkError( m_Context.CreateProductionTree( node, m_IrGenerator ), "Error while creating production tree." );
+			XnMapOutputMode mode = getRequestedOutputMode( nodeType, configureImages );
+			checkError( m_IrGenerator.SetMapOutputMode( mode ), "_2Real: Error when setting outputmode \n" );
+			if ( !m_InfraredImage_8bit )
 			{
-				_2REAL_LOG(info) << "_2Real: Starting infrared generator device " << m_InstanceName.c_str();
-				std::string error = "_2Real: Error when starting >>infrared-generator<< on device " + m_InstanceName + "\n";
-				checkError( m_InfraredGenerator.startGenerating(),
-							error.c_str() );
-				_2REAL_LOG(info) << " ...OK" << std::endl;
+				m_InfraredImage_8bit = ImageDataRef( new unsigned char[mode.nXRes*mode.nYRes]);
 			}
-			if( startGenerators & DEPTHIMAGE )
+		} 
+		else if ( nodeType == XN_NODE_TYPE_USER )
+		{
+			checkError( m_Context.CreateProductionTree( node, m_UserGenerator ), "Error while creating production tree." );
+			//Get mode from depth generator
+			XnMapOutputMode mode = getRequestedOutputMode( XN_NODE_TYPE_DEPTH, configureImages );
+			registerUserCallbacks();
+			if ( !m_UserImage_8bit )
 			{
-				_2REAL_LOG(info) << "_2Real: Starting depth generator device " << m_InstanceName.c_str();
-				std::string error = "_2Real: Error when starting >>depth-generator<< on device " + m_InstanceName + "\n";
-				checkError( GetOpenNIDepthGenerator().StartGenerating(),
-							error.c_str() );
-				_2REAL_LOG(info) << " ...OK" << std::endl;
+				m_UserImage_8bit = ImageDataRef( new unsigned char[mode.nXRes*mode.nYRes]);
 			}
-			if( startGenerators & USERIMAGE || startGenerators & USERIMAGE_COLORED )
+			if ( !m_UserImageColor_8bit )
 			{
-				_2REAL_LOG(info) << "_2Real: Starting user generator device " << m_InstanceName.c_str();
-				std::string error = "_2Real: Error when starting >>user-generator<< on device " + m_InstanceName + "\n";
-				checkError( m_UserGenerator.startGenerating(),
-							error.c_str() );
-				_2REAL_LOG(info) << " ...OK" << std::endl;
+				m_UserImageColor_8bit = ImageDataRef( new unsigned char[mode.nXRes*mode.nYRes*3]);
 			}
-
-			//starting boost thread
-			m_IsProcessingThread = true;
-			_2REAL_LOG(info) << "_2Real: Starting processing thread for device " << m_InstanceName.c_str();
-			m_ProcessingThread = boost::thread( boost::bind( &OpenNIDevice::update, this ), this );
-			_2REAL_LOG(info) << " ...OK" << std::endl;
-			
-			return ( m_IsInitialized = true );
 		}
-		catch( std::exception& e )
-		{
-			_2REAL_LOG(info) << "_2Real: Error startGenerators() " << std::endl << e.what() << std::endl;
-			return false;
-		}
-	}
-	return false; //already started
-}
 
-/*! /brief     Normalizing and copying pixel data from source to destination pixel buffer
-/param     const uint16_t * source - Pixeldata will be read and normalized
-/param     unsigned char * destination - Normalized pixeldata will be written in here
-/param     uint32_t size - Size of pixel buffer array - Notice that source and destination have to be the same size!
-/return    void
-!*/
-void OpenNIDevice::convertImage_16_to_8( const uint16_t* source, unsigned char* destination, uint32_t size, const int normalizing )
-{
-	//iterating each pixel and writing normalized pixel data
-	for( unsigned int i=0; i<size; ++i )
-		destination[i] = (unsigned char) ( source[i] * ( (float)( 1 << 8 ) / normalizing ) ); //normalized 16bit to 8bit
-}
-
-_2Real::_2RealTrackedUserVector OpenNIDevice::getUsers()
-{
-	m_MutexFetchUsers.lock();
-	_2RealTrackedUserVector retUsers;
-	for( int i=0; i<m_TrackedUserArraySize; ++i )
+	} else
 	{
-		if( m_TrackedUsersArray[i] )
-			retUsers.push_back( *m_TrackedUsersArray[i] );
+		std::cout << "Generator for nodetype: " << xnNodeTypeToString(nodeType) << " already exists." << std::endl;
 	}
-	m_MutexFetchUsers.unlock();
-	return retUsers;
 }
 
-const XnMapOutputMode& OpenNIDevice::getOutputmodeColor() const
+bool OpenNIDevice::hasGenerator( const XnPredefinedProductionNodeType &nodeType ) const
 {
-	return m_OutputModeColor;
-}
-
-const XnMapOutputMode& OpenNIDevice::getOutputmodeDepth() const
-{
-	return m_OutputModeDepth;
-}
-
-const XnMapOutputMode& OpenNIDevice::getOutputmodeInfrared() const
-{
-	return m_OutputModeInfrared;
-}
-
-const XnMapOutputMode& OpenNIDevice::getOutputmodeUser() const
-{
-	return m_OutputModeUser;
-}
-
-uint16_t* OpenNIDevice::getDepthBuffer_16bit()
-{
-	return const_cast<uint16_t*>( m_DepthImage.getData() );
-}
-
-uint8_t* OpenNIDevice::getImageBuffer()
-{
-	return const_cast<uint8_t*>( m_ColorImage.getData() );
-}
-
-uint8_t* OpenNIDevice::getDepthBuffer()
-{
-	return m_DepthImage_8bit[m_CurrentBuffer];
-}
-
-uint8_t* OpenNIDevice::getInfraredBuffer()
-{
-	return m_InfraredImage_8bit[m_CurrentBuffer];
-}
-
-uint8_t* OpenNIDevice::getUserImageBuffer()
-{
-	return m_UserImage_8bit[m_CurrentBuffer];
-}
-
-uint8_t* OpenNIDevice::getUserColorImageBuffer()
-{
-	return m_UserImageColor_8bit[m_CurrentBuffer];
-}
-
-bool OpenNIDevice::shutdown()
-{
-	if( !m_IsInitialized ) //has not been initialized
-		return false;
-	try
+	xn::Query query;
+	query.AddNeededNode( m_DeviceInfo->GetInstanceName() );
+	xn::NodeInfoList nodeList;
+	checkError( m_Context.EnumerateExistingNodes( nodeList, nodeType ), "Error Encountered while enumerating existing nodes" );
+	nodeList.FilterList( m_Context, query );
+	bool result = true;
+	if ( nodeList.IsEmpty() )
 	{
-		//killing processing thread and waiting to join
-		m_IsProcessingThread = m_IsInitialized = m_IsFetchingData = false;
-		m_ProcessingThread.join();
-		
-		//stopping OpenNI
-		if( GetOpenNIImageGenerator().IsValid() )
-		{
-			m_ColorGenerator.unlockGenerator();
-			m_ColorGenerator.stopGenerating();
-		}
-		if( GetOpenNIDepthGenerator().IsValid() )
-		{
-			m_DepthGenerator.unlockGenerator();
-			m_DepthGenerator.stopGenerating();
-		}
-		if( GetOpenNIUserGenerator().IsValid() )
-		{
-			m_UserGenerator.unlockGenerator();
-			m_UserGenerator.stopGenerating();
-		}
-		if( GetOpenNIInfraredGenertor().IsValid() )
-		{
-			m_InfraredGenerator.unlockGenerator();
-			m_InfraredGenerator.stopGenerating();
-		}
-		
-		//clearing user buffer
-		for( int i=0; i < m_TrackedUserArraySize; ++i )
-		{
-			if( m_TrackedUsersArray[i] )
-				delete m_TrackedUsersArray[i];
-		}
-
-		//free memory of pixel buffers
-		if( m_DepthImage_8bit )
-		{
-			delete [] m_DepthImage_8bit[0];
-			delete [] m_DepthImage_8bit[1];
-			delete [] m_DepthImage_8bit;
-		}
-		if( m_InfraredImage_8bit )
-		{
-			delete [] m_InfraredImage_8bit[0];
-			delete [] m_InfraredImage_8bit[1];
-			delete [] m_InfraredImage_8bit;
-		}
-		if( m_UserImage_8bit )
-		{
-			delete [] m_UserImage_8bit[0];
-			delete [] m_UserImage_8bit[1];
-			delete [] m_UserImage_8bit;
-		}
-		if( m_UserImageColor_8bit )
-		{
-			delete [] m_UserImageColor_8bit[0];
-			delete [] m_UserImageColor_8bit[1];
-			delete [] m_UserImageColor_8bit;
-		}
-
-	} catch( std::exception& e )
-	{
-		_2REAL_LOG(info) << "_2Real: Error when trying to shutdown device " << m_InstanceName.c_str()
-				  << std::endl << e.what() << std::endl;
+		result = false;
 	}
+	return result;
+}
+
+xn::NodeInfo OpenNIDevice::getNodeInfo()
+{
+	return *m_DeviceInfo;
+}
+
+xn::NodeInfoList OpenNIDevice::getNodeInfoList( const XnPredefinedProductionNodeType &nodeType  )
+{
+	xn::NodeInfoList nodeList;
+	xn::Query query;
+	query.AddNeededNode( m_DeviceInfo->GetInstanceName() );
+	checkError( m_Context.EnumerateProductionTrees( nodeType, &query, nodeList, NULL ), "Error when enumerating production trees" );
+	if ( nodeList.IsEmpty() )
+	{
+		_2RealKinectWrapper::throwError("Requested NodeType is not supported by the device");
+	}
+	return nodeList;
+}
+
+void OpenNIDevice::startGenerator( const XnPredefinedProductionNodeType &nodeType )
+{
+	xn::Generator generator;
+	getExistingProductionNode( nodeType, generator );
+	if ( !generator.IsGenerating() )
+	{
+		generator.StartGenerating();
+	}
+}
+
+void OpenNIDevice::stopGenerator( const XnPredefinedProductionNodeType &nodeType )
+{
+	xn::Generator generator;
+	getExistingProductionNode( nodeType, generator );
+	if ( generator.IsGenerating() )
+	{
+		generator.StopGenerating();
+	}
+}
+
+void OpenNIDevice::removeGenerator( const XnPredefinedProductionNodeType &nodeType )
+{
+	//ToDo: removeGenerator appears to not work. FixMe
+	xn::Generator generator;
+	getExistingProductionNode( nodeType, generator );
+	generator.Release();
+}
+
+XnMapOutputMode OpenNIDevice::getRequestedOutputMode( const XnPredefinedProductionNodeType &nodeType, boost::uint32_t configureImages )
+{
+   XnMapOutputMode mode;
+   mode.nFPS = 30;
+   if ( nodeType == XN_NODE_TYPE_DEPTH )
+   {
+	   //configuring image size
+	   if ( configureImages & IMAGE_USER_DEPTH_640X480 )
+	   {
+		   mode.nXRes = 640;
+		   mode.nYRes = 480;
+	   }
+	   else if ( configureImages & IMAGE_USER_DEPTH_320X240 )
+	   {
+		   mode.nXRes = 320;
+		   mode.nYRes = 240;
+	   }
+	   else if ( configureImages & IMAGE_USER_DEPTH_80X60 )
+	   {
+		   mode.nXRes = 80;
+		   mode.nYRes = 60;
+	   }
+	   else //default
+	   {
+		   mode.nXRes = 640;
+		   mode.nYRes = 480;
+	   }
+
+   } else if ( nodeType == XN_NODE_TYPE_IMAGE )
+   {
+	   if( configureImages & IMAGE_COLOR_1280X1024 )
+	   {
+		  /*
+			XN_RES_QVGA
+			XN_RES_VGA
+			XN_RES_SXGA
+			XN_RES_UXGA
+			XnMapOutputMode Mode;
+			pGenerator->GetMapOutputMode(Mode);
+			Mode.nXRes = Resolution((XnResolution)XN_RES_UXGA).GetXResolution();
+			Mode.nYRes = Resolution((XnResolution)XN_RES_UXGA).GetYResolution();
+			XnStatus nRetVal = pGenerator->SetMapOutputMode(Mode);
+		  */
+		   mode.nXRes = 1280;
+		   mode.nYRes = 1024;
+	   }
+	   else if( configureImages & IMAGE_COLOR_640X480 )
+	   {
+		   mode.nXRes = 640;
+		   mode.nYRes = 480;
+	   }
+	   else if( configureImages & IMAGE_COLOR_320X240 )
+	   {
+		   mode.nXRes = 320;
+		   mode.nYRes = 240;
+	   }
+	   else //default
+	   {
+		   mode.nXRes = 640;
+		   mode.nYRes = 480;
+	   }
+
+   } else if ( nodeType == XN_NODE_TYPE_USER )
+   {
+	   if ( configureImages & IMAGE_USER_DEPTH_640X480 )
+	   {
+		   mode.nXRes = 640;
+		   mode.nYRes = 480;
+	   }
+	   else if ( configureImages & IMAGE_USER_DEPTH_320X240 )
+	   {
+		   mode.nXRes = 320;
+		   mode.nYRes = 240;
+	   }
+	   else if ( configureImages & IMAGE_USER_DEPTH_80X60 )
+	   {
+		   mode.nXRes = 80;
+		   mode.nYRes = 60;
+	   }
+	   else //default
+	   {
+		   mode.nXRes = 640;
+		   mode.nYRes = 480;
+	   }
+
+   } else if ( nodeType == XN_NODE_TYPE_IR )
+   {
+	   if ( configureImages & IMAGE_INFRARED_640X480 )
+	   {
+		   mode.nXRes = 640;
+		   mode.nYRes = 480;
+	   }
+	   else if ( configureImages & IMAGE_INFRARED_320X240 )
+	   {
+		   mode.nXRes = 320;
+		   mode.nYRes = 240;
+	   }
+	   else //default
+	   {
+		   mode.nXRes = 640;
+		   mode.nYRes = 480;
+	   }
+   } else {
+
+	   throwError(" Requested node type does not support an output mode ");
+   }
+	mode.nFPS = 30;
+   return mode;
+}
+
+void OpenNIDevice::getExistingProductionNode( const XnPredefinedProductionNodeType &nodeType, xn::ProductionNode& productionNode ) const
+{
+    std::string nodeName =  xnNodeTypeToString( nodeType ) + "_" + m_DeviceName;
+	checkError( m_Context.GetProductionNodeByName(nodeName.c_str(), productionNode), " Requested production node has not been created" );
+}
+
+bool OpenNIDevice::hasNewData( const XnPredefinedProductionNodeType &nodeType )
+{
+	xn::Generator generator;
+	getExistingProductionNode( nodeType, generator );
+	XnBool newData = generator.IsDataNew();
+	if ( newData )
+		return true;
 	return false;
 }
 
+ImageDataRef OpenNIDevice::getBuffer( const XnPredefinedProductionNodeType &nodeType )
+{
+	if ( nodeType == XN_NODE_TYPE_IMAGE && hasGenerator( XN_NODE_TYPE_IMAGE ) )
+	{
+		xn::ImageMetaData imgMeta;
+		m_ImageGenerator.GetMetaData( imgMeta );
+
+		m_ColorImage.setData( (uint8_t*)m_ImageGenerator.GetImageMap());
+		m_ColorImage.setFullResolution( imgMeta.FullXRes(), imgMeta.FullYRes() );
+		m_ColorImage.setCroppedResolution( imgMeta.XRes(), imgMeta.YRes() );
+		m_ColorImage.setCroppingOffest( imgMeta.XOffset(), imgMeta.YOffset() );
+		m_ColorImage.setTimestamp( imgMeta.Timestamp() );
+		m_ColorImage.setFrameID( imgMeta.FrameID() );
+
+		m_ColorImage.setBytesPerPixel(imgMeta.BytesPerPixel());
+
+		imgMeta.XOffset() ? m_ColorImage.setCropping(true) : m_ColorImage.setCropping(false);
+		m_ImageGenerator.GetMirrorCap().IsMirrored() ? m_ColorImage.setMirroring(true) : m_ColorImage.setMirroring(false);
+		
+		return m_ColorImage.getData();
+	}
+	else if ( nodeType == XN_NODE_TYPE_DEPTH && hasGenerator( XN_NODE_TYPE_DEPTH ) )
+	{
+		ImageData16Ref buffer16	  = getBuffer16( XN_NODE_TYPE_DEPTH );
+		_2RealVector2f dimensions = m_DepthImage.getCroppedResolution();
+		unsigned int numPixels	  = dimensions.x * dimensions.y;
+		convertImage_16_to_8( buffer16, m_DepthImage_8bit, numPixels, _2REAL_OPENNI_DEPTH_NORMALIZATION_16_TO_8 );
+
+		return m_DepthImage_8bit;
+	}
+	else if ( nodeType == XN_NODE_TYPE_IR && hasGenerator( XN_NODE_TYPE_IR ) )
+	{
+		ImageData16Ref buffer16	  = getBuffer16( XN_NODE_TYPE_IR );
+		_2RealVector2f dimensions = m_InfraredImage.getCroppedResolution();
+		unsigned int numPixels	  = dimensions.x * dimensions.y;
+		convertImage_16_to_8( buffer16, m_InfraredImage_8bit, numPixels, 255 );
+
+		return m_InfraredImage_8bit;
+	} 
+	else if ( nodeType == XN_NODE_TYPE_USER && hasGenerator( XN_NODE_TYPE_USER ) )
+	{
+		ImageData16Ref buffer16 = getBuffer16( XN_NODE_TYPE_USER );
+		_2RealVector2f dims = m_UserImage.getCroppedResolution();
+		size_t numPixels = dims.x * dims.y;
+		for ( size_t idx = 0; idx < numPixels; ++idx )
+		{
+			m_UserImageColor_8bit[idx*3+0] = 0;
+			m_UserImageColor_8bit[idx*3+1] = 0;
+			m_UserImageColor_8bit[idx*3+2] = 0;
+
+			if ( (unsigned char)  buffer16[idx]  > 0 )
+			{
+				int colorIdx = buffer16[idx]%MAX_USERS;
+				m_UserImageColor_8bit[idx*3+0] = Colors[colorIdx][0];
+				m_UserImageColor_8bit[idx*3+1] = Colors[colorIdx][1];
+				m_UserImageColor_8bit[idx*3+2] = Colors[colorIdx][2];
+			}
+		}
+		return m_UserImageColor_8bit;
+	}
+	else 
+	{
+		throwError("_2Real: Requested node type does not produce image data or doesn't exist ");
+	}
 }
-#endif
+
+ImageData16Ref OpenNIDevice::getBuffer16( const XnPredefinedProductionNodeType &nodeType )
+{
+	if ( nodeType == XN_NODE_TYPE_DEPTH && hasGenerator( XN_NODE_TYPE_DEPTH ) )
+	{
+		xn::DepthMetaData depthMeta;
+		m_DepthGenerator.GetMetaData( depthMeta );
+
+		m_DepthImage.setData( (uint16_t*)m_DepthGenerator.GetDepthMap() );
+		m_DepthImage.setFullResolution( depthMeta.FullXRes(), depthMeta.FullYRes() );
+		m_DepthImage.setCroppedResolution( depthMeta.XRes(), depthMeta.YRes() );
+		m_DepthImage.setCroppingOffest( depthMeta.XOffset(), depthMeta.YOffset() );
+		m_DepthImage.setTimestamp( depthMeta.Timestamp() );
+		m_DepthImage.setFrameID( depthMeta.FrameID() );
+		m_DepthImage.setBytesPerPixel( depthMeta.BytesPerPixel() );
+
+		depthMeta.XOffset() ? m_DepthImage.setCropping( true ) : m_DepthImage.setCropping( false );
+		m_DepthGenerator.GetMirrorCap().IsMirrored() ? m_DepthImage.setMirroring(true) : m_DepthImage.setMirroring(false);
+
+		return m_DepthImage.getData();
+	}
+	else if ( nodeType == XN_NODE_TYPE_IR && hasGenerator( XN_NODE_TYPE_IR ) )
+	{
+		xn::IRMetaData irMeta;
+		m_IrGenerator.GetMetaData( irMeta );
+
+		m_InfraredImage.setData( (uint16_t*)m_IrGenerator.GetIRMap() );
+		m_InfraredImage.setFullResolution( irMeta.FullXRes(), irMeta.FullYRes() );
+		m_InfraredImage.setCroppedResolution( irMeta.XRes(), irMeta.YRes() );
+		m_InfraredImage.setCroppingOffest( irMeta.XOffset(), irMeta.YOffset() );
+		m_InfraredImage.setTimestamp( irMeta.Timestamp() );
+		m_InfraredImage.setFrameID( irMeta.FrameID() );
+		m_InfraredImage.setBytesPerPixel( irMeta.BytesPerPixel() );
+
+		irMeta.XOffset() ? m_InfraredImage.setCropping( true ) : m_InfraredImage.setCropping( false );
+		m_IrGenerator.GetMirrorCap().IsMirrored() ? m_InfraredImage.setMirroring(true) : m_InfraredImage.setMirroring(false);
+
+		return m_InfraredImage.getData();
+	}
+	else if ( nodeType == XN_NODE_TYPE_USER && hasGenerator( XN_NODE_TYPE_USER ) )
+	{
+		xn::SceneMetaData sceneMeta;
+		m_UserGenerator.GetUserPixels( 0, sceneMeta );
+		m_UserImage.setData( (uint16_t*)sceneMeta.Data() );
+		m_UserImage.setFullResolution( sceneMeta.FullXRes(), sceneMeta.FullYRes() );
+		m_UserImage.setCroppedResolution( sceneMeta.XRes(), sceneMeta.YRes() );
+		m_UserImage.setCroppingOffest( sceneMeta.XOffset(), sceneMeta.YOffset() );
+		m_UserImage.setTimestamp( sceneMeta.Timestamp() );
+		m_UserImage.setFrameID( sceneMeta.FrameID() );
+		m_UserImage.setBytesPerPixel( sceneMeta.BytesPerPixel() );
+
+		sceneMeta.XOffset() ? m_UserImage.setCropping( true ) : m_UserImage.setCropping( false );
+		m_UserGenerator.GetMirrorCap().IsMirrored() ? m_UserImage.setMirroring(true) : m_UserImage.setMirroring(false);
+
+		return m_UserImage.getData();
+	}
+	else 
+	{
+		throwError("_2Real: Requested node type does not produce 16bit image data or doesn't exist ");
+	}
+}
+
+void OpenNIDevice::convertRealWorldToProjective( XnUInt32 count, 		const XnPoint3D  	aRealWorld[], XnPoint3D  	aProjective[] )
+{
+	if ( !hasGenerator(XN_NODE_TYPE_DEPTH) )
+	{
+		throwError("A depth generator is needed for the conversions");
+	} else {
+		//Lets use the existing depthGenerator
+		xn::DepthGenerator depthGen;
+		getExistingProductionNode( XN_NODE_TYPE_DEPTH, depthGen );
+		depthGen.ConvertRealWorldToProjective( count, aRealWorld, aProjective );
+	}
+}
+
+void OpenNIDevice::convertProjectiveToRealWorld( XnUInt32 count, const XnPoint3D  	aProjective[], XnPoint3D  	aRealWorld[] )
+{
+	if ( !hasGenerator(XN_NODE_TYPE_DEPTH) )
+	{
+		throwError("A depth generator is needed for the conversions");
+	} else {
+		//Lets use the already existing one
+		xn::DepthGenerator depthGen;
+		getExistingProductionNode( XN_NODE_TYPE_DEPTH, depthGen );
+		depthGen.ConvertProjectiveToRealWorld( count, aProjective, aRealWorld );
+	}
+}
+
+std::string OpenNIDevice::xnNodeTypeToString( const XnPredefinedProductionNodeType& nodeType )
+{
+	std::string nodeTypeString;
+	switch( nodeType ) {
+	case XN_NODE_TYPE_INVALID:
+		nodeTypeString = "XN_NODE_TYPE_INVALID";
+		break;
+	case XN_NODE_TYPE_DEVICE:
+		nodeTypeString = "XN_NODE_TYPE_DEVICE";
+		break;
+	case XN_NODE_TYPE_DEPTH:
+		nodeTypeString = "XN_NODE_TYPE_DEPTH";
+		break;
+	case XN_NODE_TYPE_IMAGE:
+		nodeTypeString = "XN_NODE_TYPE_IMAGE";
+		break;
+	case XN_NODE_TYPE_AUDIO:
+		nodeTypeString = "XN_NODE_TYPE_AUDIO";
+		break;
+	case XN_NODE_TYPE_IR:
+		nodeTypeString = "XN_NODE_TYPE_IR";
+		break;
+	case XN_NODE_TYPE_USER:
+		nodeTypeString = "XN_NODE_TYPE_USER";
+		break;
+	case XN_NODE_TYPE_RECORDER:
+		nodeTypeString = "XN_NODE_TYPE_RECORDER";
+		break;
+	case XN_NODE_TYPE_PLAYER:
+		nodeTypeString = "XN_NODE_TYPE_PLAYER";
+		break;
+	case XN_NODE_TYPE_GESTURE:
+		nodeTypeString = "XN_NODE_TYPE_GESTURE";
+		break;
+	case XN_NODE_TYPE_SCENE:
+		nodeTypeString = "XN_NODE_TYPE_SCENE";
+		break;
+	case XN_NODE_TYPE_HANDS:
+		nodeTypeString = "XN_NODE_TYPE_HANDS";
+		break;
+	case XN_NODE_TYPE_CODEC:
+		nodeTypeString = "XN_NODE_TYPE_CODEC";
+		break;
+	case XN_NODE_TYPE_PRODUCTION_NODE:
+		nodeTypeString = "XN_NODE_TYPE_PRODUCTION_NODE";
+		break;
+	case XN_NODE_TYPE_GENERATOR:
+		nodeTypeString = "XN_NODE_TYPE_GENERATOR";
+		break;
+	case XN_NODE_TYPE_MAP_GENERATOR:
+		nodeTypeString = "XN_NODE_TYPE_MAP_GENERATOR";
+		break;
+	case XN_NODE_TYPE_SCRIPT:
+		nodeTypeString = "XN_NODE_TYPE_SCRIPT";
+		break;
+	default: 
+		throw std::logic_error(__FILE__ ": enum En out of range");
+		break;
+	}
+	return nodeTypeString;
+}
+
+XnSkeletonJointTransformation OpenNIDevice::getSkeletonJoint( XnUInt16 userIdx, XnSkeletonJoint jointType  )
+{
+
+	try
+	{
+		XnSkeletonJointTransformation requestedJoint;
+		m_UserGenerator.GetSkeletonCap().GetSkeletonJoint( m_Users[userIdx], jointType, requestedJoint );
+		return requestedJoint;
+	}
+	catch ( ... )
+	{
+		std::cout << "Could not get skeleton joint." << std::endl;
+	}
+}
+
+_2RealTrackedJointRef OpenNIDevice::getUserJoint( const uint32_t userID, XnSkeletonJoint type )
+{
+	XnSkeletonJointTransformation joint;
+	XnStatus status = m_UserGenerator.GetSkeletonCap().GetSkeletonJoint( userID, type, joint );
+
+	//set position of joint
+	_2RealVector3f worldPos = _2RealVector3f( joint.position.position.X, joint.position.position.Y, joint.position.position.Z);
+	XnPoint3D screenPos;
+
+	xn::UserGenerator depthGen;
+	getExistingProductionNode( XN_NODE_TYPE_DEPTH, depthGen );	
+	xnConvertRealWorldToProjective( depthGen.GetHandle(), 1, &joint.position.position, &screenPos ); 
+	_2RealMatrix3x3 mat;
+	for( int i=0; i < 9; ++i )
+		mat.elements[i] = joint.orientation.orientation.elements[i];
+
+	_2RealJointConfidence confidence((float)joint.position.fConfidence, (float)joint.orientation.fConfidence);
+
+	return boost::shared_ptr<_2RealTrackedJoint>( new _2RealTrackedJoint(  (_2RealJointType) type,
+		_2RealVector3f( screenPos.X, screenPos.Y, screenPos.Z ),
+		worldPos,
+		mat,
+		confidence));
+}
+
+
+XnStatus OpenNIDevice::getUserByID( uint32_t userID, boost::shared_ptr<_2RealTrackedUser> user )
+{
+	if ( m_UserGenerator.GetSkeletonCap().IsTracking(userID) )
+	{
+		user->setJoint( JOINT_HEAD, getUserJoint( userID, XN_SKEL_HEAD ) );
+		user->setJoint( JOINT_NECK, getUserJoint( userID, XN_SKEL_NECK ) );
+		user->setJoint( JOINT_TORSO, getUserJoint( userID, XN_SKEL_TORSO ) );
+		user->setJoint( JOINT_WAIST, getUserJoint( userID, XN_SKEL_WAIST ) );
+
+		user->setJoint( JOINT_LEFT_COLLAR, getUserJoint( userID, XN_SKEL_LEFT_COLLAR ) );
+		user->setJoint( JOINT_LEFT_SHOULDER, getUserJoint( userID, XN_SKEL_LEFT_SHOULDER ) );
+		user->setJoint( JOINT_LEFT_ELBOW, getUserJoint( userID, XN_SKEL_LEFT_ELBOW ) );
+		user->setJoint( JOINT_LEFT_WRIST, getUserJoint( userID, XN_SKEL_LEFT_WRIST ) );
+		user->setJoint( JOINT_LEFT_HAND, getUserJoint( userID, XN_SKEL_LEFT_HAND ) );
+		user->setJoint( JOINT_LEFT_FINGERTIP, getUserJoint( userID, XN_SKEL_LEFT_FINGERTIP ) );
+
+		user->setJoint( JOINT_RIGHT_COLLAR, getUserJoint( userID, XN_SKEL_RIGHT_COLLAR ) );
+		user->setJoint( JOINT_RIGHT_SHOULDER, getUserJoint( userID, XN_SKEL_RIGHT_SHOULDER ) );
+		user->setJoint( JOINT_RIGHT_ELBOW, getUserJoint( userID, XN_SKEL_RIGHT_ELBOW ) );
+		user->setJoint( JOINT_RIGHT_WRIST, getUserJoint( userID, XN_SKEL_RIGHT_WRIST ) );
+		user->setJoint( JOINT_RIGHT_HAND, getUserJoint( userID, XN_SKEL_RIGHT_HAND ) );
+		user->setJoint( JOINT_RIGHT_FINGERTIP, getUserJoint( userID, XN_SKEL_RIGHT_FINGERTIP ) );
+
+		user->setJoint( JOINT_LEFT_HIP, getUserJoint( userID, XN_SKEL_LEFT_HIP ) );
+		user->setJoint( JOINT_LEFT_KNEE, getUserJoint( userID, XN_SKEL_LEFT_KNEE ) );
+		user->setJoint( JOINT_LEFT_ANKLE, getUserJoint( userID, XN_SKEL_LEFT_ANKLE ) );
+		user->setJoint( JOINT_LEFT_FOOT, getUserJoint( userID, XN_SKEL_LEFT_FOOT ) );
+
+		user->setJoint( JOINT_RIGHT_HIP, getUserJoint( userID, XN_SKEL_RIGHT_HIP ) );
+		user->setJoint( JOINT_RIGHT_KNEE, getUserJoint( userID, XN_SKEL_RIGHT_KNEE ) );
+		user->setJoint( JOINT_RIGHT_ANKLE, getUserJoint( userID, XN_SKEL_RIGHT_ANKLE ) );
+		user->setJoint( JOINT_RIGHT_FOOT, getUserJoint( userID, XN_SKEL_RIGHT_FOOT ) );
+	}
+
+	return getErrorState();
+}
+
+_2RealTrackedUserVector OpenNIDevice::getUsers()
+{
+	_2RealTrackedUserVector trackedUsers;
+	trackedUsers.clear();
+	XnUInt16 numberOfUsers = MAX_USERS;	// is used as an input parameter for GetUser, means how many users to retrieve 
+	XnUserID currentUsers[ MAX_USERS];
+
+	checkError( m_UserGenerator.GetUsers( currentUsers, numberOfUsers ) | getErrorState(), "_2Real: OpenNIDevice  Error while attempting to get the users." );
+
+	for (int i= 0; i<(int)numberOfUsers; i++)
+	{
+		boost::shared_ptr<_2RealTrackedUser> user = boost::shared_ptr<_2RealTrackedUser>( new _2RealTrackedUser(currentUsers[i]) );
+		if ( m_UserGenerator.GetSkeletonCap().IsTracking( currentUsers[i] ) )
+		{
+			getUserByID( currentUsers[i], user );
+			trackedUsers.push_back( user );
+		}
+	}
+	return trackedUsers;
+}
+
+size_t OpenNIDevice::getNumberOfUsers()
+{
+	return m_UserGenerator.GetNumberOfUsers();
+}
+
+XnStatus OpenNIDevice::getErrorState() const
+{
+	return m_UserGenerator.GetErrorStateCap().GetErrorState();
+}
+
+void  OpenNIDevice::forceResetUser( const uint32_t id )
+{
+	XnChar calibrationPose[20];
+	xn::SkeletonCapability cap = m_UserGenerator.GetSkeletonCap();
+	if ( cap.IsTracking( id ) )
+	{
+		m_UserGenerator.GetSkeletonCap().Reset( id );
+		m_UserGenerator.GetSkeletonCap().GetCalibrationPose( calibrationPose );
+		m_UserGenerator.GetPoseDetectionCap().StartPoseDetection( calibrationPose, id );
+	}
+}
+
+void  OpenNIDevice::forceResetUsers( )
+{
+	XnUInt16 numberOfUsers = MAX_USERS;
+	XnUserID *currentUsers = new XnUserID[MAX_USERS];
+	XnChar calibrationPose[20];
+
+	checkError( m_UserGenerator.GetUsers( currentUsers, numberOfUsers ), "_2Real:OpenNIDevice Error when getting users \n" );
+	xn::SkeletonCapability cap = m_UserGenerator.GetSkeletonCap();
+	for (unsigned int i= 0; i<numberOfUsers; ++i)
+	{
+		XnUserID id = currentUsers[i];
+		if ( cap.IsTracking( currentUsers[i] ) )
+		{
+			m_UserGenerator.GetSkeletonCap().Reset( id );
+			m_UserGenerator.GetSkeletonCap().GetCalibrationPose( calibrationPose );
+			m_UserGenerator.GetPoseDetectionCap().StartPoseDetection( calibrationPose, id );
+		}
+	}
+	delete [] currentUsers;
+}
+
+void OpenNIDevice::registerUserCallbacks()
+{
+	if (!m_UserGenerator.IsCapabilitySupported( XN_CAPABILITY_SKELETON ) )
+	{
+		_2REAL_LOG(info) << "\n_2Real: Skeleton Capability Is Not Supprted " << std::endl;
+		return;
+	}
+
+	checkError( m_UserGenerator.RegisterUserCallbacks( newUserCb, lostUserCb, (xn::UserGenerator *) &m_UserGenerator, userCbHandle ), "Cannot Register User Callbacks" );
+	checkError( m_UserGenerator.RegisterToUserExit( userExitCb, (xn::UserGenerator *) &m_UserGenerator, userExitCbHandle), "Cannot Register UserExit Callback" );
+	checkError( m_UserGenerator.RegisterToUserReEnter( userReentryCb, (xn::UserGenerator *)&m_UserGenerator, userReentryCbHandle), "Cannot Register UserExit Callback" );
+	checkError( m_UserGenerator.GetSkeletonCap().RegisterToCalibrationStart( userCalibrationStartedCb,  (xn::UserGenerator *)&m_UserGenerator, calibrationStartedCbHandle ) , "Cannot Register User Calibration Started Callback ");
+	checkError( m_UserGenerator.GetSkeletonCap().RegisterToCalibrationComplete( userCalibrationCompletedCb,  (xn::UserGenerator *)&m_UserGenerator, calibrationCompletedCbHandle ), "Cannot Register User Calibration Completed Callback");
+
+	if ( m_UserGenerator.GetSkeletonCap().NeedPoseForCalibration() )
+	{
+		g_bNeedPose = TRUE;
+		checkError( m_UserGenerator.GetPoseDetectionCap().RegisterToPoseDetected( poseDetectedCb, NULL, poseDetectedCbHandle), "Cannot register pose detected callback");
+		m_UserGenerator.GetSkeletonCap().GetCalibrationPose( g_strPose );
+	}
+	m_UserGenerator.GetSkeletonCap().SetSkeletonProfile(XN_SKEL_PROFILE_ALL);
+}
+
+} //namespace

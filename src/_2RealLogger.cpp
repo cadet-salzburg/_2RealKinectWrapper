@@ -1,6 +1,6 @@
 #include "_2RealLogger.h"
 
-namespace _2Real
+namespace _2RealKinectWrapper
 {
 	std::ostream* _2RealLogger::m_pOutStream = &std::cout;
 	_2RealLogLevel _2RealLogger::m_iLogLevel = debug;				// default for logger is full verbosity

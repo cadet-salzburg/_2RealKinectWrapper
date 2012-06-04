@@ -1,0 +1,349 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		9E7420F11578D3E9009F146E /* _2RealConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E7420DB1578D3E9009F146E /* _2RealConfig.h */; };
+		9E7420F21578D3E9009F146E /* _2RealKinect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9E7420DC1578D3E9009F146E /* _2RealKinect.cpp */; };
+		9E7420F31578D3E9009F146E /* _2RealLogger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9E7420DD1578D3E9009F146E /* _2RealLogger.cpp */; };
+		9E7420F41578D3E9009F146E /* _2RealLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E7420DE1578D3E9009F146E /* _2RealLogger.h */; };
+		9E7420F51578D3E9009F146E /* _2RealTrackedJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9E7420DF1578D3E9009F146E /* _2RealTrackedJoint.cpp */; };
+		9E7420F61578D3E9009F146E /* _2RealTrackedJoint.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E7420E01578D3E9009F146E /* _2RealTrackedJoint.h */; };
+		9E7420F71578D3E9009F146E /* _2RealTrackedUser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9E7420E11578D3E9009F146E /* _2RealTrackedUser.cpp */; };
+		9E7420F81578D3E9009F146E /* _2RealTrackedUser.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E7420E21578D3E9009F146E /* _2RealTrackedUser.h */; };
+		9E7420F91578D3E9009F146E /* _2RealTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9E7420E31578D3E9009F146E /* _2RealTypes.cpp */; };
+		9E7420FA1578D3E9009F146E /* _2RealUtility.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E7420E41578D3E9009F146E /* _2RealUtility.h */; };
+		9E7420FB1578D3E9009F146E /* _2RealVector2f.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9E7420E51578D3E9009F146E /* _2RealVector2f.cpp */; };
+		9E7420FC1578D3E9009F146E /* _2RealVersion.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E7420E61578D3E9009F146E /* _2RealVersion.h */; };
+		9E7420FD1578D3E9009F146E /* I_2RealImplementation.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E7420E71578D3E9009F146E /* I_2RealImplementation.h */; };
+		9E7420FE1578D3E9009F146E /* _2RealImplementationOpenNI.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 9E7420E91578D3E9009F146E /* _2RealImplementationOpenNI.hpp */; };
+		9E7420FF1578D3E9009F146E /* OpenNIDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9E7420EA1578D3E9009F146E /* OpenNIDevice.cpp */; };
+		9E7421001578D3E9009F146E /* OpenNIDevice.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E7420EB1578D3E9009F146E /* OpenNIDevice.h */; };
+		9E7421011578D3E9009F146E /* OpenNiUtils.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 9E7420EC1578D3E9009F146E /* OpenNiUtils.hpp */; };
+		9E74210A1578D49F009F146E /* _2RealImageSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E7421061578D49F009F146E /* _2RealImageSource.h */; };
+		9E74210B1578D49F009F146E /* _2RealKinect.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E7421071578D49F009F146E /* _2RealKinect.h */; };
+		9E74210C1578D49F009F146E /* _2RealTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E7421081578D49F009F146E /* _2RealTypes.h */; };
+		9E74210D1578D49F009F146E /* _2RealVector2f.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E7421091578D49F009F146E /* _2RealVector2f.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		9EC9AE80157CDFED002CFBA0 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 12;
+			dstPath = "";
+			dstSubfolderSpec = 7;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		9E7420B91578C3E7009F146E /* _2RealKinectOpenNI_d.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = _2RealKinectOpenNI_d.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		9E7420DB1578D3E9009F146E /* _2RealConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = _2RealConfig.h; path = ../../../src/_2RealConfig.h; sourceTree = "<group>"; };
+		9E7420DC1578D3E9009F146E /* _2RealKinect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = _2RealKinect.cpp; path = ../../../src/_2RealKinect.cpp; sourceTree = "<group>"; };
+		9E7420DD1578D3E9009F146E /* _2RealLogger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = _2RealLogger.cpp; path = ../../../src/_2RealLogger.cpp; sourceTree = "<group>"; };
+		9E7420DE1578D3E9009F146E /* _2RealLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = _2RealLogger.h; path = ../../../src/_2RealLogger.h; sourceTree = "<group>"; };
+		9E7420DF1578D3E9009F146E /* _2RealTrackedJoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = _2RealTrackedJoint.cpp; path = ../../../src/_2RealTrackedJoint.cpp; sourceTree = "<group>"; };
+		9E7420E01578D3E9009F146E /* _2RealTrackedJoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = _2RealTrackedJoint.h; path = ../../../src/_2RealTrackedJoint.h; sourceTree = "<group>"; };
+		9E7420E11578D3E9009F146E /* _2RealTrackedUser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = _2RealTrackedUser.cpp; path = ../../../src/_2RealTrackedUser.cpp; sourceTree = "<group>"; };
+		9E7420E21578D3E9009F146E /* _2RealTrackedUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = _2RealTrackedUser.h; path = ../../../src/_2RealTrackedUser.h; sourceTree = "<group>"; };
+		9E7420E31578D3E9009F146E /* _2RealTypes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = _2RealTypes.cpp; path = ../../../src/_2RealTypes.cpp; sourceTree = "<group>"; };
+		9E7420E41578D3E9009F146E /* _2RealUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = _2RealUtility.h; path = ../../../src/_2RealUtility.h; sourceTree = "<group>"; };
+		9E7420E51578D3E9009F146E /* _2RealVector2f.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = _2RealVector2f.cpp; path = ../../../src/_2RealVector2f.cpp; sourceTree = "<group>"; };
+		9E7420E61578D3E9009F146E /* _2RealVersion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = _2RealVersion.h; path = ../../../src/_2RealVersion.h; sourceTree = "<group>"; };
+		9E7420E71578D3E9009F146E /* I_2RealImplementation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = I_2RealImplementation.h; path = ../../../src/I_2RealImplementation.h; sourceTree = "<group>"; };
+		9E7420E91578D3E9009F146E /* _2RealImplementationOpenNI.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = _2RealImplementationOpenNI.hpp; sourceTree = "<group>"; };
+		9E7420EA1578D3E9009F146E /* OpenNIDevice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OpenNIDevice.cpp; sourceTree = "<group>"; };
+		9E7420EB1578D3E9009F146E /* OpenNIDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenNIDevice.h; sourceTree = "<group>"; };
+		9E7420EC1578D3E9009F146E /* OpenNiUtils.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = OpenNiUtils.hpp; sourceTree = "<group>"; };
+		9E7421061578D49F009F146E /* _2RealImageSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = _2RealImageSource.h; path = ../../../include/_2RealImageSource.h; sourceTree = "<group>"; };
+		9E7421071578D49F009F146E /* _2RealKinect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = _2RealKinect.h; path = ../../../include/_2RealKinect.h; sourceTree = "<group>"; };
+		9E7421081578D49F009F146E /* _2RealTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = _2RealTypes.h; path = ../../../include/_2RealTypes.h; sourceTree = "<group>"; };
+		9E7421091578D49F009F146E /* _2RealVector2f.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = _2RealVector2f.h; path = ../../../include/_2RealVector2f.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		9E7420B61578C3E7009F146E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		9E7420AE1578C3E7009F146E = {
+			isa = PBXGroup;
+			children = (
+				9E7421051578D485009F146E /* Include */,
+				9E7420C41578D35E009F146E /* Source */,
+				9E7420BA1578C3E7009F146E /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		9E7420BA1578C3E7009F146E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9E7420B91578C3E7009F146E /* _2RealKinectOpenNI_d.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		9E7420C41578D35E009F146E /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				9E7420DB1578D3E9009F146E /* _2RealConfig.h */,
+				9E7420DC1578D3E9009F146E /* _2RealKinect.cpp */,
+				9E7420DD1578D3E9009F146E /* _2RealLogger.cpp */,
+				9E7420DE1578D3E9009F146E /* _2RealLogger.h */,
+				9E7420DF1578D3E9009F146E /* _2RealTrackedJoint.cpp */,
+				9E7420E01578D3E9009F146E /* _2RealTrackedJoint.h */,
+				9E7420E11578D3E9009F146E /* _2RealTrackedUser.cpp */,
+				9E7420E21578D3E9009F146E /* _2RealTrackedUser.h */,
+				9E7420E31578D3E9009F146E /* _2RealTypes.cpp */,
+				9E7420E41578D3E9009F146E /* _2RealUtility.h */,
+				9E7420E51578D3E9009F146E /* _2RealVector2f.cpp */,
+				9E7420E61578D3E9009F146E /* _2RealVersion.h */,
+				9E7420E71578D3E9009F146E /* I_2RealImplementation.h */,
+				9E7420E81578D3E9009F146E /* OpenNISpecific */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		9E7420E81578D3E9009F146E /* OpenNISpecific */ = {
+			isa = PBXGroup;
+			children = (
+				9E7420E91578D3E9009F146E /* _2RealImplementationOpenNI.hpp */,
+				9E7420EA1578D3E9009F146E /* OpenNIDevice.cpp */,
+				9E7420EB1578D3E9009F146E /* OpenNIDevice.h */,
+				9E7420EC1578D3E9009F146E /* OpenNiUtils.hpp */,
+			);
+			name = OpenNISpecific;
+			path = ../../../src/OpenNISpecific;
+			sourceTree = "<group>";
+		};
+		9E7421051578D485009F146E /* Include */ = {
+			isa = PBXGroup;
+			children = (
+				9E7421061578D49F009F146E /* _2RealImageSource.h */,
+				9E7421071578D49F009F146E /* _2RealKinect.h */,
+				9E7421081578D49F009F146E /* _2RealTypes.h */,
+				9E7421091578D49F009F146E /* _2RealVector2f.h */,
+			);
+			name = Include;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		9E7420B71578C3E7009F146E /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9E7420F11578D3E9009F146E /* _2RealConfig.h in Headers */,
+				9E7420F41578D3E9009F146E /* _2RealLogger.h in Headers */,
+				9E7420F61578D3E9009F146E /* _2RealTrackedJoint.h in Headers */,
+				9E7420F81578D3E9009F146E /* _2RealTrackedUser.h in Headers */,
+				9E7420FA1578D3E9009F146E /* _2RealUtility.h in Headers */,
+				9E7420FC1578D3E9009F146E /* _2RealVersion.h in Headers */,
+				9E7420FD1578D3E9009F146E /* I_2RealImplementation.h in Headers */,
+				9E7420FE1578D3E9009F146E /* _2RealImplementationOpenNI.hpp in Headers */,
+				9E7421001578D3E9009F146E /* OpenNIDevice.h in Headers */,
+				9E7421011578D3E9009F146E /* OpenNiUtils.hpp in Headers */,
+				9E74210A1578D49F009F146E /* _2RealImageSource.h in Headers */,
+				9E74210B1578D49F009F146E /* _2RealKinect.h in Headers */,
+				9E74210C1578D49F009F146E /* _2RealTypes.h in Headers */,
+				9E74210D1578D49F009F146E /* _2RealVector2f.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		9E7420B81578C3E7009F146E /* _2RealKinect */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9E7420BD1578C3E7009F146E /* Build configuration list for PBXNativeTarget "_2RealKinect" */;
+			buildPhases = (
+				9E7420B51578C3E7009F146E /* Sources */,
+				9E7420B61578C3E7009F146E /* Frameworks */,
+				9E7420B71578C3E7009F146E /* Headers */,
+				9EC9AE80157CDFED002CFBA0 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = _2RealKinect;
+			productName = _2RealKinect;
+			productReference = 9E7420B91578C3E7009F146E /* _2RealKinectOpenNI_d.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		9E7420B01578C3E7009F146E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0430;
+			};
+			buildConfigurationList = 9E7420B31578C3E7009F146E /* Build configuration list for PBXProject "_2RealKinect" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 9E7420AE1578C3E7009F146E;
+			productRefGroup = 9E7420BA1578C3E7009F146E /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				9E7420B81578C3E7009F146E /* _2RealKinect */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		9E7420B51578C3E7009F146E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9E7420F21578D3E9009F146E /* _2RealKinect.cpp in Sources */,
+				9E7420F31578D3E9009F146E /* _2RealLogger.cpp in Sources */,
+				9E7420F51578D3E9009F146E /* _2RealTrackedJoint.cpp in Sources */,
+				9E7420F71578D3E9009F146E /* _2RealTrackedUser.cpp in Sources */,
+				9E7420F91578D3E9009F146E /* _2RealTypes.cpp in Sources */,
+				9E7420FB1578D3E9009F146E /* _2RealVector2f.cpp in Sources */,
+				9E7420FF1578D3E9009F146E /* OpenNIDevice.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		9E7420BB1578C3E7009F146E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CONFIGURATION_BUILD_DIR = ../../../lib;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx10.6;
+			};
+			name = Debug;
+		};
+		9E7420BC1578C3E7009F146E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CONFIGURATION_BUILD_DIR = ../../../lib;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				SDKROOT = macosx10.6;
+			};
+			name = Release;
+		};
+		9E7420BE1578C3E7009F146E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CONFIGURATION_BUILD_DIR = ../../../lib;
+				EXECUTABLE_PREFIX = "";
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				HEADER_SEARCH_PATHS = (
+					../../../src,
+					../../../externalLibs/boost/include,
+					/usr/include/ni,
+					../../../include,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				OTHER_LDFLAGS = (
+					../../../externalLibs/boost/lib/osx/libboost_thread.a,
+					../../../externalLibs/boost/lib/osx/libboost_date_time.a,
+					/usr/lib/libOpenNI.dylib,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)OpenNI_d";
+				SDKROOT = macosx10.6;
+			};
+			name = Debug;
+		};
+		9E7420BF1578C3E7009F146E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CONFIGURATION_BUILD_DIR = ../../../lib;
+				EXECUTABLE_PREFIX = "";
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				HEADER_SEARCH_PATHS = (
+					../../../src,
+					../../../externalLibs/boost/include,
+					/usr/include/ni,
+					../../../include,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				OTHER_LDFLAGS = (
+					../../../externalLibs/boost/lib/osx/libboost_thread.a,
+					../../../externalLibs/boost/lib/osx/libboost_date_time.a,
+					/usr/lib/libOpenNI.dylib,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)OpenNI";
+				SDKROOT = macosx10.6;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		9E7420B31578C3E7009F146E /* Build configuration list for PBXProject "_2RealKinect" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9E7420BB1578C3E7009F146E /* Debug */,
+				9E7420BC1578C3E7009F146E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9E7420BD1578C3E7009F146E /* Build configuration list for PBXNativeTarget "_2RealKinect" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9E7420BE1578C3E7009F146E /* Debug */,
+				9E7420BF1578C3E7009F146E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 9E7420B01578C3E7009F146E /* Project object */;
+}

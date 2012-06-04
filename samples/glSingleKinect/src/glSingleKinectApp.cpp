@@ -27,7 +27,7 @@
 #include "GlSingleKinectApp.h"
 #include <iostream>
 
-using namespace _2Real;
+using namespace _2RealKinectWrapper;
 
 GlSingleKinectApp::GlSingleKinectApp(void)
 	: m_2Real( _2RealKinect::getInstance() ),
@@ -66,7 +66,7 @@ void GlSingleKinectApp::UpdateTextures()
 							0,
 							GL_RGB,
 							GL_UNSIGNED_BYTE,
-							m_2Real->getImageData( 0, COLORIMAGE, 0 ) );
+							m_2Real->getImageData( 0, COLORIMAGE, 0 ).get() );
 
 		glBindTexture( GL_TEXTURE_2D, m_Texture[1] );
 			glTexImage2D(	GL_TEXTURE_2D,
@@ -77,7 +77,7 @@ void GlSingleKinectApp::UpdateTextures()
 				0,
 				GL_RED,
 				GL_UNSIGNED_BYTE,
-				m_2Real->getImageData( 0, DEPTHIMAGE, 0 ) );
+				m_2Real->getImageData( 0, DEPTHIMAGE, 0 ).get() );
 	}
 }
 
@@ -123,7 +123,7 @@ bool GlSingleKinectApp::LoadTextures()
 						0,
 						GL_RGB,
 						GL_UNSIGNED_BYTE,
-						m_2Real->getImageData( 0, COLORIMAGE, 0 ) );
+						m_2Real->getImageData( 0, COLORIMAGE, 0 ).get() );
 
 		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
 		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
@@ -140,7 +140,7 @@ bool GlSingleKinectApp::LoadTextures()
 			0,
 			GL_RED,
 			GL_UNSIGNED_BYTE,
-			m_2Real->getImageData( 0, DEPTHIMAGE, 0 ) );
+			m_2Real->getImageData( 0, DEPTHIMAGE, 0 ).get() );
 
 		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
 		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );

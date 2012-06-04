@@ -29,7 +29,7 @@
 
 #include "_2RealTypes.h"
 
-namespace _2Real
+namespace _2RealKinectWrapper
 {
 
 class I_2RealImplementation;
@@ -61,14 +61,26 @@ class _2RealKinect
 			/param     uint32_t configureImages Use this to configure image capabilities, use _2realImages enum
 			/return    bool Returns the operations success
 		!*/
-		bool								start( uint32_t startGenerators = CONFIG_DEFAULT, uint32_t configureImages = IMAGE_CONFIG_DEFAULT );
+		void								update();
+		bool								configure( const uint32_t deviceID,  uint32_t startGenerators, uint32_t configureImages );
+		void								startGenerator( const uint32_t deviceID, uint32_t configureGenerators );
 
+
+
+
+		bool								start( uint32_t startGenerators = CONFIG_DEFAULT, uint32_t configureImages = IMAGE_CONFIG_DEFAULT );
 
 		/*! /brief     Shuts down all generators
 			/return    bool Returns the operations success
 		!*/
 		bool								shutdown();
 
+		/*! /brief	   Checks if new data is available to get from the wrapper, so you don't need to execute unnecessary calculations and data copying
+			/param     const uint32_t deviceID for choosing specific device
+			/param     _2RealGenerator type indicating the type of the generator to be requested, Use _2RealGenerator enum
+			/return    bool returns if new data available
+		!*/
+		const bool							isNewData(const uint32_t deviceID, _2RealGenerator type) const;
 
 		/*! /brief     Returns the bytes used (number of channels ) per pixel for a particular generator image
 			/param     _2RealGenerator type indicating the type of the generator to be requested, Use _2RealGenerator enum
@@ -91,33 +103,32 @@ class _2RealKinect
 			/param     const uint32_t deviceID for choosing specific device
 			/param     _2RealGenerator type indicating the type of the generator to be requested, Use _2RealGenerator enum
 			/param     const uint8_t userId only used for GENERATOR_USERIMAGE. Ignored by other types
-			/return    std::uint32_t Retunrs heigth of the requested image
+			/return    std::uint32_t Returns heigth of the requested image
 		!*/
 		uint32_t							getImageHeight( const uint32_t deviceID, _2RealGenerator type );
-
 
 		/*! /brief     Returns a 8bit pointer to a image buffer of a particular image
 			/param     const uint32_t deviceID for choosing specific device
 			/param     _2RealGenerator type indicating the type of the generator to be requested, Use _2RealGenerator enum
 			/param     bool waitAndBlock indicating if waiting for changes
 			/param     const uint8_t userId only used for GENERATOR_USERIMAGE. Ignored by other types
-			/return    unsigned char* Pointer to image buffer; use getImageWidth, getImageHeight, getImageBytePerPixel to obtain image specifications
+			/return    boost::shared_ptr<unsigned char> Shared Pointer to image buffer; use getImageWidth, getImageHeight, getImageBytePerPixel to obtain image specifications
 		!*/
-		unsigned char*						getImageData( const uint32_t deviceID, _2RealGenerator type, bool waitAndBlock=false, const uint8_t userId=0 );
+		boost::shared_array<unsigned char>	getImageData( const uint32_t deviceID, _2RealGenerator type, bool waitAndBlock=false, const uint8_t userId=0 );
 
 		/*! /brief     Returns a 16bit pointer to depth image buffer (16 high precision depth values from depth sensor
 			/param     const uint32_t deviceID for choosing specific device
 			/param     bool waitAndBlock indicating if waiting for changes
-			/return    uint16_t* Pointer to 16bit image buffer; use getImageWidth, getImageHeight, getImageBytePerPixel to obtain image specifications
+			/return    boost::shared_ptr<uint16_t*> shared pointer to 16bit image buffer; use getImageWidth, getImageHeight, getImageBytePerPixel to obtain image specifications
 		!*/
-		uint16_t*							getImageDataDepth16Bit( const uint32_t deviceID, bool waitAndBlock=false);
+		boost::shared_array<uint16_t>			getImageDataDepth16Bit( const uint32_t deviceID, bool waitAndBlock=false);
 
 		/*! /brief     Returns the number of detected sensors
 			/return    std::uint32_t Number of detected sensors
 		!*/
 		uint32_t							getNumberOfDevices() const;
 
-		/*! /brief		Returns position of specific joint of specific skeleton
+		/*! /brief		Returns position of specific joint of specific skeleton in wold coordinates
 			/param		const uint32_t deviceID for choosing specific device
 			/param		const uint8_t userID
 			/param		_2RealJointType indicating the type of the joint to be requested, Use _2RealJointType enum
@@ -125,61 +136,82 @@ class _2RealKinect
 		!*/
 		const _2RealVector3f				getSkeletonJointWorldPosition( const uint32_t deviceID, const uint8_t userID, _2RealJointType type );
 
-		/*! /brief		Returns all joints of the skeleton
+		/*! /brief		Returns all joints of the skeleton of a specific user in world coordinates
 			/param		const uint32_t deviceID for choosing specific device
 			/param		const uint8_t userID
-			/return		const _2RealVector3f
+			/return		const _2RealPositionsVector3f
 		!*/
 		const _2RealPositionsVector3f		getSkeletonWorldPositions( const uint32_t deviceID, const uint8_t userID );
 
-		/*! /brief		Returns position of specific joint of specific skeleton
+		/*! /brief		Returns position of specific joint of specific skeleton in screen coordinates
 			/param		const uint32_t deviceID for choosing specific device
 			/param		const uint8_t userID
 			/param		_2RealJointType type indicating the type of the joint to be requested, Use _2RealJointType enum
-			/return		const _2RealVector3f
+			/return		const _2RealVector2f
 		!*/
-		const _2RealVector2f				getSkeletonJointScreenPosition( const uint32_t deviceID, const uint8_t userID, _2RealJointType type );
+		const _2RealVector3f getSkeletonJointScreenPosition( const uint32_t deviceID, const uint8_t userID, _2RealJointType type );
 
-		/*! /brief		Returns all joints of the skeleton
+		/*! /brief		Returns all joints of the skeleton for a specific tracked user in screen coordinates
 			/param		const uint32_t deviceID for choosing specific device
 			/param		const uint8_t userID
-			/return		const _2RealVector3f
+			/return		const _2RealPositionsVector2f
 		!*/
-		const _2RealPositionsVector2f		getSkeletonScreenPositions( const uint32_t deviceID, const uint8_t userID );
+		const _2RealPositionsVector3f getSkeletonScreenPositions( const uint32_t deviceID, const uint8_t userID );
 
 		/*! /brief		Returns orientation of specific joint of specific skeleton
 			/param		const uint32_t deviceID for choosing specific device
 			/param		const uint8_t userID
 			/param		_2RealJointType type indicating the type of the joint to be requested, Use _2RealJointType enum
-			/return		const _2RealVector3f
+			/return		const _2RealMatrix3x3
 		!*/
-		const _2RealMatrix3x3 getSkeletonJointWorldOrientation( const uint32_t deviceID, const uint8_t userID, _2RealJointType type );
+		const _2RealMatrix3x3				getSkeletonJointWorldOrientation( const uint32_t deviceID, const uint8_t userID, _2RealJointType type );
 
 		/*! /brief		Returns all joint orientations of the skeleton
 			/param		const uint32_t deviceID for choosing specific device
 			/param		const uint8_t userID
-			/return		const _2RealMatrix3x3
+			/return		const _2RealOrientationsMatrix3x3
 		!*/
-		const _2RealOrientationsMatrix3x3 getSkeletonWorldOrientations( const uint32_t deviceID, const uint8_t userID );
+		const _2RealOrientationsMatrix3x3	getSkeletonWorldOrientations( const uint32_t deviceID, const uint8_t userID );
 
 		/*! /brief		Returns position and orientation confidence for a joint on a device for a specific userID
 			/param		const uint32_t deviceID for choosing specific device
 			/param		const uint8_t userID
-			/return		const _2RealConfidence
+			/return		const _2RealJointConfidence
 		!*/
-		const _2RealConfidence getSkeletonJointConfidence(const uint32_t deviceID, const uint8_t userID, _2RealJointType type);
+		const _2RealJointConfidence			getSkeletonJointConfidence(const uint32_t deviceID, const uint8_t userID, _2RealJointType type);
 
-		/*! /brief		Returns all joints of the skeleton
+		/*! /brief		Returns position and orientation confidence for a joint on a device for a specific userID
 			/param		const uint32_t deviceID for choosing specific device
-			/return		const _2RealVector3f
+			/param		const uint8_t userID
+			/return		const _2RealJointConfidences
+		!*/
+		const _2RealJointConfidences		getSkeletonJointConfidences(const uint32_t deviceID, const uint8_t userID);
+
+		/*! /brief		Returns number of tracked skeletons
+			/param		const uint32_t deviceID for choosing specific device
+			/return		const uint32_t
 		!*/
 		const uint32_t						getNumberOfSkeletons( const uint32_t deviceID ) const;
 
-		/*! /brief		Returns all joints of the skeleton
+		/*! /brief		Returns number of tracked (segmented from background) users
 			/param		const uint32_t deviceID for choosing specific device
-			/return		const _2RealVector3f
+			/return		const uint32_t
 		!*/
 		const uint32_t						getNumberOfUsers( const uint32_t deviceID ) const;
+
+		/*! /brief		Returns center of mass of a specific tracked users in world coordinates
+			/param		const uint32_t deviceID for choosing specific device
+			/param		uint8_t userID
+			/return		const _2RealVector3f 3d vector indicating the center of mass
+		!*/
+		const _2RealVector3f				getUsersWorldCenterOfMass(const uint32_t deviceID, const uint8_t userID);
+
+		/*! /brief		Returns center of mass of a specific tracked users in screen coordinates
+			/param		const uint32_t deviceID for choosing specific device
+			/param		uint8_t userID
+			/return		const _2RealVector3f 3d vector indicating the center of mass
+		!*/
+		const _2RealVector3f				getUsersScreenCenterOfMass(const uint32_t deviceID, const uint8_t userID);
 
 		/*! /brief     Indicating if a particular generator has enabled the mirror capability
 			/param     const uint32_t deviceID for choosing specific device
@@ -269,11 +301,11 @@ class _2RealKinect
 		_2RealKinect( const _2RealKinect& o );
 		_2RealKinect& operator=( const _2RealKinect& o );
 
-		I_2RealImplementation*			m_Implementation;
-		static _2RealKinect*			m_Instance;
+		boost::shared_ptr<I_2RealImplementation>		m_Implementation;
+		static _2RealKinect*							m_Instance;
 };
 
-}	// namespace _2Real
+}	// namespace _2RealKinectWrapper
 
 
 // This is used for conditional linking of libraries, you as a user don't have to set the libs in your project setting, however you have to set the paths in your IDEs settings

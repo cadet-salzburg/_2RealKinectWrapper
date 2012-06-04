@@ -27,8 +27,8 @@ class ofMultipleKinectApp : public ofBaseApp{
 		void			drawSkeletons(int deviceID, ofRectangle rect);
 		void			resizeImages();
 		void			mirrorImages();
-		
-		_2Real::_2RealKinect*		m_2RealKinect;
+
+		_2RealKinectWrapper::_2RealKinect*		m_2RealKinect;
 		bool						m_bIsMirroring;
 		int							m_iKinectWidth;
 		int							m_iKinectHeight;

@@ -31,7 +31,7 @@
 #include <vector>
 
 
-namespace _2Real
+namespace _2RealKinectWrapper
 {
 
 class _2RealTrackedUser
@@ -51,9 +51,9 @@ class _2RealTrackedUser
 
 		/*! /brief returns the object of a particular joint
 			/param jointType the name of the joint
-			/return const _2RealTrackedJoint* - reference to joint - return null if jointtype is not available
+			/return _2RealTrackedJoint - reference to joint 
 		*/
-		const _2RealTrackedJoint*				getJoint( const _2RealJointType jointType ) const;
+		boost::shared_ptr<_2RealTrackedJoint>		getJoint( const _2RealJointType jointType ) const;
 
 		/*! /brief returns a vector containing the users' joint positions in world space; if confidence expectations aren't met position for joint will be (0,0,0)
 			Use _2RealJointType enum to return a specific joint through the operator[] ( getJointWorldPositions()[JOINT_HEAD] )
@@ -65,7 +65,7 @@ class _2RealTrackedUser
 						Use _2RealJointType enum to return a specific joint through the operator[] ( getJointWorldPositions()[JOINT_HEAD] )
 			/param		jointVertices a vector of floats where the xyz coordinates of the users' joints will be stored
 		*/
-		_2RealPositionsVector2f&					getSkeletonScreenPositions( );
+		_2RealPositionsVector3f&					getSkeletonScreenPositions( );
 
 		/*! /brief		returns a vector containing the users' joint orientations; if confidence expectations aren't met position for joint will be (0,0,0)
 						Use _2RealJointType enum to return a specific joint through the operator[] ( getJointWorldPositions()[JOINT_HEAD] )
@@ -73,26 +73,32 @@ class _2RealTrackedUser
 		_2RealOrientationsMatrix3x3& getSkeletonWorldOrientations( );
 
 		/*! /brief     returns the world position of a specific user joint
-			/return    _2Real::_2RealVector3f
+			/return    _2RealKinectWrapper::_2RealVector3f
 		!*/
 		const _2RealVector3f					getJointWorldPosition( _2RealJointType type ) const;
 
 		/*! /brief     returns the screen position of a specific user joint
-			/return    _2Real::_2RealVector3f
+			/return    _2RealKinectWrapper::_2RealVector3f
 		!*/
-		const _2RealVector2f					getJointScreenPosition( _2RealJointType type ) const;
+		const _2RealVector3f getJointScreenPosition( _2RealJointType type ) const;
 
 		/*! /brief     returns the 3x3 orientation matrix of a specific user joint
 			/param     _2RealJointType type - Type of the joint to be returned (hand, ...)
-			/return    _2Real::_2RealVector3f
+			/return    _2RealKinectWrapper::_2RealVector3f
 		!*/
 		const _2RealMatrix3x3					getJointWorldOrientation( _2RealJointType type ) const;
 
 		/*! /brief     returns the position and orientation condfidence of a joint
 			/param     _2RealJointType type - Type of the joint to be returned (hand, ...)
-			/return    _2RealConfidence
+			/return    _2RealJointConfidence
 		!*/
-	    _2RealConfidence					getJointConfidence( _2RealJointType type );
+	    _2RealJointConfidence					getJointConfidence( _2RealJointType type );
+
+		/*! /brief     returns the position and orientation condfidence of a joint
+			/param     _2RealJointType type - Type of the joint to be returned (hand, ...)
+			/return    _2RealJointConfidences
+		!*/
+	    _2RealJointConfidences					getJointConfidences();
 
 		/*! /brief     Return maximal number of joints available, Notice: There will be more entries in the joint vector created than used, for information
 					   see _2RealStructuresTypes.h
@@ -103,17 +109,17 @@ class _2RealTrackedUser
 
 	private:
 
-		void									setJoint( const _2RealJointType jointType, const _2RealTrackedJoint& joint );
+		void									setJoint( const _2RealJointType jointType, boost::shared_ptr<_2RealTrackedJoint> joint );
 
 		//the joints stored in a vector
 		_2RealTrackedJointVector					m_Joints;
-		_2RealPositionsVector2f						m_JointScreenPositions;
+		_2RealPositionsVector3f						m_JointScreenPositions;
 		_2RealPositionsVector3f						m_JointWorldPositions;
 		_2RealOrientationsMatrix3x3					m_JointWorldOrientations;
+		_2RealJointConfidences						m_JointConfidences;
 		uint32_t									m_ID;
 
-		friend class OpenNIUserGenerator;
-		friend class OpenNIDepthGenerator;
+		friend class OpenNIDevice;
 		friend class WSDKDevice;
 };
 

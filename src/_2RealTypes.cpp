@@ -1,6 +1,6 @@
 #include "_2RealTypes.h"
 
-namespace _2Real
+namespace _2RealKinectWrapper
 {
 
 

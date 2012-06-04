@@ -26,20 +26,29 @@
 #include <vector>
 #include <iostream>
 #include <string>
+#include <boost/shared_ptr.hpp>
+#include <boost/shared_array.hpp>
 
 #include "_2RealImageSource.h"
 
 
-namespace _2Real
+namespace _2RealKinectWrapper
 {
 	struct _2RealVector3f;		// forward decls
 	struct _2RealVector2f;
 	struct _2RealMatrix3x3;
+	struct _2RealJointConfidence;
 
-	typedef std::vector<_2RealVector3f>		_2RealPositionsVector3f;
-	typedef std::vector<_2RealVector2f>		_2RealPositionsVector2f;
-	typedef std::vector<_2RealMatrix3x3>	_2RealOrientationsMatrix3x3;
+	typedef std::vector<_2RealVector3f>				_2RealPositionsVector3f;
+	typedef std::vector<_2RealVector2f>				_2RealPositionsVector2f;
+	typedef std::vector<_2RealJointConfidence>		_2RealJointConfidences;
+	typedef std::vector<_2RealMatrix3x3>			_2RealOrientationsMatrix3x3;
 
+	enum _2RealKinectLimit
+	{
+		MAX_DEVICES = 8,
+		MAX_USERS = 24			// defines the maximum of users in the system which can be theoretically tracked if supported by the underlying sdk
+	};
 
 	/*	_2RealJointType *
 		Filtering specific joints out of joint vector with operator[]
@@ -123,8 +132,9 @@ namespace _2Real
 		_2RealVector3f( void );
 		_2RealVector3f( float X, float Y, float Z );
 		_2RealVector3f( const _2RealVector3f& o );
+		
 		_2RealVector3f& operator=( const _2RealVector3f& o );
-
+	
 		float x;
 		float y;
 		float z;
@@ -142,12 +152,12 @@ namespace _2Real
 		float elements[9];
 	};
 
-	struct _2RealConfidence
+	struct _2RealJointConfidence
 	{
-		_2RealConfidence() : positionConfidence(0),  orientationConfidence(0)	{};	//default values
-		_2RealConfidence(float posConf, float oriConf) : positionConfidence(posConf),  orientationConfidence(oriConf)	{};	
-		_2RealConfidence( const _2RealConfidence& o ) : positionConfidence(o.positionConfidence), orientationConfidence(o.orientationConfidence) {};
-		_2RealConfidence& operator=( const _2RealConfidence& o )
+		_2RealJointConfidence() : positionConfidence(0),  orientationConfidence(0)	{};	//default values
+		_2RealJointConfidence(float posConf, float oriConf) : positionConfidence(posConf),  orientationConfidence(oriConf)	{};	
+		_2RealJointConfidence( const _2RealJointConfidence& o ) : positionConfidence(o.positionConfidence), orientationConfidence(o.orientationConfidence) {};
+		_2RealJointConfidence& operator=( const _2RealJointConfidence& o )
 		{
 			if( this == &o )
 				return *this;
@@ -157,6 +167,8 @@ namespace _2Real
 		float positionConfidence;
 		float orientationConfidence;
 	};
+
+	typedef _2RealJointConfidence _2RealConfidence;		// keep compatiblity with deprecated naming
 
 	class _2RealException : public std::exception
 	{

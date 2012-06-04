@@ -1,119 +1,107 @@
-/*
-	CADET - Center for Advances in Digital Entertainment Technologies
-	Copyright 2011 University of Applied Science Salzburg / MultiMediaTechnology
-
-	http://www.cadet.at
-	http://multimediatechnology.at/
-
-	Licensed under the Apache License, Version 2.0 (the "License");
-	you may not use this file except in compliance with the License.
-	You may obtain a copy of the License at
-
-	http://www.apache.org/licenses/LICENSE-2.0
-
-	Unless required by applicable law or agreed to in writing, software
-	distributed under the License is distributed on an "AS IS" BASIS,
-	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	See the License for the specific language governing permissions and
-	limitations under the License.
-
-	CADET - Center for Advances in Digital Entertainment Technologies
-
-	Authors: Robert Praxmarer, Gerlinde Emsenhuber, Robert Sommeregger
-	Email: support@cadet.at
-	Created: 08-09-2011
-*/
-
 #pragma once
-#include "OpenNISpecific/OpenNIColorGenerator.h"
-#include "OpenNISpecific/OpenNIDepthGenerator.h"
-#include "OpenNISpecific/OpenNIInfraredGenerator.h"
-#include "OpenNISpecific/OpenNIUserGenerator.h"
-#include "_2RealUtility.h"
-#include "_2RealTrackedUser.h"
-#include "XnOpenNI.h"
-#include "boost/thread/mutex.hpp"
-#include <boost/thread/thread.hpp>
+#include <iostream>
+#include <string>
 #include <vector>
+#include <utility>
+#include <XnCppWrapper.h>
+#include <boost/cstdint.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/shared_array.hpp>
+#include "_2RealTrackedUser.h"
+#include <memory>
 
 
+namespace _2RealKinectWrapper {
 
-namespace _2Real
-{
-	typedef std::vector<_2RealTrackedUser>	_2RealTrackedUserVector;
+	typedef boost::shared_array< unsigned char >				ImageDataRef;
+	typedef boost::shared_array< uint16_t >						ImageData16Ref;
+	typedef boost::shared_ptr< xn::NodeInfo >					NodeInfoRef;
+	typedef boost::shared_ptr< xn::Generator >					GeneratorRef;
+	typedef boost::shared_ptr< class OpenNIDevice >				OpenNIDeviceRef;
+	typedef std::vector<boost::shared_ptr<_2RealTrackedUser> >	_2RealTrackedUserVector;
+	typedef boost::shared_ptr< class _2RealTrackedJoint >		_2RealTrackedJointRef;
 
-//container for the generators of a kinect device
-class OpenNIDevice
-{
+	class OpenNIDevice
+	{
 	public:
-		OpenNIDevice( const int id, const std::string& name, xn::Context& context, xn::NodeInfo& deviceInfo );
-		~OpenNIDevice( void );
 
-		xn::DepthGenerator&			GetOpenNIDepthGenerator();
-		xn::UserGenerator&			GetOpenNIUserGenerator();
-		xn::ImageGenerator&			GetOpenNIImageGenerator();
-		xn::IRGenerator&			GetOpenNIInfraredGenertor();
+		OpenNIDevice();
+		OpenNIDevice( const xn::Context context,  NodeInfoRef deviceInfo, const std::string deviceName );
 
-		bool						startGenerators( const uint32_t startGenerators );
-		void						startupProcessingColorGenerator( xn::NodeInfo& node, const uint32_t configureImages );
-		void						startupProcessingDepthGenerator( xn::NodeInfo& node, const uint32_t configureImages );
-		void						startupProcessingInfraredGenerator( xn::NodeInfo& node, const uint32_t configureImages );
-		void						startupProcessingUserGenerator( xn::NodeInfo& node, const uint32_t configureImages );
+		void							addDeviceToContext();
 
-		bool						shutdown();
+		void							addGenerator( const XnPredefinedProductionNodeType &nodeType, uint32_t configureImages );
+		void							removeGenerator( const XnPredefinedProductionNodeType &nodeType );
+		bool							hasGenerator( const XnPredefinedProductionNodeType &nodeType ) const;
+		void							startGenerator( const XnPredefinedProductionNodeType &nodeType );
+		void							stopGenerator( const XnPredefinedProductionNodeType &nodeType );
 
-		_2RealTrackedUserVector		getUsers();
+		bool							hasNewData( const XnPredefinedProductionNodeType &nodeType );
 
-		const XnMapOutputMode&		getOutputmodeColor() const;
-		const XnMapOutputMode&		getOutputmodeDepth() const;
-		const XnMapOutputMode&		getOutputmodeInfrared() const;
-		const XnMapOutputMode&		getOutputmodeUser() const;
+		ImageDataRef					getBuffer( const XnPredefinedProductionNodeType &nodeType );
+		ImageData16Ref					getBuffer16( const XnPredefinedProductionNodeType &nodeType );
 
-		uint16_t*					getDepthBuffer_16bit();
-		uint8_t*					getImageBuffer();
-		uint8_t*					getDepthBuffer();
-		uint8_t*					getInfraredBuffer();
-		uint8_t*					getUserImageBuffer();
-		uint8_t*					getUserColorImageBuffer();
+		xn::NodeInfo					getNodeInfo();
+		xn::NodeInfoList				getNodeInfoList( const XnPredefinedProductionNodeType &nodeType  );
+
+		void							convertRealWorldToProjective( XnUInt32 count, 		const XnPoint3D  	aRealWorld[], XnPoint3D  	aProjective[] );
+		void							convertProjectiveToRealWorld( XnUInt32 count, 		const XnPoint3D  	aProjective[], XnPoint3D  	aRealWorld[] );
+
+		void							getExistingProductionNode( const XnPredefinedProductionNodeType &nodeType, xn::ProductionNode& productionNode ) const;
+		static std::string				xnNodeTypeToString( const XnPredefinedProductionNodeType& nodeType );
+
+		_2RealTrackedUserVector			getUsers();
+		size_t							getNumberOfUsers();
+
+		XnStatus						getUserByID( uint32_t userID, boost::shared_ptr<_2RealTrackedUser> user );
+
+		XnSkeletonJointTransformation	getSkeletonJoint( XnUInt16 userIdx, XnSkeletonJoint jointType);
+		_2RealTrackedJointRef			getUserJoint( const uint32_t userID, XnSkeletonJoint type );
+		void							forceResetUser( const uint32_t id );
+		void							forceResetUsers( );
 
 	private:
-		static void					update( void* instance );
-		static void					checkError( XnStatus status, std::string error );
-		static void					convertImage_16_to_8( const uint16_t* source, unsigned char* destination, uint32_t size, const int normalizing );
+		void							convertImage_16_to_8( const boost::shared_array<uint16_t> source, boost::shared_array<unsigned char> destination, uint32_t size, const int normalizing )
+		{
+			for( unsigned int i=0; i<size; ++i )
+			{
+				destination[i] = (unsigned char) ( source[i] * ( (float)( 1 << 8 ) / normalizing ) ); 	
+			}
+		};
 
-	public:
-		// the available generators - depth map, user data, color image, infrared image
-		OpenNIDepthGenerator					m_DepthGenerator;
-		OpenNIColorGenerator					m_ColorGenerator;
-		OpenNIUserGenerator						m_UserGenerator;
-		OpenNIInfraredGenerator					m_InfraredGenerator;
+		XnMapOutputMode					getRequestedOutputMode( const XnPredefinedProductionNodeType &nodeType, uint32_t configureImages );
+		mutable xn::Context				m_Context;
+		std::string						m_DeviceName;
+		NodeInfoRef						m_DeviceInfo;
 
-	private:
+		XnCallbackHandle				userCbHandle;
+		XnCallbackHandle				calibrationStartedCbHandle;
+		XnCallbackHandle				calibrationCompletedCbHandle;
+		XnCallbackHandle				userExitCbHandle;
+		XnCallbackHandle				userReentryCbHandle;
+		XnCallbackHandle				poseDetectedCbHandle;
+
+		xn::ImageGenerator				m_ImageGenerator;
+		xn::DepthGenerator				m_DepthGenerator;
+		xn::UserGenerator				m_UserGenerator;
+		xn::IRGenerator					m_IrGenerator;
+
 		//image buffer obtained from kinect
 		_2RealImageSource<uint8_t>				m_ColorImage;
 		_2RealImageSource<uint16_t>				m_DepthImage, m_InfraredImage, m_UserImage;
 
 		//converted image buffers
-		unsigned char**							m_DepthImage_8bit;
-		unsigned char**							m_InfraredImage_8bit;
-		unsigned char**							m_UserImage_8bit;
-		unsigned char**							m_UserImageColor_8bit;
+		boost::shared_array<unsigned char>	m_DepthImage_8bit;
+		boost::shared_array<unsigned char>	m_InfraredImage_8bit;
+		boost::shared_array<unsigned char>	m_UserImage_8bit;
+		boost::shared_array<unsigned char>	m_UserImageColor_8bit;
+		
+		XnUInt16						m_NumUsers;
+		XnUserID						*m_Users;
 
-		//misc
-		const uint32_t							m_ID;
-		std::string								m_InstanceName;
-		_2RealTrackedUser**						m_TrackedUsersArray;
-		const int								m_TrackedUserArraySize;
-		XnMapOutputMode							m_OutputModeColor, m_OutputModeDepth, m_OutputModeInfrared, m_OutputModeUser;
-		xn::Context&							m_Context;
-		xn::NodeInfo&							m_DeviceInfo;
-		boost::thread							m_ProcessingThread;
-		boost::mutex							m_MutexFetchUsers;
-		uint8_t									m_CurrentBuffer;
-		bool									m_IsInitialized;
-		bool									m_IsProcessingThread;
-		bool									m_IsFetchingData;
-};
+		void							registerUserCallbacks();
+		XnStatus						getErrorState() const;
 
-}
+	};
+} //namespace
 

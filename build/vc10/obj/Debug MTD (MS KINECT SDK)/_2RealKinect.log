@@ -1,0 +1,20 @@
+﻿Build started 24.05.2012 15:03:53.
+     1>Project "D:\Work\CADET\Repository\cadet\trunk\projects\_2RealKinectWrapper_New\build\vc10\_2RealKinect.vcxproj" on node 2 (build target(s)).
+     1>InitializeBuildStatus:
+         Touching ".\obj\Debug MTD (MS KINECT SDK)\_2RealKinect.unsuccessfulbuild".
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ID:\Work\CADET\Repository\cadet\trunk\projects\_2RealKinectWrapper_New\build\vc10\\..\..\include /ID:\Work\CADET\Repository\cadet\trunk\projects\_2RealKinectWrapper_New\build\vc10\\..\..\src /I"C:\Program Files (x86)\OpenNI\Include" /I"C:\Program Files\Microsoft SDKs\Kinect\v1.0\\inc" /ID:\Libraries\boost_1_48_0 /ZI /nologo /W3 /WX- /Od /Oy- /D TARGET_MSKINECTSDK /D WIN32 /D _DEBUG /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo".\obj\Debug MTD (MS KINECT SDK)\\" /Fd".\obj\Debug MTD (MS KINECT SDK)\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt ..\..\src\_2RealKinect.cpp
+         _2RealKinect.cpp
+     1>d:\work\cadet\repository\cadet\trunk\projects\_2realkinectwrapper_new\src\_2realkinect.cpp(44): error C2259: '_2RealKinectWrapper::_2RealImplementationWinSDK' : cannot instantiate abstract class
+                 due to following members:
+                 'void _2RealKinectWrapper::I_2RealImplementation::update(void)' : is abstract
+                 d:\work\cadet\repository\cadet\trunk\projects\_2realkinectwrapper_new\src\i_2realimplementation.h(47) : see declaration of '_2RealKinectWrapper::I_2RealImplementation::update'
+                 'bool _2RealKinectWrapper::I_2RealImplementation::configureDevice(const uint32_t,uint32_t,uint32_t)' : is abstract
+                 d:\work\cadet\repository\cadet\trunk\projects\_2realkinectwrapper_new\src\i_2realimplementation.h(48) : see declaration of '_2RealKinectWrapper::I_2RealImplementation::configureDevice'
+                 'void _2RealKinectWrapper::I_2RealImplementation::startGenerator(const uint32_t,uint32_t)' : is abstract
+                 d:\work\cadet\repository\cadet\trunk\projects\_2realkinectwrapper_new\src\i_2realimplementation.h(49) : see declaration of '_2RealKinectWrapper::I_2RealImplementation::startGenerator'
+     1>Done Building Project "D:\Work\CADET\Repository\cadet\trunk\projects\_2RealKinectWrapper_New\build\vc10\_2RealKinect.vcxproj" (build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:02.08

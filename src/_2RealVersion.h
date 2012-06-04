@@ -28,9 +28,9 @@
 
 #define API_MAJOR 0
 #define API_MINOR 9
-#define API_PATCH 3
+#define API_PATCH 4
 
-namespace _2Real
+namespace _2RealKinectWrapper
 {
 class _2RealVersion
 {

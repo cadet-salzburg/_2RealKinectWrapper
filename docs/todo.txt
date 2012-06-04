@@ -1,0 +1,11 @@
+Todo
+----
+	  * error message ms kinect sdk get joint confidence user number was that working in the old revision ?????
+	  * invert in ms kinect of skeleton is flawed
+	  * check always back with new versions of ms kinect sdk when they solve the debug build depht image604x480 user tracking bug (it's only working with this res in release mode, and it is definetly a microsoft bug)
+  	  * MultiDevice Microsoft SDK second dpeth image only has 8 bit res it seems
+	  * MacOS (codeblocks/xcode4) / Linux (codeblocks)
+	  * switching from openni to ms mirroring is wrong as this is saved in the firmware (reset to default?)
+	  * Integrate Hand detector of OpenNi, is that really needed
+	  * High Level Recording and Tracking Library 
+	  

@@ -26,9 +26,14 @@
 #include <stdint.h>
 #include "_2RealVector2f.h"
 
-namespace _2Real
+namespace _2RealKinectWrapper		// this null deleter is needed so the shared pointer doesn't delete the memory allocated by openni, otherwise we will segfault
 {
-
+struct null_deleter
+{
+    void operator()(void const *) const
+    {
+    }
+};
 
 template<typename T>
 class _2RealImageSource
@@ -41,7 +46,7 @@ class _2RealImageSource
 		/*! /brief returns the image data
 			/return T* a pointer to the image data
 		*/
-		const T*					getData() const;
+		boost::shared_array<T>		getData() const;
 
 		/*! /brief returns the frames' full (uncropped) resolution
 			/param x a reference to a 32 bit integer where the uncropped width (in pixel) will be stored
@@ -84,28 +89,28 @@ class _2RealImageSource
 	private:
 	
 		// pointer to the image data
-		const T*				m_pData;
+		boost::shared_array<T>							m_pData;
 		// timestamp as returned by the device
-		uint64_t				m_iTimestamp;
+		uint64_t										m_iTimestamp;
 		// frame id as returned by the device
-		uint32_t				m_iFrameID;
+		uint32_t										m_iFrameID;
 		// whether the image was mirrored
-		bool					m_bIsMirrored;
+		bool											m_bIsMirrored;
 		// whether the image was cropped
-		bool					m_bIsCropped;
+		bool											m_bIsCropped;
 		// uncropped resolution of the image
-		uint32_t				m_iFullResolutionX;
-		uint32_t				m_iFullResolutionY;
+		uint32_t										m_iFullResolutionX;
+		uint32_t										m_iFullResolutionY;
 		// cropped resolution 
-		uint32_t				m_iCroppedResolutionX;
-		uint32_t				m_iCroppedResolutionY;
+		uint32_t										m_iCroppedResolutionX;
+		uint32_t										m_iCroppedResolutionY;
 		// cropping offset from the top left corner
-		uint32_t				m_iCroppingOffsetX;
-		uint32_t				m_iCroppingOffsetY;
+		uint32_t										m_iCroppingOffsetX;
+		uint32_t										m_iCroppingOffsetY;
 		// bytes per pixel
-		uint32_t				m_iBytesPerPixel;
+		uint32_t										m_iBytesPerPixel;
 
-		void setData( const T * data );
+		void setData( T* data );
 		void setFullResolution( const uint32_t x, const uint32_t y );
 		void setCroppedResolution( const uint32_t x, const uint32_t y );
 		void setCroppingOffest( const uint32_t x, const uint32_t y );
@@ -115,15 +120,12 @@ class _2RealImageSource
 		void setMirroring( const bool mirrored );
 		void setCropping( const bool cropped );
 
-		friend class OpenNIInfraredGenerator;
-		friend class OpenNIDepthGenerator;
-		friend class OpenNIColorGenerator;
-		friend class OpenNIUserGenerator;
+		friend class OpenNIDevice;
 };
 
 
 template <typename T> 
-_2RealImageSource<T>::_2RealImageSource() : m_pData(NULL), m_iTimestamp(0), m_iFrameID(0), m_iBytesPerPixel(0), m_bIsCropped(false), m_bIsMirrored(false), m_iCroppingOffsetX(0), 
+_2RealImageSource<T>::_2RealImageSource() : m_pData(boost::shared_array<T>()), m_iTimestamp(0), m_iFrameID(0), m_iBytesPerPixel(0), m_bIsCropped(false), m_bIsMirrored(false), m_iCroppingOffsetX(0), 
 	m_iCroppingOffsetY(0), m_iFullResolutionX(0),  m_iFullResolutionY(0), m_iCroppedResolutionX(0), m_iCroppedResolutionY(0)
 {
 }
@@ -131,17 +133,17 @@ _2RealImageSource<T>::_2RealImageSource() : m_pData(NULL), m_iTimestamp(0), m_iF
 template <typename T>
 _2RealImageSource<T>::~_2RealImageSource()
 {
-	m_pData = NULL;
+	m_pData = boost::shared_array<T>();
 }
 
 template <typename T>
-void _2RealImageSource<T>::setData(const T * data)
+void _2RealImageSource<T>::setData(T* data)
 {
-	m_pData = data;
+	m_pData = boost::shared_array<T>(data, null_deleter()) ;	// null deleter is needed so the shared pointer doesn't delete the memory allocated by openni, otherwise we will segfault
 }
 
 template <typename T>
-const T* _2RealImageSource<T>::getData() const
+boost::shared_array<T> _2RealImageSource<T>::getData() const
 {
 	return m_pData;
 }

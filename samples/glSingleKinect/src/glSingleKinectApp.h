@@ -48,7 +48,7 @@ class GlSingleKinectApp
 		void				UpdateTextures();
 
 	private:
-		_2Real::_2RealKinect*			m_2Real;
+		_2RealKinectWrapper::_2RealKinect*			m_2Real;
 		GLuint							m_Texture[2];
 		bool							m_IsInitialized;
 };

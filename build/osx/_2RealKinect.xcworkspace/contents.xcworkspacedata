@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:../../samples/cinderMultipleKinect/build/osx/cinderMultipleKinect.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:_2RealKinect/_2RealKinect.xcodeproj">
+   </FileRef>
+</Workspace>

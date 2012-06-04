@@ -13,19 +13,7 @@
     <ClCompile Include="..\..\src\_2RealTypes.cpp">
       <Filter>_2RealKinectWrapper</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\OpenNISpecific\OpenNIColorGenerator.cpp">
-      <Filter>_2RealKinectWrapper\OpenNI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\OpenNISpecific\OpenNIDepthGenerator.cpp">
-      <Filter>_2RealKinectWrapper\OpenNI</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\OpenNISpecific\OpenNIDevice.cpp">
-      <Filter>_2RealKinectWrapper\OpenNI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\OpenNISpecific\OpenNIInfraredGenerator.cpp">
-      <Filter>_2RealKinectWrapper\OpenNI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\OpenNISpecific\OpenNIUserGenerator.cpp">
       <Filter>_2RealKinectWrapper\OpenNI</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\WinSDKSpecific\WSDKDevice.cpp">
@@ -48,22 +36,7 @@
     <ClInclude Include="..\..\src\WinSDKSpecific\WSDKDevice.h">
       <Filter>_2RealKinectWrapper\MS Kinect SDK</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\OpenNISpecific\OpenNIColorGenerator.h">
-      <Filter>_2RealKinectWrapper\OpenNI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\OpenNISpecific\OpenNIDepthGenerator.h">
-      <Filter>_2RealKinectWrapper\OpenNI</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\OpenNISpecific\OpenNIDevice.h">
-      <Filter>_2RealKinectWrapper\OpenNI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\OpenNISpecific\OpenNIGenerator.h">
-      <Filter>_2RealKinectWrapper\OpenNI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\OpenNISpecific\OpenNIInfraredGenerator.h">
-      <Filter>_2RealKinectWrapper\OpenNI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\OpenNISpecific\OpenNIUserGenerator.h">
       <Filter>_2RealKinectWrapper\OpenNI</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\_2RealKinect.h">
@@ -99,6 +72,9 @@
     <ClInclude Include="..\..\src\_2RealVersion.h">
       <Filter>_2RealKinectWrapper</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\OpenNISpecific\OpenNiUtils.hpp">
+      <Filter>_2RealKinectWrapper\OpenNI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="API Interface">
@@ -116,8 +92,16 @@
     <Filter Include="API Interface\Types">
       <UniqueIdentifier>{1da9ba55-968a-413e-bdee-9f68cf728cc7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="_2RealKinectWrapper\Docs">
+      <UniqueIdentifier>{e9e829dc-84ec-4eb9-be03-38414d7af876}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\readme.txt" />
+    <None Include="..\..\docs\readme.txt">
+      <Filter>_2RealKinectWrapper\Docs</Filter>
+    </None>
+    <None Include="..\..\docs\todo.txt">
+      <Filter>_2RealKinectWrapper\Docs</Filter>
+    </None>
   </ItemGroup>
 </Project>
