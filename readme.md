@@ -1,4 +1,4 @@
-/*********************************************************************************************/
+
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 University of Applied Science Salzburg / MultiMediaTechnology
 
@@ -37,7 +37,7 @@
    Website:
      http://www.cadet.at
 	 
-/*********************************************************************************************/
+
 
 Version History
 ---------------
