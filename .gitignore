@@ -1,12 +1,15 @@
-.DS_Store
-*.swp
-*~.nib
-
-*/DerivedData/
-build/osx/DerivedData
-
+#SVN Files
 .svn
 
+#OS Junk
+[Tt]humbs.db
+.DS_Store
+
+#XCode Files
+*.swp
+*~.nib
+*/DerivedData/
+build/osx/DerivedData
 *.pbxuser
 *.perspective
 *.perspectivev3
@@ -15,13 +18,35 @@ build/osx/DerivedData
 *.user
 xcuserdata
 
-vc10/debug/
-vc10/release/
-vc10/*.opensdf
-vc10/ipch/
-
-*.suo
+#Visual Studio files
+*.[Oo]bj
+*.exe
+*.pdb
+*.user
+*.aps
+*.pch
+*.vspscc
+*.vssscc
+*_i.c
+*_p.c
 *.ncb
+*.suo
+*.tlb
+*.tlh
+*.bak
+*.[Cc]ache
+*.ilk
+*.log
+*.lib
+*.sbr
 *.sdf
-Debug/
-Release/
+ipch/
+obj/
+*.opensdf
+
+[Bb]in
+Ankh.NoLoad
+
+#Common Files
+[Dd]ebug*/
+[Rr]elease*/
