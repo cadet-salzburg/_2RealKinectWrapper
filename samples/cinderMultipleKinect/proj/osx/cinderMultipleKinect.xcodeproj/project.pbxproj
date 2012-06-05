@@ -272,7 +272,7 @@
 				LIBRARY_SEARCH_PATHS = "";
 				OTHER_LDFLAGS = (
 					"\"$(CINDER_PATH)/lib/osx/libcinder.a\"",
-					../../../../lib/_2RealKinectOpenNI_d.a,
+					../../../../lib/_2RealKinectOpenNI.a,
 					/usr/lib/libOpenNI.dylib,
 				);
 				PRODUCT_NAME = cinderMultipleKinect;

@@ -280,7 +280,7 @@
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CONFIGURATION_BUILD_DIR = ../../../lib;
 				EXECUTABLE_PREFIX = "";
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = (
 					../../../src,
 					../../../externalLibs/boost/include,
@@ -304,7 +304,7 @@
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CONFIGURATION_BUILD_DIR = ../../../lib;
 				EXECUTABLE_PREFIX = "";
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = (
 					../../../src,
 					../../../externalLibs/boost/include,
