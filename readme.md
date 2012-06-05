@@ -46,23 +46,23 @@ Version
  
 Version History
 ---------------
-## 0.9.4(α) Update release
+### 0.9.4(α) Update release
 
 * A major update on the OpenNI version is underway. This branch is experimental and is not production ready.
 
 
-## 0.9.3    Update release
+### 0.9.3    Update release
 
 * Updated to newest MS kinect SDK 1.0 (microsoft changed their api quite a bit, it is tested so far with single kinect and all works fine)
 * Updated to newest boost library 1.48.0 (be aware of that when linking against our wrapper, the necessary libs and header are to be found in the external libs folders)
 * Still todo, add new highres mode to wrapper 1280x960
 
-## 0.9.2 Update release
+### 0.9.2 Update release
 
 * ATTENTION MS SDK Users (the new installer of the MS Kinect SDK sets the environment variable wrong with a double backslash in the folder structure and this renders it unuseable for MS Visual Studio)
 * Changed OpenNI to work with AutoCalibration so no need for the awkward calibration pose anymore.
 
-## 0.9.1 Update release
+### 0.9.1 Update release
 
 * Small name changes in the interface class
 * Added joint orientation methods (just works for OpenNI), use hasFeatureJointOrientation() to check
@@ -96,7 +96,7 @@ Supported Platforms
 Prerequisites
 --------------
 
-## Install device driver
+### Install device driver
 
 * The Kinect comes with it's own microsoft driver which is installed automatically.
 * OpenNI installs the PrimeSense driver as default. 
@@ -183,19 +183,19 @@ Dependencies
 Known issues
 ------------
 
-## Both SDKs
+### Both SDKs
 
 * Multiple Kinects only work if they are connected to separated USB busses (note on laptops all the usb connections are often on a single bus)
 * You can't use RGB and IR image at the same time this is a limitation by both SDKs
 * Right now all found devices will start with the nodes you entered in the start routine, if there is a use we will make an overloaded start for starting different nodes on different devices...
 		
-## OpenNI
+### OpenNI
 
 * Hand and feet have orientation confidence of value 0.0 always (so OpenNI doesn't supply you with orientations for hand and feet) 
 * Multi device user segmentation and skeletonizations are not working correctly yet (it mixes up the different devices, openni is strange)
 * OpenNI with Kinect sensor only supports 640x480 resolution, Primesense sensor supports different resolutions
 		
-## Microsoft SDK
+### Microsoft SDK
 		
 * MS SDK just supports user and skeleton tracking for a single device, depth and rgb go for multiple devices
 * Color IDs of users can be different at start up (problem seems to be in the Microsoft Kinect SDK, which doesn't seem to do the ids right)
