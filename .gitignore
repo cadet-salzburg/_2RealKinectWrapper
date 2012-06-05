@@ -13,7 +13,6 @@ build/osx/DerivedData
 *.mode1v3
 *.mode2v3
 *.user
-*.xcworkspace/
 xcuserdata
 
 vc10/debug/
