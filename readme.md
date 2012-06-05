@@ -22,7 +22,7 @@ License
 	CADET - Center for Advances in Digital Entertainment Technologies
 		funded by the Austrian Research Promotion Agency (http://www.ffg.at)
 
-	Authors: Robert Praxmarer, Gerlinde Emsenhuber, Robert Sommeregger, Andreas Stallinger
+	Authors: Robert Praxmarer, Nikolas Psaroudakis, Gerlinde Emsenhuber, Robert Sommeregger, Andreas Stallinger
 	Email: support@cadet.at
 	Created: 08-09-2011
 
@@ -73,19 +73,18 @@ Version History
 
 Info
 ----
-	_2RealKinectWrapper is an API built as a static library which simplifies the usage of multiple Kinect sensors (PrimeSense, Microsoft) for C++ programmers. 
-	It supports both major SDKs (OpenNI and Microsoft's Kinect SDK) with one easy to use programming interface. It is multithreaded for maximum performance.
-	Simple examples for libCinder, OpenFrameworks and plain OpenGL accompanies the release to demonstrate it's capabilities and usage. 
-	The programming interface shouldn't change in the future in terms of breaking your code, new functions nevertheless might be added.
-	We tried to test the software as good as possible. However if you find bugs or issues we are happy if you send us a report or a solution to support@cadet.at, or use github ...
-	You can acquire different images (Depth, RGB, IR,...) of different Kinects at the same time. 
-	However skeleton and user detection on multiple devices is not available for Microsoft's SDK.
-	OpenNI in principal supports this feature at least for 2 devices, our solution has still a flaw as OpenNI is handling multiple user nodes really strange, but we are working on fixing it as soon as possible ...
+_2RealKinectWrapper is an API built as a static library which simplifies the usage of multiple Kinect sensors (PrimeSense, Microsoft) for C++ programmers. 
+It supports both major SDKs (OpenNI and Microsoft's Kinect SDK) with one easy to use programming interface. It is multithreaded for maximum performance.
+Simple examples for libCinder, OpenFrameworks and plain OpenGL accompanies the release to demonstrate it's capabilities and usage. 
+The programming interface shouldn't change in the future in terms of breaking your code, new functions nevertheless might be added.
+We tried to test the software as good as possible. However if you find bugs or issues we are happy if you send us a report or a solution to support@cadet.at, or use github ...
+You can acquire different images (Depth, RGB, IR,...) of different Kinects at the same time. 
+However skeleton and user detection on multiple devices is not available for Microsoft's SDK.
+OpenNI in principal supports this feature at least for 2 devices, our solution has still a flaw as OpenNI is handling multiple user nodes really strange, but we are working on fixing it as soon as possible ...
 
-	Watch the demo video here:
-		http://www.vimeo.com/29949750
+Watch the demo video here: http://www.vimeo.com/29949750
 
-	If you find that software helpful for your projects, comment on the vimeo and like it, as we are funded by a research grant we have to proove we are doing something useful ;-)
+If you find that software helpful for your projects, comment on the vimeo and like it, as we are funded by a research grant we have to proove we are doing something useful ;-)
 	
 Supported Platforms
 -------------------
