@@ -90,25 +90,33 @@ If you find that software helpful for your projects, comment on the vimeo and li
 	
 Supported Platforms
 -------------------
-	Win7 (OpenNI, Microsoft Kinect)
-    	MacOS (just OpenNI)
-	Planned Linux
 
-Prerequistites
+* Win7 (OpenNI, Microsoft Kinect)
+* MacOS (just OpenNI
+* Linux support is planned
+
+Prerequisites
 --------------
-	Install device driver:
-		The microsoft comes with it's own driver and installs it automatically.
-		OpenNI installs the PrimeSense driver as default. If you want to use a Kinect with OpenNI be sure to install the patched driver:
-			https://github.com/avin2/SensorKinect  (in the bin folder you find the driver just double click and install it)
 
-	You need to:
-		if you want to use OpenNI
-			* install newest unstable OpenNI lib --> http://openni.org/
-			* install newest unstable NITE SDK --> http://openni.org/
-		or for Microsoft's Kinect SDK
-			* install newest MS Kinect SDK --> http://www.microsoft.com/en-us/kinectforwindows/develop/
+Install device driver:
+
+* The Kinect comes with it's own microsoft driver which is installed automatically.
+* OpenNI installs the PrimeSense driver as default. 
+
+If you want to use a Kinect with OpenNI be sure to install the patched Kinect driver from:
+			
+	https://github.com/avin2/SensorKinect  ( the patch comes in the form of an executable that can be found in the bin folder )
+
+If you want to use the OpenNI SDK you need to:
+
+* install the newest unstable OpenNI lib  ( http://openni.org/ )
+* install the newest unstable NITE SDK ( http://openni.org/ )
+
+If you want to use the Microsoft Kinect SDK you need to:
+
+* install the newest MS Kinect SDK  ( http://www.microsoft.com/en-us/kinectforwindows/develop/ )
 		
-	Note if you want to use both SDKs on your system (Win7), you can install all of the above libs. And switch the driver in the device manager of windows
+	If you want to use both Microsoft and OpenNI SDKs on your system (Win7), you need to install all of the above libs and switch the driver accordingly in the windows device manager.
 
 Build
 -----
@@ -129,7 +137,7 @@ Build
 
 Sample
 ------
-	There are 3 samples accompaning the wrapper (Openframeworks, Cinder, Glut)
+	There are 3 samples accompanying the wrapper (Openframeworks, Cinder, Glut)
 
 	The glut sample is very simple and should work out of the box, it just shows the use of one kinect and just outputs rgb and depth image.
 	For the others you must have installed Cinder and/or openframeworks and set the environment variables as stated above.
@@ -178,14 +186,15 @@ Known issues
 Todo
 ----
 	  * Change implementation to shared_ptr
-	  * Integrate Hand detector of OpenNi
-	  * MacOS (codeblocks/xcode4) / Linux (codeblocks)
+	  * Integrate Hand detector of OpenNI
+	  * Linux (codeblocks)
 	  * Tutorial
 	  * High Level Recording and Tracking Library 
-	  * Multi device user tracking bug fixing
+	  * Multi Device User Tracking
   
 Additional notes on the implementation
 --------------------------------------
-	In our API we make heavy use of the pimpl ideom to encapsulate the necessary specific implementation details which shouldn't bother the user. The API should be easily extendable to other DepthCameraSDKs, Panasonic Imager is on our list...
+	In our API we make heavy use of the PIMPL idiom to encapsulate the necessary SDK specific, implementation details that shouldn't bother the user. 
+	The API should be easily extensible to other depth camera SDKs, e.g Panasonic Imager etc
 	
-Please help us make this wrapper multiplatform, specially xcode, and spread the word and maybe write a nice comment on vimeo, thx!!!
+Please help us improve this wrapper, spread the word and maybe write a nice comment on vimeo, thx!!!
