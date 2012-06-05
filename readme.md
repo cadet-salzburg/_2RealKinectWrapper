@@ -30,7 +30,8 @@ License
 Version
 -------
 
-     0.9.3 (this is still a beta)
+     0.9.4-α ( this branch is experimental and currently in alpha ). 
+     It includes *Breaking* changes to the interface and works on OS X as well.
    
    Bug reports, feature request or inquiries to:
 	support@cadet.at
@@ -42,10 +43,15 @@ Version
      http://www.cadet.at
 	 
 
-
+ 
 Version History
 ---------------
-0.9.3 Update release
+0.9.4(α) Update release
+
+    * A major update on the OpenNI version is underway. This branch is experimental and is not production ready.
+
+
+0.9.3    Update release
 
 	* Updated to newest MS kinect SDK 1.0 (microsoft changed their api quite a bit, it is tested so far with single kinect 
   	  and all works fine)
@@ -83,8 +89,9 @@ Info
 	
 Supported Platforms
 -------------------
-	Win7 (OpenNI, Microsoft Kinect) 
-	Planned Linux, MacOS (just OpenNI)
+	Win7 (OpenNI, Microsoft Kinect)
+    	MacOS (just OpenNI)
+	Planned Linux
 
 Prerequistites
 --------------
@@ -112,7 +119,7 @@ Build
 			CINDER_DIR		your drive\your base path where you installed cinder (e.g. c:\sdk\cinder)
 
 		If you want to build the openframeworks sample add:
-			OPENFRAMEWORKS_DIR		your drive\your base path where you installed cinder (e.g. c:\sdk\of_preRelease_v007_vs2010)
+			OPENFRAMEWORKS_DIR your drive\your base path where you installed cinder (e.g. c:\sdk\of_preRelease_v007_vs2010)
 
 	To build _2RealKinect go to _2RealKinectWrapper/build/vc10
 	In Visual Studio go to menu build/batch build ...
