@@ -1,4 +1,7 @@
 
+License
+-------
+
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 University of Applied Science Salzburg / MultiMediaTechnology
 
@@ -25,7 +28,9 @@
 	Created: 08-09-2011
 
    
-   Version
+Version
+-------
+
      0.9.3 (this is still a beta)
    
    Bug reports, feature request or inquiries to:
