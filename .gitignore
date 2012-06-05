@@ -25,6 +25,7 @@ xcuserdata
 *.user
 *.aps
 *.pch
+
 *.vspscc
 *.vssscc
 *_i.c
@@ -42,7 +43,17 @@ xcuserdata
 *.sdf
 ipch/
 obj/
+
+# Visual C++ cache files
+ipch/
+*.aps
 *.opensdf
+*.sdf
+
+# Visual Studio profiler
+*.psess
+*.vsp
+
 
 [Bb]in
 Ankh.NoLoad
