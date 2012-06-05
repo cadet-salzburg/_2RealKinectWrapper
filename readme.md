@@ -42,9 +42,9 @@
 Version History
 ---------------
 0.9.3 Update release
-	+ Updated to newest MS kinect SDK 1.0 (microsoft changed their api quite a bit, it is tested so far with single kinect, and all works fine)
-	+ Updated to newest boost library 1.48.0 (be aware of that when linking against our wrapper, the necessary libs and header are to be found in the external libs folders)
-	+ still todo, add new highres mode to wrapper 1280x960
+	* Updated to newest MS kinect SDK 1.0 (microsoft changed their api quite a bit, it is tested so far with single kinect, and all works fine)
+	* Updated to newest boost library 1.48.0 (be aware of that when linking against our wrapper, the necessary libs and header are to be found in the external libs folders)
+	* still todo, add new highres mode to wrapper 1280x960
 
 0.9.2 Update release
 	+ ATTENTION MS SDK Users (the new installer of the MS Kinect SDK sets the environment variable wrong with a double backslash in the folder structure and this renders it unuseable for MS Visual Studio)
