@@ -15,18 +15,25 @@ void ofMultipleKinectApp::setup(){
 
 	m_iKinectWidth = 640;
 	m_iKinectHeight = 480;
-	m_iScreenWidth = 1024;
-	m_iScreenHeight = 768;
+	m_iScreenWidth = 1280;
+	m_iScreenHeight = 1024;
 	m_bIsMirroring = true;	// generators are mirrored by default
 
 	try
 	{
 		m_2RealKinect = _2RealKinect::getInstance();
 		std::cout << "_2RealKinectWrapper Version: " << m_2RealKinect->getVersion() << std::endl;
-		bool bResult = m_2RealKinect->start( COLORIMAGE | USERIMAGE | DEPTHIMAGE );
-		if( bResult )
-			std::cout << "\n\n_2Real started successfully!...";
+		bool bResult = false;
 		m_iNumberOfDevices = m_2RealKinect->getNumberOfDevices();
+		for ( int devIdx=0; devIdx < m_iNumberOfDevices ; ++devIdx )
+		{
+			bResult = m_2RealKinect->configure( devIdx,  COLORIMAGE | DEPTHIMAGE | USERIMAGE, IMAGE_COLOR_640X480  );
+			if( bResult )
+			{
+				std::cout << "_2RealKinectWrapper Device " << devIdx << " started successfully!..." << std::endl;
+			}
+			m_2RealKinect->startGenerator( devIdx,  DEPTHIMAGE | COLORIMAGE | USERIMAGE );
+		}
 		resizeImages();
 	}
 	catch ( std::exception& e )
@@ -58,42 +65,39 @@ void ofMultipleKinectApp::draw(){
 
 void ofMultipleKinectApp::drawKinectImages()
 {
+	boost::shared_array<unsigned char> imgRef;
+	int numberChannels = 0;
+
 	for( int i = 0; i < m_iNumberOfDevices; ++i)
 	{
-		//rgb image
-		uint8_t* imgRef = (uint8_t*)m_2RealKinect->getImageData( i, COLORIMAGE ).get();
-		int numberChannels = m_2RealKinect->getBytesPerPixel( COLORIMAGE );
-		int m_iKinectWidth = m_2RealKinect->getImageWidth( i, COLORIMAGE );
-		int m_iKinectHeight = m_2RealKinect->getImageHeight( i, COLORIMAGE );
+		//---------------Color Image---------------------//
+		imgRef = getImageData( i, COLORIMAGE, m_iKinectWidth, m_iKinectHeight, numberChannels);
 		ofImage colorImage;
-		colorImage.setFromPixels(imgRef, m_iKinectWidth, m_iKinectHeight, OF_IMAGE_COLOR, true);
+		colorImage.setFromPixels(imgRef.get(), m_iKinectWidth, m_iKinectHeight, OF_IMAGE_COLOR, true);
 		colorImage.draw(i * m_ImageSize.x, 0, m_ImageSize.x*(i+1) , m_ImageSize.y);
 
-		//depth image
-		numberChannels = m_2RealKinect->getBytesPerPixel( DEPTHIMAGE );
-		m_iKinectWidth = m_2RealKinect->getImageWidth( i, DEPTHIMAGE );
-		m_iKinectHeight = m_2RealKinect->getImageHeight( i, DEPTHIMAGE );
+		//---------------Depth Image---------------------//
+		imgRef = getImageData( i, DEPTHIMAGE, m_iKinectWidth, m_iKinectHeight, numberChannels);
 		ofImage depthImage;
-		depthImage.setFromPixels(m_2RealKinect->getImageData( i, DEPTHIMAGE).get(), m_iKinectWidth, m_iKinectHeight, OF_IMAGE_GRAYSCALE, true);
+		depthImage.setFromPixels(imgRef.get(), m_iKinectWidth, m_iKinectHeight, OF_IMAGE_GRAYSCALE, true);
 		depthImage.draw(i * m_ImageSize.x, m_ImageSize.y, m_ImageSize.x*(i+1), m_ImageSize.y);
 
-		//user image
+		//---------------User Image---------------------//
 #ifdef	TARGET_MSKINECTSDK
 		if( i == 0 )
 #endif
 		{
-			m_iKinectWidth = m_2RealKinect->getImageWidth( i, USERIMAGE_COLORED );
-			m_iKinectHeight = m_2RealKinect->getImageHeight( i, USERIMAGE_COLORED );
-			uint8_t* imgRef = (uint8_t*)m_2RealKinect->getImageData( i, USERIMAGE_COLORED, false, 0 ).get();
-			ofImage colorImage;
-			colorImage.setFromPixels(imgRef, m_iKinectWidth, m_iKinectHeight, OF_IMAGE_COLOR, true);
-			colorImage.draw(i * m_ImageSize.x,  m_ImageSize.y*2, m_ImageSize.x*(i+1) , m_ImageSize.y);
+			imgRef = getImageData( i, USERIMAGE, m_iKinectWidth, m_iKinectHeight, numberChannels);
+			if ( imgRef )
+			{
+				ofImage colorImage;
+				colorImage.setFromPixels(imgRef.get(), m_iKinectWidth, m_iKinectHeight, OF_IMAGE_COLOR, true);
+				colorImage.draw(i * m_ImageSize.x,  m_ImageSize.y*2, m_ImageSize.x*(i+1) , m_ImageSize.y);
+			} 
+
 
 		}
-
-		m_iKinectWidth = m_2RealKinect->getImageWidth( i, COLORIMAGE );
-		m_iKinectHeight = m_2RealKinect->getImageHeight( i, COLORIMAGE );
-		//skeleton
+		//---------------Skeletons---------------------//
 		drawSkeletons(i, ofRectangle( i * m_ImageSize.x, m_ImageSize.y *3 , m_ImageSize.x, m_ImageSize.y));
 
 	}
@@ -166,7 +170,13 @@ void ofMultipleKinectApp::drawSkeletons(int deviceID, ofRectangle rect)
 
 	glColor3f( 1.0, 1.0, 1.0 );	// reset vertex color to white
 }
-
+boost::shared_array<unsigned char> ofMultipleKinectApp::getImageData( int deviceID, _2RealGenerator imageType, int& imageWidth, int& imageHeight, int& bytePerPixel )
+{
+	bytePerPixel = m_2RealKinect->getBytesPerPixel( imageType );
+	imageWidth = m_2RealKinect->getImageWidth( deviceID, imageType );		
+	imageHeight = m_2RealKinect->getImageHeight( deviceID, imageType );
+	return m_2RealKinect->getImageData( deviceID, imageType );
+}
 
 void ofMultipleKinectApp::resizeImages()
 {

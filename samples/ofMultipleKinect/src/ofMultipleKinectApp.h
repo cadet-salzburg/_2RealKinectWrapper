@@ -5,6 +5,8 @@
 //#define TARGET_MSKINECTSDK
 #include "_2RealKinect.h"
 
+using namespace _2RealKinectWrapper; 
+
 class ofMultipleKinectApp : public ofBaseApp{
 
 	public:
@@ -23,6 +25,7 @@ class ofMultipleKinectApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 	private:
+		boost::shared_array< unsigned char > getImageData( int deviceID, _2RealGenerator imageType, int& imageWidth, int& imageHeight, int& bytePerPixel );
 		void			drawKinectImages();
 		void			drawSkeletons(int deviceID, ofRectangle rect);
 		void			resizeImages();
