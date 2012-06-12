@@ -35,8 +35,11 @@ GlSingleKinectApp::GlSingleKinectApp(void)
 {
 	try
 	{
-		if( m_IsInitialized = m_2Real->start( COLORIMAGE | DEPTHIMAGE ) )
+		if( m_IsInitialized = m_2Real->configure( 0, COLORIMAGE | DEPTHIMAGE, IMAGE_COLOR_640X480 ) )
+		{
+			m_2Real->startGenerator( 0, COLORIMAGE | DEPTHIMAGE );
 			std::cout << std::endl << "_2Real: Initialization successful!" << std::endl;
+		}
 		else
 			std::cout << std::endl << "_2Real: Initialization unsuccessful!" << std::endl;		
 		LoadTextures();
