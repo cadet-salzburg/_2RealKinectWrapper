@@ -326,7 +326,7 @@ class _2RealKinect
             #endif
         #endif
     #else
-        #pragma comment( lib, "Kinect10.lib" )
+        #pragma comment( lib, "Kinect15.lib" )
         #ifdef _DEBUG
             #ifdef _DLL
                 #pragma comment( lib, "_2RealKinectMicrosoftSDK_mtd_d.lib")		// Debug MS SDK

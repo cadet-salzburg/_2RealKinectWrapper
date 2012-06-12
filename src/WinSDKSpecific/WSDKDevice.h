@@ -35,17 +35,17 @@
 #include <boost/thread/condition.hpp>
 
 
-namespace _2Real
+namespace _2RealKinectWrapper
 {
 	typedef unsigned char uchar;
 	class _2RealTrackedUser;
 	class _2RealTrackedJoint;
-	typedef std::vector<_2RealTrackedUser>	_2RealTrackedUserVector;
+	typedef std::vector<boost::shared_ptr<_2RealTrackedUser>>	_2RealTrackedUserVector;
 
 class WSDKDevice
 {
 	public:
-		WSDKDevice( INuiSensor* devicePtr, const uint32_t configSensor, const uint32_t configImage, const std::string& name );
+		WSDKDevice( boost::shared_ptr<INuiSensor> devicePtr, const uint32_t configSensor, const uint32_t configImage, const std::string& name );
 		virtual ~WSDKDevice(void);
 
 		struct BGRX
@@ -58,20 +58,22 @@ class WSDKDevice
 			uchar		r, g, b;
 		};
 
-		void						SetMirroringColor( const bool flag );
-		void						SetMirroringDetph( const bool flag );
-		void						SetMirroringUser( const bool flag );
-		bool						IsMirroingColor() const;
-		bool						IsMirroingDepth() const;
-		bool						IsMirroingUser() const;
-		_2RealTrackedUserVector&	GetUsers( bool waitForNewData );
-		uchar*						GetColorImageBuffer( bool waitForNewData );
-		uchar*						GetDepthImageBuffer( bool waitForNewData );
-		uchar*						GetUserImageBuffer( bool waitForNewData );
-		uchar*						GetColoredUserImageBuffer( bool waitForNewData );
-		uint16_t*					GetDepthImageBuffer16Bit( bool waitForNewData );
-		bool						SetMotorAngle(int angle);
-		int							GetMotorAngle();
+		void							setMirroringColor( const bool flag );
+		void							setMirroringDetph( const bool flag );
+		void							setMirroringUser( const bool flag );
+		const bool						isNewData(_2RealGenerator type) const;
+		bool							isMirroingColor() const;
+		bool							isMirroingDepth() const;
+		bool							isMirroingUser() const;
+		_2RealTrackedUserVector  		getUsers( bool waitForNewData );
+		boost::shared_array<uchar>		getColorImageBuffer( bool waitForNewData );
+		boost::shared_array<uchar>		getDepthImageBuffer( bool waitForNewData );
+		boost::shared_array<uchar>		getUserImageBuffer( bool waitForNewData );
+		boost::shared_array<uchar>		getColoredUserImageBuffer( bool waitForNewData );
+		boost::shared_array<uint16_t>	getDepthImageBuffer16Bit( bool waitForNewData );
+		bool							setMotorAngle(int angle);
+		int								getMotorAngle();
+		void							shutdown();
 
 		//image measure
 		const uint32_t				m_WidthImageColor, m_WidthImageDepthAndUser;
@@ -79,53 +81,59 @@ class WSDKDevice
 
 	private:
 
-		static DWORD WINAPI			ThreadEventsFetcher( LPVOID pParam );
-		void						ProcessColorImageEvent();
-		void						ProcessDepthImageEvent();
-		void						ProcessSkeletonEvent();
-		_2RealTrackedJoint			GetJoint( _2RealJointType type, _NUI_SKELETON_POSITION_INDEX nuiType, const NUI_SKELETON_DATA& data );
+		static DWORD WINAPI							threadEventsFetcher( LPVOID pParam );
+		void										processColorImageEvent();
+		void										processDepthImageEvent();
+		void										processSkeletonEvent();
+		boost::shared_ptr<_2RealTrackedJoint>		getJoint( _2RealJointType type, _NUI_SKELETON_POSITION_INDEX nuiType, const NUI_SKELETON_DATA& data );
 								
 
-		INuiSensor*					m_pNuiSensor;
-		std::string					m_name;
+		boost::shared_ptr<INuiSensor>		m_pNuiSensor;
+		std::string							m_name;
 		//events
-		HANDLE						m_EventColorImage;
-		HANDLE						m_EventDepthImage;
-		HANDLE						m_EventSkeletonData;
-		HANDLE						m_EventStopThread;
+		HANDLE								m_EventColorImage;
+		HANDLE								m_EventDepthImage;
+		HANDLE								m_EventSkeletonData;
+		HANDLE								m_EventStopThread;
 		//stream handles
-		HANDLE						m_HandleColorStream;
-		HANDLE						m_HandleDepthStream;
-		HANDLE						m_HandleThread;
+		HANDLE								m_HandleColorStream;
+		HANDLE								m_HandleDepthStream;
+		HANDLE								m_HandleThread;
 
-		bool						m_IsDepthOnly;
-		bool						m_IsMirroringColor;
-		bool						m_IsMirroringDepth;
-		bool						m_IsMirroringUser;
-		bool						m_IsDeletingDevice;
+		bool								m_bIsDepthOnly;
+		bool								m_bIsMirroringColor;
+		bool								m_bIsMirroringDepth;
+		bool								m_bIsMirroringUser;
+		bool								m_bIsDeletingDevice;
+
+		bool								m_bIsNewColorData;
+		bool								m_bIsNewDepthData;
+		bool								m_bIsNewUserData;
+		bool								m_bIsNewSkeletonData;
+		bool								m_bIsNewInfraredData;
+
 
 		//image buffers
-		uchar*						m_ImageColor_8bit;
-		uchar*						m_ImageDepth_8bit;
-		uchar*						m_ImageUser_8bit;
-		uchar*						m_ImageColoredUser_8bit;
-		uint16_t*					m_ImageDepth_16bit;
+		boost::shared_array<uchar>			m_ImageColor_8bit;
+		boost::shared_array<uchar>			m_ImageDepth_8bit;
+		boost::shared_array<uchar>			m_ImageUser_8bit;
+		boost::shared_array<uchar>			m_ImageColoredUser_8bit;
+		boost::shared_array<uint16_t>		m_ImageDepth_16bit;
 		
 		//users
-		_2RealTrackedUserVector		m_Users;
-		_2RealTrackedUserVector		m_UsersShared;
+		_2RealTrackedUserVector				m_Users;
 
 		//sync
-		boost::mutex				m_MutexImage;
-		boost::mutex				m_MutexDepth;
-		boost::mutex				m_MutexUser;
-		boost::mutex				m_MutexColoredUser;
-		boost::mutex				m_MutexFetchUser;
-		boost::mutex				m_MutexFetchColorImage;
-		boost::mutex				m_MutexFetchDepthImage, m_MutexFetchDepthImage2, m_MutexFetchDepthImage3;
-		boost::condition			m_NotificationNewColorImageData;
-		boost::condition			m_NotificationNewDepthImageData;
-		boost::condition			m_NotificationNewUserdata;
+		boost::mutex						m_MutexImage;
+		boost::mutex						m_MutexDepth;
+		boost::mutex						m_MutexUser;
+		boost::mutex						m_MutexColoredUser;
+		boost::mutex						m_MutexFetchUser;
+		boost::mutex						m_MutexFetchColorImage;
+		boost::mutex						m_MutexFetchDepthImage, m_MutexFetchDepthImage2, m_MutexFetchDepthImage3;
+		boost::condition					m_NotificationNewColorImageData;
+		boost::condition					m_NotificationNewDepthImageData;
+		boost::condition					m_NotificationNewUserdata;
 };
 
 }
