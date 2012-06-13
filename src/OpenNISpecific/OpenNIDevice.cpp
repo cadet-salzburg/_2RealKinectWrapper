@@ -123,7 +123,8 @@ OpenNIDevice::OpenNIDevice()
 	 m_DepthImage_8bit( NULL ),
 	 m_InfraredImage_8bit( NULL ),
 	 m_UserImage_8bit( NULL ),
-	 m_UserImageColor_8bit( NULL )
+	 m_UserImageColor_8bit( NULL ),
+	 m_MotorInitialized( false )
 {
 
 }
@@ -135,7 +136,8 @@ OpenNIDevice::OpenNIDevice( const xn::Context context,  NodeInfoRef deviceInfo, 
 	 m_DepthImage_8bit( NULL ),
 	 m_InfraredImage_8bit( NULL ),
 	 m_UserImage_8bit( NULL ),
-	 m_UserImageColor_8bit( NULL )
+	 m_UserImageColor_8bit( NULL ),
+	 m_MotorInitialized( false )
 {
 
 }
@@ -152,6 +154,12 @@ void OpenNIDevice::addDeviceToContext()
 
 	checkError( m_Context.CreateProductionTree( *m_DeviceInfo, m_Device ), " Error when creating production tree for device" );
 	m_Device.AddRef();
+	std::cout << "addDevToContext" << std::endl;	
+	if ( m_DeviceMotorController.Create() == XN_STATUS_OK )
+	{
+		m_MotorInitialized = true;
+		m_DeviceMotorController.Move( 0 );
+	}
 }
 
 void OpenNIDevice::addGenerator( const XnPredefinedProductionNodeType &nodeType, uint32_t configureImages )
@@ -762,6 +770,21 @@ void  OpenNIDevice::forceResetUsers( )
 	}
 	delete [] currentUsers;
 }
+
+void OpenNIDevice::setMotorAngle( int angle )
+{
+	if ( !m_MotorInitialized )
+		return;
+	m_DeviceMotorController.Move( angle );
+}
+
+int	OpenNIDevice::getMotorAngle()
+{
+	if ( !m_MotorInitialized )
+		return 0;
+	return m_DeviceMotorController.GetAngle();
+}
+
 
 void OpenNIDevice::registerUserCallbacks()
 {

@@ -216,7 +216,7 @@ bool _2RealKinect::hasFeatureJointOrientation() const
 	return m_Implementation->hasFeatureJointOrientation();
 }
 
-bool _2RealKinect::setMotorAngle(int deviceID, int angle)
+bool _2RealKinect::setMotorAngle(int deviceID, int& angle)
 {
 	return m_Implementation->setMotorAngle(deviceID, angle);
 }

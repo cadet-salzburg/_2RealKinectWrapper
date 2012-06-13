@@ -62,13 +62,8 @@ class _2RealKinect
 			/return    bool Returns the operations success
 		!*/
 		void								update();
-		bool								configure( const uint32_t deviceID,  uint32_t startGenerators, uint32_t configureImages );
+		bool								configure( const uint32_t deviceID,  uint32_t startGenerators = CONFIG_DEFAULT, uint32_t configureImages = IMAGE_CONFIG_DEFAULT );
 		void								startGenerator( const uint32_t deviceID, uint32_t configureGenerators );
-
-
-
-
-		bool								start( uint32_t startGenerators = CONFIG_DEFAULT, uint32_t configureImages = IMAGE_CONFIG_DEFAULT );
 
 		/*! /brief     Shuts down all generators
 			/return    bool Returns the operations success
@@ -274,7 +269,7 @@ class _2RealKinect
 			/param     angle between -27 and 27 for kinect device, 0 is the middle and normal position
 			/return    could angle value be set ?
 		!*/
-		bool								setMotorAngle(int deviceID, int angle);
+		bool								setMotorAngle(int deviceID, int& angle);
 
 		/*! /brief     Sets elevation of camera via built in motor
 			/param	   device number
@@ -293,6 +288,9 @@ class _2RealKinect
 			/return    void
 		!*/
 		void								setLogOutputStream(std::ostream* outStream);
+
+		void								mapColorToDepth(){};
+		
 
 	private:
 

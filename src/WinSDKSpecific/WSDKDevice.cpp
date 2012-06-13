@@ -552,7 +552,7 @@ void WSDKDevice::setMirroringColor( const bool flag )
 	m_bIsMirroringColor = flag;
 }
 
-void WSDKDevice::setMirroringDetph( const bool flag )
+void WSDKDevice::setMirroringDepth( const bool flag )
 {
 	m_bIsMirroringDepth = flag;
 }
@@ -562,17 +562,17 @@ void WSDKDevice::setMirroringUser( const bool flag )
 	m_bIsMirroringUser = flag;
 }
 
-bool WSDKDevice::isMirroingColor() const
+bool WSDKDevice::isMirroringColor() const
 {
 	return m_bIsMirroringColor;
 }
 
-bool WSDKDevice::isMirroingDepth() const
+bool WSDKDevice::isMirroringDetph() const
 {
 	return m_bIsMirroringDepth;
 }
 
-bool WSDKDevice::isMirroingUser() const
+bool WSDKDevice::isMirroringUser() const
 {
 	return m_bIsMirroringUser;
 }

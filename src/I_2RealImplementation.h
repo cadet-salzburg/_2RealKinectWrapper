@@ -47,7 +47,6 @@ class I_2RealImplementation
 		virtual void								update()=0;
 		virtual bool								configureDevice( const uint32_t deviceID,  uint32_t startGenerators, uint32_t configureImages ) = 0;
 		virtual void								startGenerator( const uint32_t deviceID, uint32_t configureGenerators ) = 0;
-//		virtual bool								start( uint32_t startGenerators, uint32_t configureImages ) = 0;
 		virtual bool								shutdown() = 0;
 
 		virtual const bool							isNewData(const uint32_t deviceID, _2RealGenerator type) const = 0;
@@ -84,7 +83,7 @@ class I_2RealImplementation
 		virtual void								convertProjectiveToWorld( const uint32_t deviceID, const uint32_t coordinateCount, const _2RealVector3f* inProjective, _2RealVector3f* outWorld ) = 0;
 		virtual void								convertWorldToProjective( const uint32_t deviceID, const uint32_t coordinateCount, const _2RealVector3f* inWorld, _2RealVector3f* outProjective ) = 0;
 
-		virtual bool								setMotorAngle(int deviceID, int angle) = 0;
+		virtual bool								setMotorAngle(int deviceID, int& angle) = 0;
 		virtual int									getMotorAngle(int deviceID) = 0;
 
 		virtual void								setLogLevel(_2RealLogLevel iLevel) = 0;

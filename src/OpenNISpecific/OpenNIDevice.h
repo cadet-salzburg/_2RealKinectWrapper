@@ -8,6 +8,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/shared_array.hpp>
 #include "_2RealTrackedUser.h"
+#include "OpenNIMotorController.h"
 #include <memory>
 
 
@@ -60,6 +61,9 @@ namespace _2RealKinectWrapper {
 		void							forceResetUser( const uint32_t id );
 		void							forceResetUsers( );
 
+		void							setMotorAngle( int angle );
+		int								getMotorAngle();
+
 	private:
 		void							convertImage_16_to_8( const boost::shared_array<uint16_t> source, boost::shared_array<unsigned char> destination, uint32_t size, const int normalizing )
 		{
@@ -101,7 +105,8 @@ namespace _2RealKinectWrapper {
 
 		void							registerUserCallbacks();
 		XnStatus						getErrorState() const;
-
+		OpenNIMotorController			m_DeviceMotorController;
+		bool							m_MotorInitialized;
 	};
 } //namespace
 

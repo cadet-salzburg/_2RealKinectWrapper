@@ -59,12 +59,15 @@ class WSDKDevice
 		};
 
 		void							setMirroringColor( const bool flag );
-		void							setMirroringDetph( const bool flag );
+		void							setMirroringDepth( const bool flag );
 		void							setMirroringUser( const bool flag );
+
+		bool							isMirroringColor() const;
+		bool							isMirroringDepth() const;
+		bool							isMirroringUser() const;
+
 		const bool						isNewData(_2RealGenerator type) const;
-		bool							isMirroingColor() const;
-		bool							isMirroingDepth() const;
-		bool							isMirroingUser() const;
+
 		_2RealTrackedUserVector  		getUsers( bool waitForNewData );
 		boost::shared_array<uchar>		getColorImageBuffer( bool waitForNewData );
 		boost::shared_array<uchar>		getDepthImageBuffer( bool waitForNewData );

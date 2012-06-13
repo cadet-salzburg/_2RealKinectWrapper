@@ -25,6 +25,9 @@
     <ClCompile Include="..\..\src\_2RealVector2f.cpp">
       <Filter>API Interface\Types</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\OpenNISpecific\OpenNIMotorController.cpp">
+      <Filter>_2RealKinectWrapper\OpenNI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\_2RealTrackedJoint.h">
@@ -73,6 +76,9 @@
       <Filter>_2RealKinectWrapper</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\OpenNISpecific\OpenNiUtils.hpp">
+      <Filter>_2RealKinectWrapper\OpenNI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\OpenNISpecific\OpenNIMotorController.h">
       <Filter>_2RealKinectWrapper\OpenNI</Filter>
     </ClInclude>
   </ItemGroup>

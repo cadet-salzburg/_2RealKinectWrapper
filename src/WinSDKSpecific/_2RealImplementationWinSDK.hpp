@@ -271,12 +271,12 @@ public:
 		{
 		case COLORIMAGE:
 			{
-				value = m_Devices[deviceID]->isMirroingColor();
+				value = m_Devices[deviceID]->isMirroringColor();
 				break;
 			}
 		case DEPTHIMAGE:
 			{
-				value = m_Devices[deviceID]->isMirroingDepth();
+				value = m_Devices[deviceID]->isMirroringDepth();
 				break;
 			}
 		case INFRAREDIMAGE:
@@ -288,7 +288,7 @@ public:
 		case USERIMAGE_COLORED:
 		case USERIMAGE:
 			{
-				value = m_Devices[deviceID]->isMirroingUser();
+				value = m_Devices[deviceID]->isMirroringUser();
 				break;
 			}
 		default:
@@ -536,7 +536,7 @@ public:
 		return _2RealVector3f();
 	}
 
-	virtual bool setMotorAngle(int deviceID, int angle)
+	virtual bool setMotorAngle(int deviceID, int& angle)
 	{
 		return m_Devices[deviceID]->setMotorAngle(angle);
 	}

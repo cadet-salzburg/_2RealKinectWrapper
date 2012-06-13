@@ -59,7 +59,7 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 			_2REAL_LOG(info) << "\n_2Real: Init OpenNI SDK " + std::string(XN_VERSION_STRING);
 			checkError( m_Context.Init(), "\n_2Real: Error Could not Initialize OpenNI Context ...\n" );
 			checkError( m_Context.EnumerateProductionTrees( XN_NODE_TYPE_DEVICE, NULL, m_DeviceInfo, NULL ), "\n_2Real: Error while enumerating available devices ...\n" );
-			xn::NodeInfoList::Iterator deviceIter = m_DeviceInfo.Begin();
+  			xn::NodeInfoList::Iterator deviceIter = m_DeviceInfo.Begin();
 			for ( ; deviceIter!=m_DeviceInfo.End(); ++deviceIter )
 			{
 				std::stringstream deviceName;
@@ -201,7 +201,7 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 
 		virtual bool isMirrored( const uint32_t deviceID, _2RealGenerator type ) const
 		{
-			checkDeviceRunning(deviceID);
+			checkDeviceRunning( deviceID );
             XnBool flag = TRUE;
 			RequestedNodeVector requestedNodes = getRequestedNodes( type );
 			if ( requestedNodes.empty() )
@@ -548,16 +548,19 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 			}
 		}
 
-		virtual bool setMotorAngle(int deviceID, int angle)
+		virtual bool setMotorAngle(int deviceID, int& angle)
 		{
-			//m_Devices[ deviceID ]->setMotorAngle( angle );
+			if ( angle < -31 )
+				angle = -31;
+			if ( angle > 31 )
+				angle = 31;
+			m_Devices[ deviceID ]->setMotorAngle( angle );
 			return true;
 		}
 
 		virtual int getMotorAngle(int deviceID)
 		{
-			//return m_Devices[ deviceID ]->getMotorAngle();
-			return 0;
+			return m_Devices[ deviceID ]->getMotorAngle();
 		}
 
 		virtual const _2RealVector3f getUsersWorldCenterOfMass(const uint32_t deviceID, const uint8_t userID)
