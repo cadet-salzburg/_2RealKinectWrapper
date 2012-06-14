@@ -20,7 +20,7 @@ namespace _2RealKinectWrapper {
 	
 		// Init OpenNI USB
 		res = xnUSBInit();
-		std::cout << xnGetStatusString(res) << " "  <<  res << std::endl;
+		//std::cout << xnGetStatusString(res) << " "  <<  res << std::endl;
 		if( res != XN_STATUS_OK && res != 131142 /** USB alreay initialized **/ )
 			return res;
 	
@@ -32,7 +32,12 @@ namespace _2RealKinectWrapper {
 		const XnChar* pUSBtoUse = paths[0];
 		if( count > 0 )
 		{
+
 			res = xnUSBOpenDeviceByPath( pUSBtoUse, &m_xDevice );
+			for( int i=0; i < count; ++i )
+			{
+				std::cout << "MI: " << paths[i] << std::endl; 
+			}
 			if( res != XN_STATUS_OK )
 				return res;
 

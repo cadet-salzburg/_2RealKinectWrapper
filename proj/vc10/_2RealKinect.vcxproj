@@ -237,7 +237,7 @@
       </AdditionalDependencies>
     </Lib>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)\..\..\lib;$(OPEN_NI_LIB);$(MSKINECTSDK_DIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\..\..\lib;$(OPEN_NI_LIB);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>

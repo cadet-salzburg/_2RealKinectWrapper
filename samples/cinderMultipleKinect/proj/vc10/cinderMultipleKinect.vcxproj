@@ -67,7 +67,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(OPEN_NI_DIR)\Lib;$(KINECTSDK10_DIR)\lib\x86;$(CINDER_DIR)\lib;$(CINDER_DIR)\lib\msw;$(ProjectDir)\..\..\..\..\lib;$(BOOST_ROOT)\lib;C:\Program Files (x86)\Visual Leak Detector\lib\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OPEN_NI_LIB);$(KINECTSDK10_DIR)\lib\x86;$(CINDER_DIR)\lib;$(CINDER_DIR)\lib\msw;$(ProjectDir)\..\..\..\..\lib;$(BOOST_ROOT)\lib;C:\Program Files (x86)\Visual Leak Detector\lib\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>cinder_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <DataExecutionPrevention>false</DataExecutionPrevention>
       <OptimizeReferences>
@@ -100,7 +100,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(OPEN_NI_DIR)\Lib;$(KINECTSDK10_DIR)\lib\x86;$(CINDER_DIR)\lib;$(CINDER_DIR)\lib\msw;$(ProjectDir)\..\..\..\..\lib;$(BOOST_ROOT);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OPEN_NI_LIB);$(KINECTSDK10_DIR)\lib\x86;$(CINDER_DIR)\lib;$(CINDER_DIR)\lib\msw;$(ProjectDir)\..\..\..\..\lib;$(BOOST_ROOT);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>cinder.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <DataExecutionPrevention>false</DataExecutionPrevention>
       <Profile>true</Profile>
