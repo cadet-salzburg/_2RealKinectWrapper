@@ -36,7 +36,13 @@ namespace _2RealKinectWrapper {
 			res = xnUSBOpenDeviceByPath( pUSBtoUse, &m_xDevice );
 			for( int i=0; i < count; ++i )
 			{
-				std::cout << "MI: " << paths[i] << std::endl; 
+				unsigned short vendor_id;
+				unsigned short product_id;
+				unsigned char bus;
+				unsigned char address;
+				sscanf(paths[i], "%hx/%hx@%hhu/%hhu", &vendor_id, &product_id, &bus, &address);
+				printf("MotorInfo vendor_id %i product_id %i bus %i address %i \n", vendor_id, product_id, bus, address );
+				std::cout << "MI: " << paths[i] << std::endl;
 			}
 			if( res != XN_STATUS_OK )
 				return res;
