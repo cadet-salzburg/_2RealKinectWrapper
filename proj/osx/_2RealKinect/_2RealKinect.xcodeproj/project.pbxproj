@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9E40DF421599BA2E00C8A74E /* OpenNIMotorController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9E40DF401599BA2E00C8A74E /* OpenNIMotorController.cpp */; };
+		9E40DF431599BA2E00C8A74E /* OpenNIMotorController.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E40DF411599BA2E00C8A74E /* OpenNIMotorController.h */; };
 		9E7420F11578D3E9009F146E /* _2RealConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E7420DB1578D3E9009F146E /* _2RealConfig.h */; };
 		9E7420F21578D3E9009F146E /* _2RealKinect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9E7420DC1578D3E9009F146E /* _2RealKinect.cpp */; };
 		9E7420F31578D3E9009F146E /* _2RealLogger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9E7420DD1578D3E9009F146E /* _2RealLogger.cpp */; };
@@ -43,6 +45,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		9E40DF401599BA2E00C8A74E /* OpenNIMotorController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OpenNIMotorController.cpp; sourceTree = "<group>"; };
+		9E40DF411599BA2E00C8A74E /* OpenNIMotorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenNIMotorController.h; sourceTree = "<group>"; };
 		9E7420B91578C3E7009F146E /* _2RealKinectOpenNI_d.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = _2RealKinectOpenNI_d.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E7420DB1578D3E9009F146E /* _2RealConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = _2RealConfig.h; path = ../../../src/_2RealConfig.h; sourceTree = "<group>"; };
 		9E7420DC1578D3E9009F146E /* _2RealKinect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = _2RealKinect.cpp; path = ../../../src/_2RealKinect.cpp; sourceTree = "<group>"; };
@@ -119,6 +123,8 @@
 		9E7420E81578D3E9009F146E /* OpenNISpecific */ = {
 			isa = PBXGroup;
 			children = (
+				9E40DF401599BA2E00C8A74E /* OpenNIMotorController.cpp */,
+				9E40DF411599BA2E00C8A74E /* OpenNIMotorController.h */,
 				9E7420E91578D3E9009F146E /* _2RealImplementationOpenNI.hpp */,
 				9E7420EA1578D3E9009F146E /* OpenNIDevice.cpp */,
 				9E7420EB1578D3E9009F146E /* OpenNIDevice.h */,
@@ -160,6 +166,7 @@
 				9E74210B1578D49F009F146E /* _2RealKinect.h in Headers */,
 				9E74210C1578D49F009F146E /* _2RealTypes.h in Headers */,
 				9E74210D1578D49F009F146E /* _2RealVector2f.h in Headers */,
+				9E40DF431599BA2E00C8A74E /* OpenNIMotorController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -221,6 +228,7 @@
 				9E7420F91578D3E9009F146E /* _2RealTypes.cpp in Sources */,
 				9E7420FB1578D3E9009F146E /* _2RealVector2f.cpp in Sources */,
 				9E7420FF1578D3E9009F146E /* OpenNIDevice.cpp in Sources */,
+				9E40DF421599BA2E00C8A74E /* OpenNIMotorController.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

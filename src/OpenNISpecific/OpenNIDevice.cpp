@@ -154,7 +154,6 @@ void OpenNIDevice::addDeviceToContext()
 
 	checkError( m_Context.CreateProductionTree( *m_DeviceInfo, m_Device ), " Error when creating production tree for device" );
 	m_Device.AddRef();
-	std::cout << "addDevToContext" << std::endl;	
 	if ( m_DeviceMotorController.Create() == XN_STATUS_OK )
 	{
 		m_MotorInitialized = true;
@@ -189,13 +188,13 @@ void OpenNIDevice::addDeviceToContext()
 
 
         const XnProductionNodeDescription& description = m_DeviceInfo->GetDescription();
-        printf("device: vendor %s name %s, instance %s\n", description.strVendor, description.strName, m_DeviceInfo->GetInstanceName());
+        //printf("device: vendor %s name %s, instance %s\n", description.strVendor, description.strName, m_DeviceInfo->GetInstanceName());
         unsigned short vendor_id;
         unsigned short product_id;
         unsigned char bus;
         unsigned char address;
-        sscanf( m_DeviceInfo->GetCreationInfo(), "%hx/%hx@%hhu/%hhu", &vendor_id, &product_id, &bus, &address );
-        printf("vendor_id %i product_id %i bus %i address %i connection %s\n", vendor_id, product_id, bus, address );
+        //sscanf( m_DeviceInfo->GetCreationInfo(), "%hx/%hx@%hhu/%hhu", &vendor_id, &product_id, &bus, &address );
+        //printf("vendor_id %i product_id %i bus %i address %i connection %s\n", vendor_id, product_id, bus, address );
 	}
 }
 

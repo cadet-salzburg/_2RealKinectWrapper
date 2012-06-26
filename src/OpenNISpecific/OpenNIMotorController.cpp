@@ -41,8 +41,8 @@ namespace _2RealKinectWrapper {
 				unsigned char bus;
 				unsigned char address;
 				sscanf(paths[i], "%hx/%hx@%hhu/%hhu", &vendor_id, &product_id, &bus, &address);
-				printf("MotorInfo vendor_id %i product_id %i bus %i address %i \n", vendor_id, product_id, bus, address );
-				std::cout << "MI: " << paths[i] << std::endl;
+				//printf("MotorInfo vendor_id %i product_id %i bus %i address %i \n", vendor_id, product_id, bus, address );
+				//std::cout << "MI: " << paths[i] << std::endl;
 			}
 			if( res != XN_STATUS_OK )
 				return res;
