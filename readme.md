@@ -30,7 +30,7 @@ License
 Version
 -------
 
-     0.9.5-α ( this branch is experimental and currently in alpha ). 
+     0.9.4α ( this branch is experimental and currently in alpha ). 
      It includes *Breaking* changes to the interface and works on OS X as well.
    
    Bug reports, feature request or inquiries to:
@@ -46,13 +46,9 @@ Version
  
 Version History
 ---------------
-### 0.9.5(α) Update release
+### 0.9.4α Update release
 
 * A major update on the OpenNI version is underway. This branch is experimental and is not production ready.
-
-### 0.9.4    Update release
-
-
 
 ### 0.9.3    Update release
 
