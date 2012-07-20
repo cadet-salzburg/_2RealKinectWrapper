@@ -357,6 +357,15 @@ void MultipleKinectApp::keyDown( KeyEvent event )
 		m_Align = !m_Align;
 		m_2RealKinect->alignColorToDepth( 0, m_Align );
 	}
+	if ( event.getChar() == 'l' )
+	{
+		m_2RealKinect->stopGenerator( 0,  DEPTHIMAGE | COLORIMAGE | USERIMAGE );
+	}
+	if ( event.getChar() == 'o' )
+	{
+		m_2RealKinect->startGenerator( 0,  DEPTHIMAGE | COLORIMAGE | USERIMAGE );
+	}
+
 	if( event.getCode() == ci::app::KeyEvent::KEY_UP )	
 	{
 		m_iMotorValue+=3;

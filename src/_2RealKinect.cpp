@@ -66,6 +66,11 @@ void _2RealKinect::startGenerator( const uint32_t deviceID, uint32_t configureGe
 	m_Implementation->startGenerator( deviceID, configureGenerators );
 }
 
+void _2RealKinect::stopGenerator( const uint32_t deviceID, uint32_t configureGenerators )
+{
+	m_Implementation->stopGenerator( deviceID, configureGenerators );
+}
+
 bool _2RealKinect::shutdown()
 {
 	return m_Implementation->shutdown();
