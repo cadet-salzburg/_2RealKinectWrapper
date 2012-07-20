@@ -609,7 +609,13 @@ void OpenNIDevice::alignColorToDepth( bool flag )
 	{
 		if ( m_DepthGenerator.IsCapabilitySupported("AlternativeViewPoint") )
 		{
-			checkError( m_DepthGenerator.GetAlternativeViewPointCap().SetViewPoint( m_ImageGenerator ), "Alternate View Point Capability Is Not Supported");
+			if ( flag )
+			{
+				checkError( m_DepthGenerator.GetAlternativeViewPointCap().SetViewPoint( m_ImageGenerator ), "Error while setting alternate viewpoint");
+			} else
+			{
+				checkError( m_DepthGenerator.GetAlternativeViewPointCap().ResetViewPoint( ), "Error while resetting alternate viewpoint");
+			}
 		}
 
 	}

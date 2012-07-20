@@ -48,6 +48,7 @@ class I_2RealImplementation
 		virtual bool								configureDevice( const uint32_t deviceID,  uint32_t startGenerators, uint32_t configureImages ) = 0;
 		virtual void								startGenerator( const uint32_t deviceID, uint32_t configureGenerators ) = 0;
 		virtual void								stopGenerator( const uint32_t deviceID, uint32_t configureGenerators ) = 0;
+
 		virtual bool								shutdown() = 0;
 
 		virtual const bool							isNewData(const uint32_t deviceID, _2RealGenerator type) const = 0;

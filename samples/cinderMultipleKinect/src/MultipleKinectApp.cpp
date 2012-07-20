@@ -76,9 +76,10 @@ class MultipleKinectApp : public AppBasic
 		ci::Vec2f					m_ImageSize;
 		ci::Font					m_Font;
 		int							m_iMotorValue;
+		bool						m_Align;
 };
 
-MultipleKinectApp::MultipleKinectApp() : m_iScreenWidth(1280), m_iScreenHeight(1024)
+MultipleKinectApp::MultipleKinectApp() : m_iScreenWidth(1280), m_iScreenHeight(1024), m_Align(false)
 {
 
 }
@@ -345,13 +346,16 @@ void MultipleKinectApp::keyDown( KeyEvent event )
 			std::cout << "\n\n_2Real started successfully!..." << std::endl;
 		m_iNumberOfDevices = m_2RealKinect->getNumberOfDevices();
 	}
+
 	if( event.getChar() == 'u' )	// reset all calibrated users (OpenNI only)
 	{
 		m_2RealKinect->resetAllSkeletons();
 	}
+
 	if ( event.getChar() == 'w' )
 	{
-		m_2RealKinect->alignColorToDepth( 0, true );
+		m_Align = !m_Align;
+		m_2RealKinect->alignColorToDepth( 0, m_Align );
 	}
 	if( event.getCode() == ci::app::KeyEvent::KEY_UP )	
 	{
