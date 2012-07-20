@@ -185,9 +185,12 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 		virtual void setMirrored( const uint32_t deviceID, _2RealGenerator type, bool flag )
 		{
 			checkDeviceRunning(deviceID);
-			RequestedNodeVector requestedNodes =  getRequestedNodes( m_GeneratorConfig );
+			RequestedNodeVector requestedNodes =  getRequestedNodes( type );
 			if ( requestedNodes[0] == XN_NODE_TYPE_USER )
+			{ 
+				//OpenNI cannot mirror User Image.
 				return;
+			}
 
 			if( !m_Devices[ deviceID ]->hasGenerator( requestedNodes[0] ) )
 			{
@@ -497,9 +500,10 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 			return m_Devices[deviceID]->getUsers().size(); //awesome!!! :) -> terror by robz
 		}
 
-		virtual void setAlignColorDepthImage( const uint32_t deviceID, bool flag )
+		virtual void alignColorToDepth( const uint32_t deviceID, bool flag )
 		{
 			checkDeviceRunning(deviceID);
+			m_Devices[deviceID]->alignColorToDepth(flag);
 		}
 
 		virtual bool hasFeatureJointOrientation() const

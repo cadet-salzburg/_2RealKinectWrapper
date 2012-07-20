@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "glSingleKinect", "glSingleKinect.vcxproj", "{FEF75444-2702-2860-9266-80F82DB7EC0F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "glSingleKinect", "glSingleKinect.vcxproj", "{1D21AB6E-B6BA-A556-7CDF-71133E3D1BFB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,10 +9,10 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{FEF75444-2702-2860-9266-80F82DB7EC0F}.Debug|Win32.ActiveCfg = Debug|Win32
-		{FEF75444-2702-2860-9266-80F82DB7EC0F}.Debug|Win32.Build.0 = Debug|Win32
-		{FEF75444-2702-2860-9266-80F82DB7EC0F}.Release|Win32.ActiveCfg = Release|Win32
-		{FEF75444-2702-2860-9266-80F82DB7EC0F}.Release|Win32.Build.0 = Release|Win32
+		{1D21AB6E-B6BA-A556-7CDF-71133E3D1BFB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1D21AB6E-B6BA-A556-7CDF-71133E3D1BFB}.Debug|Win32.Build.0 = Debug|Win32
+		{1D21AB6E-B6BA-A556-7CDF-71133E3D1BFB}.Release|Win32.ActiveCfg = Release|Win32
+		{1D21AB6E-B6BA-A556-7CDF-71133E3D1BFB}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

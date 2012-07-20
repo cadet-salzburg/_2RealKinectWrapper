@@ -64,7 +64,7 @@ class _2RealKinect
 		void								update();
 		bool								configure( const uint32_t deviceID,  uint32_t startGenerators = CONFIG_DEFAULT, uint32_t configureImages = IMAGE_CONFIG_DEFAULT );
 		void								startGenerator( const uint32_t deviceID, uint32_t configureGenerators );
-
+		void								stopGenerator( const uint32_t deviceID, uint32_t configureGenerators );
 		/*! /brief     Shuts down all generators
 			/return    bool Returns the operations success
 		!*/
@@ -253,7 +253,7 @@ class _2RealKinect
 			/param     bool flag indicating if turn capability on or off
 			/return    void
 		!*/
-		void								setAlignColorDepthImage( const uint32_t deviceID, bool flag );
+		void								alignColorToDepth( const uint32_t deviceID, bool flag );
 
 		/*! /brief     Shuts the system down and restarts it with flags provided in start()
 			/return    bool

@@ -113,7 +113,8 @@ void MultipleKinectApp::setup()
 		m_2RealKinect = _2RealKinect::getInstance();
 		std::cout << "_2RealKinectWrapper Version: " << m_2RealKinect->getVersion() << std::endl;
 		bool bResult = false;
-		m_iNumberOfDevices = m_2RealKinect->getNumberOfDevices();
+		//m_iNumberOfDevices = m_2RealKinect->getNumberOfDevices();
+		m_iNumberOfDevices = 1;
 		for ( int devIdx=0; devIdx < m_iNumberOfDevices ; ++devIdx )
 		{
 			bResult = m_2RealKinect->configure( devIdx,  COLORIMAGE | DEPTHIMAGE | USERIMAGE, IMAGE_COLOR_640X480  );
@@ -347,6 +348,10 @@ void MultipleKinectApp::keyDown( KeyEvent event )
 	if( event.getChar() == 'u' )	// reset all calibrated users (OpenNI only)
 	{
 		m_2RealKinect->resetAllSkeletons();
+	}
+	if ( event.getChar() == 'w' )
+	{
+		m_2RealKinect->alignColorToDepth( 0, true );
 	}
 	if( event.getCode() == ci::app::KeyEvent::KEY_UP )	
 	{

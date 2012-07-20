@@ -48,6 +48,8 @@ namespace _2RealKinectWrapper {
 		void							convertRealWorldToProjective( XnUInt32 count, 		const XnPoint3D  	aRealWorld[], XnPoint3D  	aProjective[] );
 		void							convertProjectiveToRealWorld( XnUInt32 count, 		const XnPoint3D  	aProjective[], XnPoint3D  	aRealWorld[] );
 
+		void							alignColorToDepth( bool flag );
+
 		void							getExistingProductionNode( const XnPredefinedProductionNodeType &nodeType, xn::ProductionNode& productionNode ) const;
 		static std::string				xnNodeTypeToString( const XnPredefinedProductionNodeType& nodeType );
 

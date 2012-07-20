@@ -468,7 +468,7 @@ ImageDataRef OpenNIDevice::getBuffer( const XnPredefinedProductionNodeType &node
 
 		imgMeta.XOffset() ? m_ColorImage.setCropping(true) : m_ColorImage.setCropping(false);
 		m_ImageGenerator.GetMirrorCap().IsMirrored() ? m_ColorImage.setMirroring(true) : m_ColorImage.setMirroring(false);
-		
+
 		return m_ColorImage.getData();
 	}
 	else if ( nodeType == XN_NODE_TYPE_DEPTH && hasGenerator( XN_NODE_TYPE_DEPTH ) )
@@ -600,6 +600,18 @@ void OpenNIDevice::convertProjectiveToRealWorld( XnUInt32 count, const XnPoint3D
 		xn::DepthGenerator depthGen;
 		getExistingProductionNode( XN_NODE_TYPE_DEPTH, depthGen );
 		depthGen.ConvertProjectiveToRealWorld( count, aProjective, aRealWorld );
+	}
+}
+
+void OpenNIDevice::alignColorToDepth( bool flag )
+{
+	if ( hasGenerator(XN_NODE_TYPE_DEPTH) && hasGenerator(XN_NODE_TYPE_IMAGE) )
+	{
+		if ( m_DepthGenerator.IsCapabilitySupported("AlternativeViewPoint") )
+		{
+			checkError( m_DepthGenerator.GetAlternativeViewPointCap().SetViewPoint( m_ImageGenerator ), "Alternate View Point Capability Is Not Supported");
+		}
+
 	}
 }
 
