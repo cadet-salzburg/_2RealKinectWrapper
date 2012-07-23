@@ -219,7 +219,7 @@ void OpenNIDevice::addGenerator( const XnPredefinedProductionNodeType &nodeType,
 		{
 			checkError( m_Context.CreateProductionTree( node, m_ImageGenerator ), "Error while creating production tree." );
 			XnMapOutputMode mode = getRequestedOutputMode( nodeType, configureImages );
-			checkError( m_ImageGenerator.SetMapOutputMode( mode ), "_2Real: Error when setting outputmode \n" );
+			//checkError( m_ImageGenerator.SetMapOutputMode( mode ), "_2Real: Error when setting outputmode \n" );
 		} 
 		else if ( nodeType == XN_NODE_TYPE_DEPTH )
 		{
@@ -324,22 +324,107 @@ void OpenNIDevice::removeGenerator( const XnPredefinedProductionNodeType &nodeTy
 	generator.Release();
 }
 
+void OpenNIDevice::setGeneratorResolution( const XnPredefinedProductionNodeType &nodeType, unsigned int hRes, unsigned int vRes )
+{
+	if ( nodeType != XN_NODE_TYPE_DEPTH && nodeType != XN_NODE_TYPE_USER && nodeType != XN_NODE_TYPE_IMAGE &&  nodeType != XN_NODE_TYPE_IR )
+		return;
+	xn::MapGenerator node;
+	XnMapOutputMode mode = getClosestOutputMode( nodeType, hRes, vRes );
+	getExistingProductionNode( nodeType, node );
+	checkError( node.SetMapOutputMode( mode ), "_2Real: Error when setting outputmode \n" );
+}
+
+XnMapOutputMode	OpenNIDevice::getClosestOutputMode( const XnPredefinedProductionNodeType &nodeType, unsigned int hRes, unsigned int vRes )
+{
+	boost::uint32_t configureImages = 0;
+	if ( nodeType == XN_NODE_TYPE_DEPTH )
+	{
+		if ( hRes == 640 || vRes == 480 )
+		{
+			configureImages = IMAGE_USER_DEPTH_640X480;
+		} 
+		else if ( hRes == 320 || vRes == 240 )
+		{
+			configureImages = IMAGE_USER_DEPTH_640X480;
+		} 
+		else if ( hRes == 80 || vRes == 60 )
+		{
+			configureImages = IMAGE_USER_DEPTH_640X480;
+		} 
+		else
+		{
+			configureImages = IMAGE_USER_DEPTH_640X480;
+		}
+	} else if ( nodeType == XN_NODE_TYPE_IMAGE )
+	{
+		if ( hRes == 1280 || vRes == 1024 )
+		{
+			configureImages = IMAGE_COLOR_1280X1024;
+		} 
+		else if ( hRes == 640 || vRes == 480 )
+		{
+			configureImages = IMAGE_COLOR_640X480;
+		} 
+		else if ( hRes == 320 || vRes == 240 )
+		{
+			configureImages = IMAGE_COLOR_320X240;
+		} else 
+		{
+			configureImages = IMAGE_COLOR_640X480;
+		}
+	} else if ( nodeType == XN_NODE_TYPE_USER )
+	{
+		if ( hRes == 640 || vRes == 480 )
+		{
+			configureImages = IMAGE_USER_DEPTH_640X480;
+		}
+		else if ( hRes == 320 || vRes == 240 )
+		{
+			configureImages = IMAGE_USER_DEPTH_320X240;
+		}
+		else if ( hRes == 80 || vRes == 60  )
+		{
+			configureImages = IMAGE_USER_DEPTH_80X60;
+		}
+		else //default
+		{
+			configureImages = IMAGE_USER_DEPTH_640X480;
+		}
+	} else if ( nodeType == XN_NODE_TYPE_IR )
+	{
+		if (  hRes == 640 || vRes == 480 )
+		{
+			configureImages = IMAGE_INFRARED_640X480;
+		}
+		else if ( hRes == 320 || vRes == 240 )
+		{
+			configureImages = IMAGE_INFRARED_320X240;
+		}
+		else //default
+		{
+			configureImages = IMAGE_INFRARED_640X480;
+		}
+	}
+	return getRequestedOutputMode( nodeType, configureImages );
+}
+
 XnMapOutputMode OpenNIDevice::getRequestedOutputMode( const XnPredefinedProductionNodeType &nodeType, boost::uint32_t configureImages )
 {
    XnMapOutputMode mode;
    mode.nFPS = 30;
+
    if ( nodeType == XN_NODE_TYPE_DEPTH )
    {
 	   //configuring image size
 	   if ( configureImages & IMAGE_USER_DEPTH_640X480 )
 	   {
-		   mode.nXRes = 640;
-		   mode.nYRes = 480;
+		   mode.nXRes = 1280;
+		   mode.nYRes = 1024;
 	   }
 	   else if ( configureImages & IMAGE_USER_DEPTH_320X240 )
 	   {
-		   mode.nXRes = 320;
-		   mode.nYRes = 240;
+		   mode.nXRes = 640;
+		   mode.nYRes = 480;
 	   }
 	   else if ( configureImages & IMAGE_USER_DEPTH_80X60 )
 	   {
@@ -430,7 +515,7 @@ XnMapOutputMode OpenNIDevice::getRequestedOutputMode( const XnPredefinedProducti
 
 	   throwError(" Requested node type does not support an output mode ");
    }
-	mode.nFPS = 30;
+
    return mode;
 }
 

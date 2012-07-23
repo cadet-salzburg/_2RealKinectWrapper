@@ -43,6 +43,7 @@ namespace _2RealKinectWrapper
 	boost::mutex						m_MutexSyncProcessUsers;
 class _2RealImplementationOpenNI : public I_2RealImplementation
 {
+
 	private:
 		xn::Context															m_Context;
 		xn::NodeInfoList													m_DeviceInfo;
@@ -182,6 +183,16 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 			setGeneratorState( deviceID, configureGenerators, false );
 		}
 
+		virtual void addGenerator( const uint32_t deviceID, uint32_t configureGenerators )
+		{
+			//m_Dev
+		}
+
+		virtual void removeGenerator( const uint32_t deviceID, uint32_t configureGenerators )
+		{
+			setGeneratorState( deviceID, configureGenerators, false );
+		}
+
 		virtual void setMirrored( const uint32_t deviceID, _2RealGenerator type, bool flag )
 		{
 			checkDeviceRunning(deviceID);
@@ -199,7 +210,18 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 			}
 			xn::Generator gen;
 			m_Devices[ deviceID ]->getExistingProductionNode( requestedNodes[0], gen );
-			checkError( gen.GetMirrorCap().SetMirror( flag ), "Error when trying to set mirroring for image\n" );
+
+			//checkError( gen.GetMirrorCap().SetMirror( flag ), "Error when trying to set mirroring for image\n" );
+
+			try 
+			{
+				checkError( gen.GetMirrorCap().SetMirror( flag ), "Error when trying to set mirroring for image\n" );
+			} 
+			catch (_2RealException& e )
+			{
+				std::cout << e.what() << std::endl;
+			}		
+
 		}
 
 		virtual bool isMirrored( const uint32_t deviceID, _2RealGenerator type ) const
@@ -315,6 +337,25 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 			if( type == COLORIMAGE || type == USERIMAGE_COLORED ) //rgb image 3byte/Pixel
 				return 3;
 			return 1; //depth-, and userimage will be converted to 1byte/Pixel (8bit uchar*)
+		}
+
+		virtual void setResolution( const uint32_t deviceID, _2RealGenerator type, unsigned int hRes, unsigned int vRes )
+		{
+			checkDeviceRunning( deviceID );
+			RequestedNodeVector requestedNodes = getRequestedNodes( type );
+			if ( requestedNodes.size() > 1 )
+			{
+				throwError( "_2Real:: getImageData() Error: wrong type of generator provided!");
+			} else if ( requestedNodes.empty() )
+			{
+				throwError( "_2Real:: getImageData() Error: WTF!");
+			}
+
+			if ( !m_Devices[ deviceID ]->hasGenerator( requestedNodes[0] )  )
+			{
+				_2REAL_LOG(warn) << "_2Real: getImageData()  Generator is not activated! Cannot set resolution..." << std::endl;
+			}
+			m_Devices[ deviceID ]->setGeneratorResolution(  requestedNodes[0], hRes, vRes );
 		}
 
 		virtual uint32_t getImageWidth( const uint32_t deviceID, _2RealGenerator type )

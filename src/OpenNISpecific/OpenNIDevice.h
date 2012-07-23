@@ -37,6 +37,8 @@ namespace _2RealKinectWrapper {
 		void							startGenerator( const XnPredefinedProductionNodeType &nodeType );
 		void							stopGenerator( const XnPredefinedProductionNodeType &nodeType );
 
+		void							setGeneratorResolution( const XnPredefinedProductionNodeType &nodeType, unsigned int hRes, unsigned int vRes );
+
 		bool							hasNewData( const XnPredefinedProductionNodeType &nodeType );
 
 		ImageDataRef					getBuffer( const XnPredefinedProductionNodeType &nodeType );
@@ -75,6 +77,7 @@ namespace _2RealKinectWrapper {
 			}
 		};
 
+		XnMapOutputMode					getClosestOutputMode( const XnPredefinedProductionNodeType &nodeType, unsigned int hRes, unsigned int vRes );
 		XnMapOutputMode					getRequestedOutputMode( const XnPredefinedProductionNodeType &nodeType, uint32_t configureImages );
 		mutable xn::Context				m_Context;
 		std::string						m_DeviceName;

@@ -58,6 +58,7 @@ class I_2RealImplementation
 		virtual uint32_t							getImageWidth( const uint32_t deviceID, _2RealGenerator type) = 0;
 		virtual uint32_t							getImageHeight( const uint32_t deviceID, _2RealGenerator type) = 0;
 		virtual uint32_t							getNumberOfDevices() const = 0;
+		virtual void								setResolution( const uint32_t deviceID, _2RealGenerator type, unsigned int hRes, unsigned int vRes ) = 0;
 		virtual const _2RealVector3f				getJointWorldPosition( const uint32_t deviceID, const uint8_t userID, _2RealJointType type ) = 0;
 		virtual const _2RealPositionsVector3f&		getSkeletonWorldPositions( const uint32_t deviceID, const uint8_t userID ) = 0;
 		virtual const _2RealVector3f				getJointScreenPosition( const uint32_t deviceID, const uint8_t userID, _2RealJointType type ) = 0;

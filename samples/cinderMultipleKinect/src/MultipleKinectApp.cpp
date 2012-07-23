@@ -118,7 +118,7 @@ void MultipleKinectApp::setup()
 		m_iNumberOfDevices = 1;
 		for ( int devIdx=0; devIdx < m_iNumberOfDevices ; ++devIdx )
 		{
-			bResult = m_2RealKinect->configure( devIdx,  COLORIMAGE | DEPTHIMAGE | USERIMAGE, IMAGE_COLOR_640X480  );
+			bResult = m_2RealKinect->configure( devIdx,  COLORIMAGE | DEPTHIMAGE | USERIMAGE, IMAGE_COLOR_640X480 );
 			if( bResult )
 			{
 				std::cout << "_2RealKinectWrapper Device " << devIdx << " started successfully!..." << std::endl;
@@ -170,12 +170,18 @@ void MultipleKinectApp::drawKinectImages()
 	for( int i = 0; i < m_iNumberOfDevices; ++i)
 	{
 		//---------------Color Image---------------------//
+		m_iKinectWidth = m_2RealKinect->getImageWidth(i, COLORIMAGE );
+		m_iKinectHeight = m_2RealKinect->getImageHeight(i, COLORIMAGE );
+		m_iKinectWidth = 640;
+		m_iKinectHeight = 480;
 		ci::Rectf destinationRectangle( m_ImageSize.x * i, 0, m_ImageSize.x * (i+1), m_ImageSize.y);
 		imgRef = getImageData( i, COLORIMAGE, m_iKinectWidth, m_iKinectHeight, numberChannels);
 		Surface8u color( imgRef.get(), m_iKinectWidth, m_iKinectHeight, m_iKinectWidth*numberChannels, SurfaceChannelOrder::RGB );
 		gl::draw( gl::Texture( color ), destinationRectangle );
 
 		//---------------Depth Image---------------------//
+		m_iKinectWidth = m_2RealKinect->getImageWidth(i, DEPTHIMAGE );
+		m_iKinectHeight = m_2RealKinect->getImageHeight(i, DEPTHIMAGE );
 		imgRef = getImageData( i, DEPTHIMAGE, m_iKinectWidth, m_iKinectHeight, numberChannels);
 		Channel depth( m_iKinectWidth, m_iKinectHeight, m_iKinectWidth, numberChannels, imgRef.get() );
 		destinationRectangle.offset( ci::Vec2f( 0, m_ImageSize.y) );
@@ -186,7 +192,9 @@ void MultipleKinectApp::drawKinectImages()
 		if( i == 0 )						
 #endif
 		{
-		 imgRef = getImageData( i, USERIMAGE, m_iKinectWidth, m_iKinectHeight, numberChannels);
+			m_iKinectWidth = m_2RealKinect->getImageWidth(i, USERIMAGE );
+			m_iKinectHeight = m_2RealKinect->getImageHeight(i, USERIMAGE );
+			imgRef = getImageData( i, USERIMAGE, m_iKinectWidth, m_iKinectHeight, numberChannels);
 			if( imgRef )
 			{
 				Surface8u userColored( imgRef.get(), m_iKinectWidth, m_iKinectHeight, m_iKinectWidth*3, SurfaceChannelOrder::RGB );
@@ -388,8 +396,15 @@ void MultipleKinectApp::keyDown( KeyEvent event )
 
 void MultipleKinectApp::mirrorImages()
 {
+	//m_2RealKinect->setResolution( 0, COLORIMAGE, 320,241);
 	m_bIsMirroring = !m_bIsMirroring;	// toggleMirroring
-	for( int i = 0; i < m_iNumberOfDevices; ++i)
+
+	if ( m_bIsMirroring )
+		m_2RealKinect->setResolution( 0, COLORIMAGE, 320,241);
+	else
+		m_2RealKinect->setResolution( 0, COLORIMAGE, 640,230);
+
+	for ( int i = 0; i < m_iNumberOfDevices; ++i )
 	{
 		m_2RealKinect->setMirrored( i, COLORIMAGE, m_bIsMirroring );
 		m_2RealKinect->setMirrored( i, DEPTHIMAGE, m_bIsMirroring );

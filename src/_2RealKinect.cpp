@@ -115,6 +115,10 @@ uint32_t _2RealKinect::getImageHeight( const uint32_t deviceID, _2RealGenerator 
 {
 	return m_Implementation->getImageHeight( deviceID, type );
 }
+void _2RealKinect::setResolution( const uint32_t deviceID, _2RealGenerator type, unsigned int hRes, unsigned int vRes )
+{
+	m_Implementation->setResolution( deviceID, type, hRes, vRes );
+}
 
 void _2RealKinect::resetAllSkeletons()
 {

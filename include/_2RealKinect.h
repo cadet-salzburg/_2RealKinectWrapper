@@ -109,6 +109,9 @@ class _2RealKinect
 			/param     const uint8_t userId only used for GENERATOR_USERIMAGE. Ignored by other types
 			/return    boost::shared_ptr<unsigned char> Shared Pointer to image buffer; use getImageWidth, getImageHeight, getImageBytePerPixel to obtain image specifications
 		!*/
+
+		void								setResolution( const uint32_t deviceID, _2RealGenerator type, unsigned int hRes, unsigned int vRes );
+
 		boost::shared_array<unsigned char>	getImageData( const uint32_t deviceID, _2RealGenerator type, bool waitAndBlock=false, const uint8_t userId=0 );
 
 		/*! /brief     Returns a 16bit pointer to depth image buffer (16 high precision depth values from depth sensor
