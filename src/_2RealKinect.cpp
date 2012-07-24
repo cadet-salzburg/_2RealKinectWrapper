@@ -80,6 +80,11 @@ void _2RealKinect::removeGenerator( const uint32_t deviceID, uint32_t configureG
 	m_Implementation->removeGenerator( deviceID, configureGenerators );
 }
 
+bool _2RealKinect::generatorIsActive( const uint32_t deviceID, _2RealGenerator type )
+{
+	return m_Implementation->generatorIsActive( deviceID, type );
+}
+
 bool _2RealKinect::shutdown()
 {
 	return m_Implementation->shutdown();

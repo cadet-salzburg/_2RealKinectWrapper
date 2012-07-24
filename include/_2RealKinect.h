@@ -71,6 +71,8 @@ class _2RealKinect
 		!*/
 		void								addGenerator( const uint32_t deviceID, uint32_t configureGenerators, uint32_t configureImages );
 		void								removeGenerator( const uint32_t deviceID, uint32_t configureGenerators );
+		bool								generatorIsActive( const uint32_t deviceID, _2RealGenerator type );
+
 		bool								shutdown();
 		/*! /brief	   Checks if new data is available to get from the wrapper, so you don't need to execute unnecessary calculations and data copying
 			/param     const uint32_t deviceID for choosing specific device

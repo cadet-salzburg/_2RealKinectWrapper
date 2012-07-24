@@ -36,6 +36,8 @@ namespace _2RealKinectWrapper {
 		bool							hasGenerator( const XnPredefinedProductionNodeType &nodeType ) const;
 		void							startGenerator( const XnPredefinedProductionNodeType &nodeType );
 		void							stopGenerator( const XnPredefinedProductionNodeType &nodeType );
+		bool							generatorIsActive( const XnPredefinedProductionNodeType &nodeType );
+
 
 		void							setGeneratorResolution( const XnPredefinedProductionNodeType &nodeType, unsigned int hRes, unsigned int vRes );
 

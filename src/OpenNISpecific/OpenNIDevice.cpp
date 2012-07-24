@@ -343,6 +343,15 @@ void OpenNIDevice::removeGenerator( const XnPredefinedProductionNodeType &nodeTy
 	}
 }
 
+bool OpenNIDevice::generatorIsActive( const XnPredefinedProductionNodeType &nodeType )
+{
+	if ( !hasGenerator(nodeType) )
+		throwError("Requested generator has not been added");
+	xn::Generator gen;
+	getExistingProductionNode( nodeType, gen );
+	return gen.IsGenerating() ? true : false;
+}
+
 void OpenNIDevice::setGeneratorResolution( const XnPredefinedProductionNodeType &nodeType, unsigned int hRes, unsigned int vRes )
 {
 	if ( nodeType != XN_NODE_TYPE_DEPTH && nodeType != XN_NODE_TYPE_USER && nodeType != XN_NODE_TYPE_IMAGE &&  nodeType != XN_NODE_TYPE_IR )

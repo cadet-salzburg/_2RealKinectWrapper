@@ -169,7 +169,9 @@ void MultipleKinectApp::drawKinectImages()
 	boost::shared_array<unsigned char> imgRef;
 	int numberChannels = 0;
 
-	for( int i = 0; i < m_iNumberOfDevices; ++i)
+
+
+ 	for( int i = 0; i < m_iNumberOfDevices; ++i)
 	{
 		//---------------IR Image---------------------//
 		ci::Rectf destinationRectangle( m_ImageSize.x * i, 0, m_ImageSize.x * (i+1), m_ImageSize.y);
@@ -416,11 +418,26 @@ void MultipleKinectApp::mirrorImages()
 		std::cout << "Switch to 1280X1024" << std::endl;
 		try
 		{
-			//m_2RealKinect->stopGenerator( 0, COLORIMAGE );
+			m_2RealKinect->stopGenerator( 0, COLORIMAGE );
+			if ( m_2RealKinect->generatorIsActive( 0, COLORIMAGE ))
+			{
+				std::cout << "Its active" <<std::endl;
+			} else 
+			{
+				std::cout << "Its not active" <<std::endl;
+			}
 			//m_2RealKinect->removeGenerator( 0, COLORIMAGE );
 			//m_2RealKinect->addGenerator( 0, COLORIMAGE, IMAGE_COLOR_320X240 );
-			//m_2RealKinect->startGenerator( 0, COLORIMAGE );
-			m_2RealKinect->setResolution( 0, COLORIMAGE, 1280, 1024 );
+			m_2RealKinect->startGenerator( 0, COLORIMAGE );
+			if ( m_2RealKinect->generatorIsActive( 0, COLORIMAGE ))
+			{
+				std::cout << "Its active" <<std::endl;
+			} else 
+			{
+				std::cout << "Its not active" <<std::endl;
+			}
+
+			m_2RealKinect->setResolution( 0, COLORIMAGE, 1290, 1024 );
 		}
 		catch (...)
 		{

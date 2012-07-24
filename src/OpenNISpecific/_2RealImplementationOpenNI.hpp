@@ -206,6 +206,12 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 			m_MutexSyncProcessUsers.unlock();
 		}
 
+		virtual bool generatorIsActive( const uint32_t deviceID, _2RealGenerator type )
+		{
+			checkDeviceRunning(deviceID);
+			RequestedNodeVector requestedNodes =  getRequestedNodes( type );
+			return m_Devices[deviceID]->generatorIsActive( requestedNodes[0] );
+		}
 		virtual void setMirrored( const uint32_t deviceID, _2RealGenerator type, bool flag )
 		{
 			checkDeviceRunning(deviceID);
