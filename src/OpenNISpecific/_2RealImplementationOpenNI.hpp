@@ -136,9 +136,10 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 			 {
 				 if ( m_ShouldUpdate )
 				 {
-					 //boost::mutex::scoped_lock lock( m_MutexSyncProcessUsers );
+					 m_MutexSyncProcessUsers.lock();
 					 checkError( m_Context.WaitNoneUpdateAll(), "_2Real: Error while trying to update context." );
 					 boost::this_thread::sleep(boost::posix_time::milliseconds(1));
+					 m_MutexSyncProcessUsers.unlock();
 				 }
 			 }
 		};
@@ -183,14 +184,26 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 			setGeneratorState( deviceID, configureGenerators, false );
 		}
 
-		virtual void addGenerator( const uint32_t deviceID, uint32_t configureGenerators )
+		virtual void addGenerator( const uint32_t deviceID, uint32_t configureGenerators, uint32_t configureImages )
 		{
-			//m_Dev
+			m_MutexSyncProcessUsers.lock();
+			RequestedNodeVector requestedNodes = getRequestedNodes( configureGenerators );
+			for ( RequestedNodeVector::iterator iter = requestedNodes.begin(); iter!=requestedNodes.end(); ++iter ) 
+			{
+				m_Devices[ deviceID ]->addGenerator( *iter, configureImages );
+			}
+			m_MutexSyncProcessUsers.unlock();
 		}
 
 		virtual void removeGenerator( const uint32_t deviceID, uint32_t configureGenerators )
 		{
-			setGeneratorState( deviceID, configureGenerators, false );
+			m_MutexSyncProcessUsers.lock();
+			RequestedNodeVector requestedNodes = getRequestedNodes( configureGenerators );
+			for ( RequestedNodeVector::iterator iter = requestedNodes.begin(); iter!=requestedNodes.end(); ++iter ) 
+			{
+				m_Devices[ deviceID ]->removeGenerator( *iter );
+			}
+			m_MutexSyncProcessUsers.unlock();
 		}
 
 		virtual void setMirrored( const uint32_t deviceID, _2RealGenerator type, bool flag )
@@ -221,7 +234,6 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 			{
 				std::cout << e.what() << std::endl;
 			}		
-
 		}
 
 		virtual bool isMirrored( const uint32_t deviceID, _2RealGenerator type ) const
@@ -296,12 +308,10 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 				m_Devices[ deviceID ]->forceResetUsers();
 			}
 		}
-
 		virtual bool shutdown()
 		{
 			return false;
 		}
-
 		virtual boost::shared_array<unsigned char> getImageData( const uint32_t deviceID, _2RealGenerator type, bool waitAndBlock, const uint8_t userId )
 		{
 			//boost::mutex::scoped_lock lock(m_MutexSyncProcessUsers);

@@ -298,6 +298,8 @@ xn::NodeInfoList OpenNIDevice::getNodeInfoList( const XnPredefinedProductionNode
 
 void OpenNIDevice::startGenerator( const XnPredefinedProductionNodeType &nodeType )
 {
+	if ( !hasGenerator( nodeType ) )
+		return;
 	xn::Generator generator;
 	getExistingProductionNode( nodeType, generator );
 	if ( !generator.IsGenerating() )
@@ -308,6 +310,8 @@ void OpenNIDevice::startGenerator( const XnPredefinedProductionNodeType &nodeTyp
 
 void OpenNIDevice::stopGenerator( const XnPredefinedProductionNodeType &nodeType )
 {
+	if ( !hasGenerator( nodeType ) )
+		return;
 	xn::Generator generator;
 	getExistingProductionNode( nodeType, generator );
 	if ( generator.IsGenerating() )
@@ -318,10 +322,25 @@ void OpenNIDevice::stopGenerator( const XnPredefinedProductionNodeType &nodeType
 
 void OpenNIDevice::removeGenerator( const XnPredefinedProductionNodeType &nodeType )
 {
-	//ToDo: removeGenerator appears to not work. FixMe
-	xn::Generator generator;
-	getExistingProductionNode( nodeType, generator );
-	generator.Release();
+	if ( hasGenerator( nodeType ) )
+	{
+		if ( nodeType == XN_NODE_TYPE_IMAGE )
+		{
+			m_ImageGenerator.Release();
+		} 
+		else if ( nodeType == XN_NODE_TYPE_DEPTH )
+		{
+			m_DepthGenerator.Release();
+		}
+		else if ( nodeType == XN_NODE_TYPE_USER )
+		{
+			m_UserGenerator.Release();
+		}
+		else if ( nodeType == XN_NODE_TYPE_IR )
+		{
+			m_IrGenerator.Release();
+		}
+	}
 }
 
 void OpenNIDevice::setGeneratorResolution( const XnPredefinedProductionNodeType &nodeType, unsigned int hRes, unsigned int vRes )
@@ -418,13 +437,13 @@ XnMapOutputMode OpenNIDevice::getRequestedOutputMode( const XnPredefinedProducti
 	   //configuring image size
 	   if ( configureImages & IMAGE_USER_DEPTH_640X480 )
 	   {
-		   mode.nXRes = 1280;
-		   mode.nYRes = 1024;
+		   mode.nXRes = 640;
+		   mode.nYRes = 480;
 	   }
 	   else if ( configureImages & IMAGE_USER_DEPTH_320X240 )
 	   {
-		   mode.nXRes = 640;
-		   mode.nYRes = 480;
+		   mode.nXRes = 320;
+		   mode.nYRes = 240;
 	   }
 	   else if ( configureImages & IMAGE_USER_DEPTH_80X60 )
 	   {

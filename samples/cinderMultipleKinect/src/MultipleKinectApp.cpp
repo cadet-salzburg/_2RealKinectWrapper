@@ -118,13 +118,15 @@ void MultipleKinectApp::setup()
 		m_iNumberOfDevices = 1;
 		for ( int devIdx=0; devIdx < m_iNumberOfDevices ; ++devIdx )
 		{
-			bResult = m_2RealKinect->configure( devIdx,  COLORIMAGE | DEPTHIMAGE | USERIMAGE, IMAGE_COLOR_640X480 );
+			//bResult = m_2RealKinect->configure( devIdx,  COLORIMAGE, IMAGE_COLOR_1280X1024 );
+			bResult = m_2RealKinect->configure( devIdx,  COLORIMAGE, IMAGE_COLOR_640X480 );
 			if( bResult )
 			{
 				std::cout << "_2RealKinectWrapper Device " << devIdx << " started successfully!..." << std::endl;
 			}
-			m_iMotorValue = m_2RealKinect->getMotorAngle( devIdx );	// just make motor device 0 controllable
-			m_2RealKinect->startGenerator( devIdx,  DEPTHIMAGE | COLORIMAGE | USERIMAGE );
+			//m_iMotorValue = m_2RealKinect->getMotorAngle( devIdx );	// just make motor device 0 controllable
+			m_2RealKinect->startGenerator( devIdx,  COLORIMAGE );
+			//m_2RealKinect->startGenerator( devIdx,  COLORIMAGE );
 		}
 		resizeImages();
 	}
@@ -169,62 +171,71 @@ void MultipleKinectApp::drawKinectImages()
 
 	for( int i = 0; i < m_iNumberOfDevices; ++i)
 	{
+		//---------------IR Image---------------------//
+		ci::Rectf destinationRectangle( m_ImageSize.x * i, 0, m_ImageSize.x * (i+1), m_ImageSize.y);
+//		m_iKinectWidth  = m_2RealKinect->getImageWidth(i, COLORIMAGE );
+//		m_iKinectHeight = m_2RealKinect->getImageHeight(i, COLORIMAGE );
+//		imgRef = getImageData( i, COLORIMAGE, m_iKinectWidth, m_iKinectHeight, numberChannels);
+//		Channel depth( m_iKinectWidth, m_iKinectHeight, m_iKinectWidth, numberChannels, imgRef.get() );
+//		destinationRectangle.offset( ci::Vec2f( 0, m_ImageSize.y) );
+//		gl::draw( gl::Texture( depth ),  destinationRectangle );
+
 		//---------------Color Image---------------------//
 		m_iKinectWidth = m_2RealKinect->getImageWidth(i, COLORIMAGE );
 		m_iKinectHeight = m_2RealKinect->getImageHeight(i, COLORIMAGE );
 		m_iKinectWidth = 640;
 		m_iKinectHeight = 480;
-		ci::Rectf destinationRectangle( m_ImageSize.x * i, 0, m_ImageSize.x * (i+1), m_ImageSize.y);
+	//	ci::Rectf destinationRectangle( m_ImageSize.x * i, 0, m_ImageSize.x * (i+1), m_ImageSize.y);
 		imgRef = getImageData( i, COLORIMAGE, m_iKinectWidth, m_iKinectHeight, numberChannels);
 		Surface8u color( imgRef.get(), m_iKinectWidth, m_iKinectHeight, m_iKinectWidth*numberChannels, SurfaceChannelOrder::RGB );
 		gl::draw( gl::Texture( color ), destinationRectangle );
-
-		//---------------Depth Image---------------------//
-		m_iKinectWidth = m_2RealKinect->getImageWidth(i, DEPTHIMAGE );
-		m_iKinectHeight = m_2RealKinect->getImageHeight(i, DEPTHIMAGE );
-		imgRef = getImageData( i, DEPTHIMAGE, m_iKinectWidth, m_iKinectHeight, numberChannels);
-		Channel depth( m_iKinectWidth, m_iKinectHeight, m_iKinectWidth, numberChannels, imgRef.get() );
-		destinationRectangle.offset( ci::Vec2f( 0, m_ImageSize.y) );
-		gl::draw( gl::Texture( depth ),  destinationRectangle );
-
-		//---------------User Image---------------------//
-#ifdef TARGET_MSKINECTSDK
-		if( i == 0 )						
-#endif
-		{
-			m_iKinectWidth = m_2RealKinect->getImageWidth(i, USERIMAGE );
-			m_iKinectHeight = m_2RealKinect->getImageHeight(i, USERIMAGE );
-			imgRef = getImageData( i, USERIMAGE, m_iKinectWidth, m_iKinectHeight, numberChannels);
-			if( imgRef )
-			{
-				Surface8u userColored( imgRef.get(), m_iKinectWidth, m_iKinectHeight, m_iKinectWidth*3, SurfaceChannelOrder::RGB );
-				destinationRectangle.offset( ci::Vec2f( 0, m_ImageSize.y) );			
-				gl::draw( gl::Texture( userColored ), destinationRectangle );
-#ifndef		TARGET_MSKINECTSDK
-				drawCenterOfMasses(i, destinationRectangle);
-#endif
-			}
-			// draw nrOfUsers with font
-			gl::disableDepthRead();
-			gl::drawString( "Users: "+ toString(m_2RealKinect->getNumberOfUsers(i)), Vec2f( destinationRectangle.x1 + 20 , destinationRectangle.y1 ), Color( 1.0f, 0.0f, 0.0f ), m_Font );	
-			gl::enableDepthRead();
-		}
-		//---------------Skeletons---------------------//	
-		destinationRectangle.offset( ci::Vec2f( 0, m_ImageSize.y) );
-		drawSkeletons(i, destinationRectangle );
-
-		gl::disableDepthRead();
-		gl::drawString( "Skeletons: "+ toString(m_2RealKinect->getNumberOfSkeletons(i)), Vec2f( destinationRectangle.x1 + 20 , destinationRectangle.y1 ), Color( 1.0f, 0.0f, 0.0f ), m_Font );	
-		gl::enableDepthRead();
-
-		//drawing debug strings for devices
-
-		gl::disableDepthRead();
-		gl::color(Color( 1.0, 1.0, 1.0 ));	
-		gl::drawString( "Device "+ toString(i), Vec2f( m_ImageSize.x * i + 20 , 0 ), Color( 1.0f, 0.0f, 0.0f ), m_Font );		
-		//draw fps
-		gl::drawString( "fps: " + toString(getAverageFps()), Vec2f( float(getWindowWidth() - 120), 10.0 ), Color(1,0,0), m_Font);	
-		gl::enableDepthRead();
+//
+//		//---------------Depth Image---------------------//
+//		m_iKinectWidth = m_2RealKinect->getImageWidth(i, DEPTHIMAGE );
+//		m_iKinectHeight = m_2RealKinect->getImageHeight(i, DEPTHIMAGE );
+//		imgRef = getImageData( i, DEPTHIMAGE, m_iKinectWidth, m_iKinectHeight, numberChannels);
+//		Channel depth( m_iKinectWidth, m_iKinectHeight, m_iKinectWidth, numberChannels, imgRef.get() );
+//		destinationRectangle.offset( ci::Vec2f( 0, m_ImageSize.y) );
+//		gl::draw( gl::Texture( depth ),  destinationRectangle );
+//
+//		//---------------User Image---------------------//
+//#ifdef TARGET_MSKINECTSDK
+//		if( i == 0 )						
+//#endif
+//		{
+//			m_iKinectWidth = m_2RealKinect->getImageWidth(i, USERIMAGE );
+//			m_iKinectHeight = m_2RealKinect->getImageHeight(i, USERIMAGE );
+//			imgRef = getImageData( i, USERIMAGE, m_iKinectWidth, m_iKinectHeight, numberChannels);
+//			if( imgRef )
+//			{
+//				Surface8u userColored( imgRef.get(), m_iKinectWidth, m_iKinectHeight, m_iKinectWidth*3, SurfaceChannelOrder::RGB );
+//				destinationRectangle.offset( ci::Vec2f( 0, m_ImageSize.y) );			
+//				gl::draw( gl::Texture( userColored ), destinationRectangle );
+//#ifndef		TARGET_MSKINECTSDK
+//				drawCenterOfMasses(i, destinationRectangle);
+//#endif
+//			}
+//			// draw nrOfUsers with font
+//			gl::disableDepthRead();
+//			gl::drawString( "Users: "+ toString(m_2RealKinect->getNumberOfUsers(i)), Vec2f( destinationRectangle.x1 + 20 , destinationRectangle.y1 ), Color( 1.0f, 0.0f, 0.0f ), m_Font );	
+//			gl::enableDepthRead();
+//		}
+//		//---------------Skeletons---------------------//	
+//		destinationRectangle.offset( ci::Vec2f( 0, m_ImageSize.y) );
+//		drawSkeletons(i, destinationRectangle );
+//
+//		gl::disableDepthRead();
+//		gl::drawString( "Skeletons: "+ toString(m_2RealKinect->getNumberOfSkeletons(i)), Vec2f( destinationRectangle.x1 + 20 , destinationRectangle.y1 ), Color( 1.0f, 0.0f, 0.0f ), m_Font );	
+//		gl::enableDepthRead();
+//
+//		//drawing debug strings for devices
+//
+//		gl::disableDepthRead();
+//		gl::color(Color( 1.0, 1.0, 1.0 ));	
+//		gl::drawString( "Device "+ toString(i), Vec2f( m_ImageSize.x * i + 20 , 0 ), Color( 1.0f, 0.0f, 0.0f ), m_Font );		
+//		//draw fps
+//		gl::drawString( "fps: " + toString(getAverageFps()), Vec2f( float(getWindowWidth() - 120), 10.0 ), Color(1,0,0), m_Font);	
+//		gl::enableDepthRead();
 	}
 }
 
@@ -328,11 +339,10 @@ void MultipleKinectApp::resize( ResizeEvent event)
 	resizeImages();
 }
 
-
 void MultipleKinectApp::resizeImages()
 {
 	//calculate imagesize
-	int iImageHeight = (int)(m_iScreenHeight / 4.0);		// divide window height according to the number of generator outputs (rgb, depth, user, skeleton)
+	int iImageHeight = (int)(m_iScreenHeight);		// divide window height according to the number of generator outputs (rgb, depth, user, skeleton)
 	int iImageWidth = (int)(iImageHeight * 4.0 / 3.0);		// keep images aspect ratio 4:3
 	if(iImageWidth * m_iNumberOfDevices > m_iScreenWidth)	// aspect ratio 	
 	{
@@ -346,7 +356,9 @@ void MultipleKinectApp::resizeImages()
 void MultipleKinectApp::keyDown( KeyEvent event )
 {
 	if( event.getChar() == 'm' )	// mirror generators
+	{
 		mirrorImages();
+	}
 	if( event.getChar() == 'r' )	// restart kinects
 	{
 		bool bResult = m_2RealKinect->restart();
@@ -397,18 +409,57 @@ void MultipleKinectApp::keyDown( KeyEvent event )
 void MultipleKinectApp::mirrorImages()
 {
 	//m_2RealKinect->setResolution( 0, COLORIMAGE, 320,241);
-	m_bIsMirroring = !m_bIsMirroring;	// toggleMirroring
 
-	if ( m_bIsMirroring )
-		m_2RealKinect->setResolution( 0, COLORIMAGE, 320,241);
+
+	if ( !m_bIsMirroring )
+	{
+		std::cout << "Switch to 1280X1024" << std::endl;
+		try
+		{
+			//m_2RealKinect->stopGenerator( 0, COLORIMAGE );
+			//m_2RealKinect->removeGenerator( 0, COLORIMAGE );
+			//m_2RealKinect->addGenerator( 0, COLORIMAGE, IMAGE_COLOR_320X240 );
+			//m_2RealKinect->startGenerator( 0, COLORIMAGE );
+			m_2RealKinect->setResolution( 0, COLORIMAGE, 1280, 1024 );
+		}
+		catch (...)
+		{
+			std::cout << "Couldn't switch to 1280X1024" << std::endl;
+		}
+	}
 	else
-		m_2RealKinect->setResolution( 0, COLORIMAGE, 640,230);
+	{
+		std::cout << "Switch to 640X480" << std::endl;
+		try
+		{
+			//m_2RealKinect->stopGenerator( 0, COLORIMAGE );
+			//m_2RealKinect->removeGenerator( 0, COLORIMAGE );
+			//m_2RealKinect->addGenerator( 0, COLORIMAGE, IMAGE_COLOR_1280X1024 );
+			//m_2RealKinect->startGenerator( 0, COLORIMAGE );
+			m_2RealKinect->setResolution( 0, COLORIMAGE, 640, 480 );
+			
+		}
+		catch (...)
+		{
+			std::cout << "Couldn't switch to 320X240" << std::endl;
+		}
+	}
+	m_bIsMirroring = !m_bIsMirroring;	// toggleMirroring
 
 	for ( int i = 0; i < m_iNumberOfDevices; ++i )
 	{
-		m_2RealKinect->setMirrored( i, COLORIMAGE, m_bIsMirroring );
-		m_2RealKinect->setMirrored( i, DEPTHIMAGE, m_bIsMirroring );
-		m_2RealKinect->setMirrored( i, USERIMAGE, m_bIsMirroring );		// OpenNI has no capability yet to mirror the user image
+//		m_2RealKinect->setMirrored( i, COLORIMAGE, m_bIsMirroring );
+//		m_2RealKinect->setMirrored( i, DEPTHIMAGE, m_bIsMirroring );
+//		m_2RealKinect->setMirrored( i, USERIMAGE, m_bIsMirroring );		// OpenNI has no capability yet to mirror the user image
+
+		try
+		{
+			//m_2RealKinect->setMirrored( i, COLORIMAGE, m_bIsMirroring );
+		}
+		catch (...)
+		{
+
+		}
 	}		
 }
 

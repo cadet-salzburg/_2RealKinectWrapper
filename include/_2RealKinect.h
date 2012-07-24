@@ -64,12 +64,14 @@ class _2RealKinect
 		void								update();
 		bool								configure( const uint32_t deviceID,  uint32_t startGenerators = CONFIG_DEFAULT, uint32_t configureImages = IMAGE_CONFIG_DEFAULT );
 		void								startGenerator( const uint32_t deviceID, uint32_t configureGenerators );
-		void								stopGenerator( const uint32_t deviceID, uint32_t configureGenerators );
-		/*! /brief     Shuts down all generators
-			/return    bool Returns the operations success
+		/*! /brief     Start a set of existing generators.
 		!*/
+		void								stopGenerator( const uint32_t deviceID, uint32_t configureGenerators );
+		/*! /brief     Stops a set of existing generators.
+		!*/
+		void								addGenerator( const uint32_t deviceID, uint32_t configureGenerators, uint32_t configureImages );
+		void								removeGenerator( const uint32_t deviceID, uint32_t configureGenerators );
 		bool								shutdown();
-
 		/*! /brief	   Checks if new data is available to get from the wrapper, so you don't need to execute unnecessary calculations and data copying
 			/param     const uint32_t deviceID for choosing specific device
 			/param     _2RealGenerator type indicating the type of the generator to be requested, Use _2RealGenerator enum

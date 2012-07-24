@@ -70,6 +70,15 @@ void _2RealKinect::stopGenerator( const uint32_t deviceID, uint32_t configureGen
 {
 	m_Implementation->stopGenerator( deviceID, configureGenerators );
 }
+void _2RealKinect::addGenerator( const uint32_t deviceID, uint32_t configureGenerators, uint32_t configureImages )
+{
+	m_Implementation->addGenerator( deviceID, configureGenerators, configureImages );
+}
+
+void _2RealKinect::removeGenerator( const uint32_t deviceID, uint32_t configureGenerators )
+{
+	m_Implementation->removeGenerator( deviceID, configureGenerators );
+}
 
 bool _2RealKinect::shutdown()
 {
