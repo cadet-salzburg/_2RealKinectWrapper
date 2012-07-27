@@ -214,6 +214,11 @@ const uint32_t _2RealKinect::getNumberOfSkeletons( const uint32_t deviceID ) con
 	return m_Implementation->getNumberOfSkeletons( deviceID );
 }
 
+const _2RealTrackedUserVector _2RealKinect::getUsers( const uint32_t deviceID ) const
+{
+	return m_Implementation->getUsers( deviceID );
+}
+
 const uint32_t _2RealKinect::getNumberOfUsers( const uint32_t deviceID ) const
 {
 	return m_Implementation->getNumberOfUsers( deviceID );

@@ -545,6 +545,12 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 			return m_TrackedUserVector[userID]->getJointConfidences();
 		}
 
+		virtual const _2RealTrackedUserVector	getUsers( const uint32_t deviceID ) const
+		{
+			checkDeviceRunning(deviceID);
+			return m_Devices[deviceID]->getUsers();
+		}
+
 		virtual const uint32_t getNumberOfUsers( const uint32_t deviceID ) const
 		{
 			checkDeviceRunning(deviceID);
