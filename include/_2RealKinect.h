@@ -263,7 +263,8 @@ class _2RealKinect
 			/param     bool flag indicating if turn capability on or off
 			/return    void
 		!*/
-		void								alignColorToDepth( const uint32_t deviceID, bool flag );
+		void								alignDepthToColor( const uint32_t deviceID, bool flag );
+		bool								depthIsAlignedToColor( const uint32_t deviceID );
 
 		/*! /brief     Shuts the system down and restarts it with flags provided in start()
 			/return    bool

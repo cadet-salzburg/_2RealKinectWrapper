@@ -149,9 +149,14 @@ uint32_t _2RealKinect::getNumberOfDevices() const
 	return m_Implementation->getNumberOfDevices();
 }
 
-void _2RealKinect::alignColorToDepth( const uint32_t deviceID, bool flag )
+void _2RealKinect::alignDepthToColor( const uint32_t deviceID, bool flag )
 {
-	m_Implementation->alignColorToDepth( deviceID, flag );
+	m_Implementation->alignDepthToColor( deviceID, flag );
+}
+
+bool _2RealKinect::depthIsAlignedToColor( const uint32_t deviceID )
+{
+	return m_Implementation->depthIsAlignedToColor( deviceID );
 }
 
 bool _2RealKinect::restart()

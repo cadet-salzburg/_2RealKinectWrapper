@@ -189,10 +189,10 @@ void OpenNIDevice::addDeviceToContext()
 
         const XnProductionNodeDescription& description = m_DeviceInfo->GetDescription();
         //printf("device: vendor %s name %s, instance %s\n", description.strVendor, description.strName, m_DeviceInfo->GetInstanceName());
-        unsigned short vendor_id;
-        unsigned short product_id;
-        unsigned char bus;
-        unsigned char address;
+        //unsigned short vendor_id;
+        //unsigned short product_id;
+        //unsigned char bus;
+        //unsigned char address;
         //sscanf( m_DeviceInfo->GetCreationInfo(), "%hx/%hx@%hhu/%hhu", &vendor_id, &product_id, &bus, &address );
         //printf("vendor_id %i product_id %i bus %i address %i connection %s\n", vendor_id, product_id, bus, address );
 	}
@@ -716,7 +716,7 @@ void OpenNIDevice::convertProjectiveToRealWorld( XnUInt32 count, const XnPoint3D
 	}
 }
 
-void OpenNIDevice::alignColorToDepth( bool flag )
+void OpenNIDevice::alignDepthToColor( bool flag )
 {
 	if ( hasGenerator(XN_NODE_TYPE_DEPTH) && hasGenerator(XN_NODE_TYPE_IMAGE) )
 	{
@@ -733,6 +733,23 @@ void OpenNIDevice::alignColorToDepth( bool flag )
 
 	}
 }
+
+bool OpenNIDevice::depthIsAlignedToColor()
+{
+	if ( hasGenerator(XN_NODE_TYPE_DEPTH) && hasGenerator(XN_NODE_TYPE_IMAGE) )
+	{
+		if ( m_DepthGenerator.IsCapabilitySupported("AlternativeViewPoint") )
+		{
+			XnBool check = m_DepthGenerator.GetAlternativeViewPointCap().IsViewPointAs( m_ImageGenerator );
+			return !!check;
+		}
+	} else 
+	{
+		_2REAL_LOG(info) << "Depth and Image generators are needed for alignment" << std::endl;
+	}
+	return false;
+}
+
 
 std::string OpenNIDevice::xnNodeTypeToString( const XnPredefinedProductionNodeType& nodeType )
 {

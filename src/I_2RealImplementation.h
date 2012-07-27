@@ -91,7 +91,8 @@ class I_2RealImplementation
 		virtual void								convertProjectiveToWorld( const uint32_t deviceID, const uint32_t coordinateCount, const _2RealVector3f* inProjective, _2RealVector3f* outWorld ) = 0;
 		virtual void								convertWorldToProjective( const uint32_t deviceID, const uint32_t coordinateCount, const _2RealVector3f* inWorld, _2RealVector3f* outProjective ) = 0;
 
-		virtual void								alignColorToDepth( const uint32_t deviceID, bool flag ) = 0;
+		virtual void								alignDepthToColor( const uint32_t deviceID, bool flag ) = 0;
+		virtual bool								depthIsAlignedToColor( const uint32_t deviceID ) = 0;
 
 		virtual bool								setMotorAngle(int deviceID, int& angle) = 0;
 		virtual int									getMotorAngle(int deviceID) = 0;

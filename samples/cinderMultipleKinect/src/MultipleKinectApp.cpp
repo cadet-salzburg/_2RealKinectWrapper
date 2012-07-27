@@ -127,6 +127,14 @@ void MultipleKinectApp::setup()
 			//m_iMotorValue = m_2RealKinect->getMotorAngle( devIdx );	// just make motor device 0 controllable
 			m_2RealKinect->startGenerator( devIdx,  COLORIMAGE );
 			//m_2RealKinect->startGenerator( devIdx,  COLORIMAGE );
+			try
+			{
+				m_2RealKinect->setMirrored( devIdx, COLORIMAGE, true );
+			}
+			catch (...)
+			{
+				std::cout << "Failed to mirror" << std::endl;
+			}
 		}
 		resizeImages();
 	}
@@ -377,7 +385,16 @@ void MultipleKinectApp::keyDown( KeyEvent event )
 	if ( event.getChar() == 'w' )
 	{
 		m_Align = !m_Align;
-		m_2RealKinect->alignColorToDepth( 0, m_Align );
+		if ( !m_2RealKinect->depthIsAlignedToColor( 0 ) )
+		try
+		{
+			m_2RealKinect->alignDepthToColor( 0, m_Align );
+
+		}
+		catch ( ... )
+		{
+			std::cout << "Something" << std::endl;
+		}
 	}
 	if ( event.getChar() == 'l' )
 	{
@@ -413,71 +430,72 @@ void MultipleKinectApp::mirrorImages()
 	//m_2RealKinect->setResolution( 0, COLORIMAGE, 320,241);
 
 
-	if ( !m_bIsMirroring )
-	{
-		std::cout << "Switch to 1280X1024" << std::endl;
-		try
-		{
-			m_2RealKinect->stopGenerator( 0, COLORIMAGE );
-			if ( m_2RealKinect->generatorIsActive( 0, COLORIMAGE ))
-			{
-				std::cout << "Its active" <<std::endl;
-			} else 
-			{
-				std::cout << "Its not active" <<std::endl;
-			}
-			//m_2RealKinect->removeGenerator( 0, COLORIMAGE );
-			//m_2RealKinect->addGenerator( 0, COLORIMAGE, IMAGE_COLOR_320X240 );
-			m_2RealKinect->startGenerator( 0, COLORIMAGE );
-			if ( m_2RealKinect->generatorIsActive( 0, COLORIMAGE ))
-			{
-				std::cout << "Its active" <<std::endl;
-			} else 
-			{
-				std::cout << "Its not active" <<std::endl;
-			}
+	//if ( !m_bIsMirroring )
+	//{
+	//	std::cout << "Switch to 1280X1024" << std::endl;
+	//	try
+	//	{
+	//		m_2RealKinect->stopGenerator( 0, COLORIMAGE );
+	//		if ( m_2RealKinect->generatorIsActive( 0, COLORIMAGE ))
+	//		{
+	//			std::cout << "Its active" <<std::endl;
+	//		} else 
+	//		{
+	//			std::cout << "Its not active" <<std::endl;
+	//		}
+	//		//m_2RealKinect->removeGenerator( 0, COLORIMAGE );
+	//		//m_2RealKinect->addGenerator( 0, COLORIMAGE, IMAGE_COLOR_320X240 );
+	//		//m_2RealKinect->startGenerator( 0, COLORIMAGE );
+	//		if ( m_2RealKinect->generatorIsActive( 0, COLORIMAGE ))
+	//		{
+	//			std::cout << "Its active" <<std::endl;
+	//		} else 
+	//		{
+	//			std::cout << "Its not active" <<std::endl;
+	//		}
 
-			m_2RealKinect->setResolution( 0, COLORIMAGE, 1290, 1024 );
-		}
-		catch (...)
-		{
-			std::cout << "Couldn't switch to 1280X1024" << std::endl;
-		}
-	}
-	else
-	{
-		std::cout << "Switch to 640X480" << std::endl;
-		try
-		{
-			//m_2RealKinect->stopGenerator( 0, COLORIMAGE );
-			//m_2RealKinect->removeGenerator( 0, COLORIMAGE );
-			//m_2RealKinect->addGenerator( 0, COLORIMAGE, IMAGE_COLOR_1280X1024 );
-			//m_2RealKinect->startGenerator( 0, COLORIMAGE );
-			m_2RealKinect->setResolution( 0, COLORIMAGE, 640, 480 );
-			
-		}
-		catch (...)
-		{
-			std::cout << "Couldn't switch to 320X240" << std::endl;
-		}
-	}
-	m_bIsMirroring = !m_bIsMirroring;	// toggleMirroring
+	//	//	m_2RealKinect->setResolution( 0, COLORIMAGE, 1290, 1024 );
+	//	}
+	//	catch (...)
+	//	{
+	//		std::cout << "Couldn't switch to 1280X1024" << std::endl;
+	//	}
+	//}
+	//else
+	//{
+	//	std::cout << "Switch to 640X480" << std::endl;
+	//	try
+	//	{
+	//		//m_2RealKinect->stopGenerator( 0, COLORIMAGE );
+	//		//m_2RealKinect->removeGenerator( 0, COLORIMAGE );
+	//		//m_2RealKinect->addGenerator( 0, COLORIMAGE, IMAGE_COLOR_1280X1024 );
+	//		//m_2RealKinect->startGenerator( 0, COLORIMAGE );
+	//	//	m_2RealKinectb->setResolution( 0, COLORIMAGE, 640, 480 );
+	//		
+	//	}
+	//	catch (...)
+	//	{
+	//		std::cout << "Couldn't switch to 320X240" << std::endl;
+	//	}
+	//}
+	
 
 	for ( int i = 0; i < m_iNumberOfDevices; ++i )
 	{
-//		m_2RealKinect->setMirrored( i, COLORIMAGE, m_bIsMirroring );
+		
 //		m_2RealKinect->setMirrored( i, DEPTHIMAGE, m_bIsMirroring );
 //		m_2RealKinect->setMirrored( i, USERIMAGE, m_bIsMirroring );		// OpenNI has no capability yet to mirror the user image
 
 		try
 		{
-			//m_2RealKinect->setMirrored( i, COLORIMAGE, m_bIsMirroring );
+			m_2RealKinect->setMirrored( i, COLORIMAGE, m_bIsMirroring );
 		}
 		catch (...)
 		{
-
+			std::cout << "Failed to mirror" << std::endl;
 		}
-	}		
+	}
+	m_bIsMirroring = !m_bIsMirroring;	// toggleMirroring
 }
 
 CINDER_APP_BASIC( MultipleKinectApp, RendererGl )

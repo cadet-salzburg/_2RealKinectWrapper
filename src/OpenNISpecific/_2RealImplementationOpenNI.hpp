@@ -563,10 +563,15 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 			return m_Devices[deviceID]->getUsers().size(); //awesome!!! :) -> terror by robz
 		}
 
-		virtual void alignColorToDepth( const uint32_t deviceID, bool flag )
+		virtual void alignDepthToColor( const uint32_t deviceID, bool flag )
 		{
 			checkDeviceRunning(deviceID);
-			m_Devices[deviceID]->alignColorToDepth(flag);
+			m_Devices[deviceID]->alignDepthToColor(flag);
+		}
+
+		virtual bool depthIsAlignedToColor( const uint32_t deviceID )
+		{
+			return m_Devices[deviceID]->depthIsAlignedToColor();
 		}
 
 		virtual bool hasFeatureJointOrientation() const
