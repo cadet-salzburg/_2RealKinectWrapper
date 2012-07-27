@@ -31,7 +31,6 @@
 
 namespace _2RealKinectWrapper
 {
-typedef std::vector<boost::shared_ptr< class _2RealTrackedUser> >	_2RealTrackedUserVector;
 class I_2RealImplementation;
 
 
@@ -199,8 +198,6 @@ class _2RealKinect
 			/param		const uint32_t deviceID for choosing specific device
 			/return		const uint32_t
 		!*/
-
-		const _2RealTrackedUserVector		getUsers( const uint32_t deviceID ) const;
 
 		const uint32_t						getNumberOfUsers( const uint32_t deviceID ) const;
 
