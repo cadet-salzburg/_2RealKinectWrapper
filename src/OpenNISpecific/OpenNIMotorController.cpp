@@ -65,7 +65,7 @@ namespace _2RealKinectWrapper {
 			
 			m_bOpened = true;
 			
-			std::cout << "The motor controller was initialized correctly" << std::endl;
+			std::cout << "\n The motor controller was initialized correctly" << std::endl;
 			return XN_STATUS_OK;
 		}
 

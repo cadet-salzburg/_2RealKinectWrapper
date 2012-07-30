@@ -200,7 +200,6 @@ class _2RealKinect
 			/return		const uint32_t
 		!*/
 
-		const _2RealTrackedUserVector		getUsers( const uint32_t deviceID ) const;
 
 		const uint32_t						getNumberOfUsers( const uint32_t deviceID ) const;
 
