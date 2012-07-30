@@ -362,7 +362,6 @@ void MultipleKinectApp::keyDown( KeyEvent event )
 	if ( event.getChar() == 'w' )
 	{
 		m_Align = !m_Align;
-		if ( !m_2RealKinect->depthIsAlignedToColor( 0 ) )
 		try
 		{
 			m_2RealKinect->alignDepthToColor( 0, m_Align );
