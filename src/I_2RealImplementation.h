@@ -73,7 +73,6 @@ class I_2RealImplementation
 		virtual const _2RealJointConfidence			getSkeletonJointConfidence(const uint32_t deviceID, const uint8_t userID, _2RealJointType type) = 0;
 		virtual const _2RealJointConfidences		getSkeletonJointConfidences(const uint32_t deviceID, const uint8_t userID) = 0;
 
-		virtual const _2RealTrackedUserVector		getUsers( const uint32_t deviceID ) const = 0;
 		virtual const uint32_t						getNumberOfUsers( const uint32_t deviceID ) const = 0;
 		virtual const uint32_t						getNumberOfSkeletons( const uint32_t deviceID ) const = 0;
 		virtual const _2RealVector3f				getUsersWorldCenterOfMass(const uint32_t deviceID, const uint8_t userID) = 0;

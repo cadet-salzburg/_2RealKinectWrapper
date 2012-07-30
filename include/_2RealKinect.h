@@ -199,6 +199,8 @@ class _2RealKinect
 			/return		const uint32_t
 		!*/
 
+
+
 		const uint32_t						getNumberOfUsers( const uint32_t deviceID ) const;
 
 		/*! /brief		Returns center of mass of a specific tracked users in world coordinates
