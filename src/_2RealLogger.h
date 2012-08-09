@@ -40,7 +40,7 @@ namespace _2RealKinectWrapper
 class _2RealLogger			// implemented as singleton
 {
 public:
-    static _2RealLogger&	getInstance();
+	static _2RealLogger&	getInstance();
 	void					setLogLevel(_2RealLogLevel level);				// sets verbosity (external use for the user api)
 	void					setLogLevelForMsg(_2RealLogLevel level);				// sets level of current stream (internal use in framework)
 	void					setLogOutputStream(std::ostream* outStream);

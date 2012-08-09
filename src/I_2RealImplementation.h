@@ -34,70 +34,65 @@
 
 namespace _2RealKinectWrapper
 {
-	//fwds
+	// Fwds
 	typedef std::vector<boost::shared_ptr< class _2RealTrackedUser> >	_2RealTrackedUserVector;
 	struct _2RealVector2f;
 	struct _2RealVector3f;
 
-//2Real-Interface for different kinect-SDK-implementations
+// 2Real-Interface for OpenNI/WSDK Implementations
 class I_2RealImplementation
 {
 	public:
 
-		virtual void								update()=0;
-		virtual bool								configureDevice( const uint32_t deviceID,  uint32_t startGenerators, uint32_t configureImages ) = 0;
-		virtual void								startGenerator( const uint32_t deviceID, uint32_t configureGenerators ) = 0;
-		virtual void								stopGenerator( const uint32_t deviceID, uint32_t configureGenerators ) = 0;
-
 		virtual void								addGenerator( const uint32_t deviceID, uint32_t configureGenerators, uint32_t configureImages ) = 0;
-		virtual void								removeGenerator( const uint32_t deviceID, uint32_t configureGenerators ) = 0;
-
+		virtual void								alignDepthToColor( const uint32_t deviceID, bool flag ) = 0;
+		virtual bool								depthIsAlignedToColor( const uint32_t deviceID ) = 0;
+		virtual bool								configureDevice( const uint32_t deviceID,  uint32_t startGenerators, uint32_t configureImages ) = 0;
+		virtual void								convertProjectiveToWorld( const uint32_t deviceID, const uint32_t coordinateCount, const _2RealVector3f* inProjective, _2RealVector3f* outWorld ) = 0;
+		virtual void								convertWorldToProjective( const uint32_t deviceID, const uint32_t coordinateCount, const _2RealVector3f* inWorld, _2RealVector3f* outProjective ) = 0;
 		virtual bool								generatorIsActive( const uint32_t deviceID, _2RealGenerator type ) = 0;
 
-		virtual bool								shutdown() = 0;
-
-		virtual const bool							isNewData(const uint32_t deviceID, _2RealGenerator type) const = 0;
+		virtual uint32_t							getBytesPerPixel( _2RealGenerator type) const = 0;
 		virtual boost::shared_array<unsigned char>	getImageData( const uint32_t deviceID, _2RealGenerator type, bool waitAndBlock=false, const uint8_t userId=0 ) = 0;
 		virtual boost::shared_array<uint16_t>		getImageDataDepth16Bit( const uint32_t deviceID, bool waitAndBlock=false) = 0;
-		virtual uint32_t							getBytesPerPixel( _2RealGenerator type) const = 0;
-		virtual uint32_t							getImageWidth( const uint32_t deviceID, _2RealGenerator type) = 0;
 		virtual uint32_t							getImageHeight( const uint32_t deviceID, _2RealGenerator type) = 0;
+		virtual uint32_t							getImageWidth( const uint32_t deviceID, _2RealGenerator type) = 0;
+		virtual const _2RealVector3f				getJointScreenPosition( const uint32_t deviceID, const uint8_t userID, _2RealJointType type ) = 0;
+		virtual const _2RealMatrix3x3				getJointWorldOrientation( const uint32_t deviceID, const uint8_t userID, _2RealJointType type ) = 0;
+		virtual const _2RealVector3f				getJointWorldPosition( const uint32_t deviceID, const uint8_t userID, _2RealJointType type ) = 0;
+		virtual int									getMotorAngle(int deviceID) = 0;
 		virtual uint32_t							getNumberOfDevices() const = 0;
 		virtual void								setResolution( const uint32_t deviceID, _2RealGenerator type, unsigned int hRes, unsigned int vRes ) = 0;
-		virtual const _2RealVector3f				getJointWorldPosition( const uint32_t deviceID, const uint8_t userID, _2RealJointType type ) = 0;
-		virtual const _2RealPositionsVector3f&		getSkeletonWorldPositions( const uint32_t deviceID, const uint8_t userID ) = 0;
-		virtual const _2RealVector3f				getJointScreenPosition( const uint32_t deviceID, const uint8_t userID, _2RealJointType type ) = 0;
-		virtual const _2RealPositionsVector3f&		getSkeletonScreenPositions( const uint32_t deviceID, const uint8_t userID ) = 0;
-		virtual const _2RealMatrix3x3				getJointWorldOrientation( const uint32_t deviceID, const uint8_t userID, _2RealJointType type ) = 0;
-		virtual const _2RealOrientationsMatrix3x3&	getSkeletonWorldOrientations( const uint32_t deviceID, const uint8_t userID ) = 0;
 		virtual const _2RealJointConfidence			getSkeletonJointConfidence(const uint32_t deviceID, const uint8_t userID, _2RealJointType type) = 0;
 		virtual const _2RealJointConfidences		getSkeletonJointConfidences(const uint32_t deviceID, const uint8_t userID) = 0;
+		virtual const _2RealPositionsVector3f&		getSkeletonScreenPositions( const uint32_t deviceID, const uint8_t userID ) = 0;
+		virtual const _2RealOrientationsMatrix3x3&	getSkeletonWorldOrientations( const uint32_t deviceID, const uint8_t userID ) = 0;
+		virtual const _2RealPositionsVector3f&		getSkeletonWorldPositions( const uint32_t deviceID, const uint8_t userID ) = 0;
 
 		virtual const uint32_t						getNumberOfUsers( const uint32_t deviceID ) const = 0;
 		virtual const uint32_t						getNumberOfSkeletons( const uint32_t deviceID ) const = 0;
 		virtual const _2RealVector3f				getUsersWorldCenterOfMass(const uint32_t deviceID, const uint8_t userID) = 0;
 		virtual const _2RealVector3f				getUsersScreenCenterOfMass(const uint32_t deviceID, const uint8_t userID) = 0;
 
-		virtual bool								isMirrored( const uint32_t deviceID, _2RealGenerator type ) const = 0;
-		virtual void								setMirrored( const uint32_t deviceID, _2RealGenerator type, bool flag ) = 0;
-		virtual bool								isJointAvailable( _2RealJointType type ) const = 0;
-
 		virtual bool								hasFeatureJointOrientation() const = 0;
-		virtual void								resetSkeleton( const uint32_t deviceID, const uint32_t id ) = 0;
+		virtual bool								isJointAvailable( _2RealJointType type ) const = 0;
+		virtual bool								isMirrored( const uint32_t deviceID, _2RealGenerator type ) const = 0;
+		virtual const bool							isNewData(const uint32_t deviceID, _2RealGenerator type) const = 0;
+
+		virtual void								removeGenerator( const uint32_t deviceID, uint32_t configureGenerators ) = 0;
 		virtual void								resetAllSkeletons() = 0;
+		virtual void								resetSkeleton( const uint32_t deviceID, const uint32_t id ) = 0;
 		virtual bool								restart() = 0;
-
-		virtual void								convertProjectiveToWorld( const uint32_t deviceID, const uint32_t coordinateCount, const _2RealVector3f* inProjective, _2RealVector3f* outWorld ) = 0;
-		virtual void								convertWorldToProjective( const uint32_t deviceID, const uint32_t coordinateCount, const _2RealVector3f* inWorld, _2RealVector3f* outProjective ) = 0;
-
-		virtual void								alignDepthToColor( const uint32_t deviceID, bool flag ) = 0;
-		virtual bool								depthIsAlignedToColor( const uint32_t deviceID ) = 0;
-
-		virtual bool								setMotorAngle(int deviceID, int& angle) = 0;
-		virtual int									getMotorAngle(int deviceID) = 0;
 
 		virtual void								setLogLevel(_2RealLogLevel iLevel) = 0;
 		virtual void								setLogOutputStream(std::ostream* outStream) = 0;
+		virtual void								setMirrored( const uint32_t deviceID, _2RealGenerator type, bool flag ) = 0;
+		virtual bool								setMotorAngle(int deviceID, int& angle) = 0;
+
+		virtual bool								shutdown() = 0;
+		virtual void								startGenerator( const uint32_t deviceID, uint32_t configureGenerators ) = 0;
+		virtual void								stopGenerator( const uint32_t deviceID, uint32_t configureGenerators ) = 0;
+		virtual void								update() = 0;
 };
 
 }

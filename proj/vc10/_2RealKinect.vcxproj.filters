@@ -1,24 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="..\..\src\_2RealVector2f.cpp">
-      <Filter>API Interface\Types</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealKinect.cpp">
-      <Filter>_2RealKinectWrapper</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealLogger.cpp">
-      <Filter>_2RealKinectWrapper</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealTrackedJoint.cpp">
-      <Filter>_2RealKinectWrapper</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealTrackedUser.cpp">
-      <Filter>_2RealKinectWrapper</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\_2RealTypes.cpp">
-      <Filter>_2RealKinectWrapper</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\WinSDKSpecific\WSDKDevice.cpp">
       <Filter>_2RealKinectWrapper\MS Kinect SDK</Filter>
     </ClCompile>
@@ -28,6 +10,24 @@
     <ClCompile Include="..\..\src\OpenNISpecific\OpenNIMotorController.cpp">
       <Filter>_2RealKinectWrapper\OpenNI</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\_2RealKinect.cpp">
+      <Filter>_2RealKinectWrapper\Wrapper Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealLogger.cpp">
+      <Filter>_2RealKinectWrapper\Wrapper Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealTrackedJoint.cpp">
+      <Filter>_2RealKinectWrapper\Wrapper Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealTrackedUser.cpp">
+      <Filter>_2RealKinectWrapper\Wrapper Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealTypes.cpp">
+      <Filter>_2RealKinectWrapper\Wrapper Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\_2RealVector2f.cpp">
+      <Filter>_2RealKinectWrapper\Wrapper Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\_2RealKinect.h">
@@ -36,32 +36,8 @@
     <ClInclude Include="..\..\include\_2RealTypes.h">
       <Filter>API Interface\Types</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\_2RealVector2f.h">
-      <Filter>API Interface\Types</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\_2RealImageSource.h">
       <Filter>API Interface\Types</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\I_2RealImplementation.h">
-      <Filter>_2RealKinectWrapper</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealConfig.h">
-      <Filter>_2RealKinectWrapper</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealLogger.h">
-      <Filter>_2RealKinectWrapper</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealTrackedJoint.h">
-      <Filter>_2RealKinectWrapper</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealTrackedUser.h">
-      <Filter>_2RealKinectWrapper</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealUtility.h">
-      <Filter>_2RealKinectWrapper</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\_2RealVersion.h">
-      <Filter>_2RealKinectWrapper</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\WinSDKSpecific\WSDKDevice.h">
       <Filter>_2RealKinectWrapper\MS Kinect SDK</Filter>
@@ -80,6 +56,30 @@
     </ClInclude>
     <ClInclude Include="..\..\src\OpenNISpecific\_2RealImplementationOpenNI.hpp">
       <Filter>_2RealKinectWrapper\OpenNI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealConfig.h">
+      <Filter>_2RealKinectWrapper\Wrapper Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealLogger.h">
+      <Filter>_2RealKinectWrapper\Wrapper Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealTrackedJoint.h">
+      <Filter>_2RealKinectWrapper\Wrapper Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealTrackedUser.h">
+      <Filter>_2RealKinectWrapper\Wrapper Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealUtility.h">
+      <Filter>_2RealKinectWrapper\Wrapper Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\_2RealVector2f.h">
+      <Filter>_2RealKinectWrapper\Wrapper Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealVersion.h">
+      <Filter>_2RealKinectWrapper\Wrapper Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\I_2RealImplementation.h">
+      <Filter>_2RealKinectWrapper\Wrapper Header</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -100,6 +100,12 @@
     </Filter>
     <Filter Include="_2RealKinectWrapper\Docs">
       <UniqueIdentifier>{a8dfccc4-cf78-4bdf-a8c9-d3208b064298}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_2RealKinectWrapper\Wrapper Source">
+      <UniqueIdentifier>{d32a40de-dfaa-4977-b42a-9ab694dc9d65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_2RealKinectWrapper\Wrapper Header">
+      <UniqueIdentifier>{3b560280-d9e0-4afc-bb48-382d03a0035e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

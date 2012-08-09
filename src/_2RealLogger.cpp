@@ -10,7 +10,7 @@ namespace _2RealKinectWrapper
 _2RealLogger& _2RealLogger::getInstance()
 {
 	static _2RealLogger instance;
-    return instance;
+	return instance;
 }
 
 void _2RealLogger::setLogLevel(_2RealLogLevel iLevel)

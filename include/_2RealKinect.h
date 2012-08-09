@@ -29,6 +29,7 @@
 
 #include "_2RealTypes.h"
 
+
 namespace _2RealKinectWrapper
 {
 class I_2RealImplementation;
@@ -318,35 +319,35 @@ class _2RealKinect
 
 // This is used for conditional linking of libraries, you as a user don't have to set the libs in your project setting, however you have to set the paths in your IDEs settings
 #ifndef UNIX
-    #ifndef TARGET_MSKINECTSDK
-        #pragma comment( lib, "openNI.lib" )
-        #ifdef _DEBUG
-            #ifdef _DLL
-                #pragma comment( lib, "_2RealKinectOpenNI_mtd_d.lib")		// Debug multi threaded dll for OpenNI
-            #elif _MT
-                #pragma comment( lib, "_2RealKinectOpenNI_d.lib")		// Debug OpenNI
-            #endif
-        #else
-            #ifdef _DLL
-                #pragma comment( lib, "_2RealKinectOpenNI_mtd.lib")		// Release multi threaded dll for OpenNI
-            #elif _MT
-                #pragma comment( lib, "_2RealKinectOpenNI.lib")			// Release OpenNI
-            #endif
-        #endif
-    #else
-        #pragma comment( lib, "Kinect15.lib" )
-        #ifdef _DEBUG
-            #ifdef _DLL
-                #pragma comment( lib, "_2RealKinectMicrosoftSDK_mtd_d.lib")		// Debug MS SDK
-            #elif _MT
-                #pragma comment( lib, "_2RealKinectMicrosoftSDK_d.lib")			// Debug MS SDK
-            #endif
-        #else
-            #ifdef _DLL
-                #pragma comment( lib, "_2RealKinectMicrosoftSDK_mtd.lib")		// Release MS SDK
-            #elif _MT
-                #pragma comment( lib, "_2RealKinectMicrosoftSDK.lib")			// Release MS SDK
-            #endif
-        #endif
-    #endif
+	#ifndef TARGET_MSKINECTSDK
+		#pragma comment( lib, "openNI.lib" )
+		#ifdef _DEBUG
+			#ifdef _DLL
+				#pragma comment( lib, "_2RealKinectOpenNI_mtd_d.lib")		// Debug multi threaded dll for OpenNI
+			#elif _MT
+				#pragma comment( lib, "_2RealKinectOpenNI_d.lib")		// Debug OpenNI
+			#endif
+		#else
+			#ifdef _DLL
+				#pragma comment( lib, "_2RealKinectOpenNI_mtd.lib")		// Release multi threaded dll for OpenNI
+			#elif _MT
+				#pragma comment( lib, "_2RealKinectOpenNI.lib")			// Release OpenNI
+			#endif
+		#endif
+	#else
+		#pragma comment( lib, "Kinect15.lib" )
+		#ifdef _DEBUG
+			#ifdef _DLL
+				#pragma comment( lib, "_2RealKinectMicrosoftSDK_mtd_d.lib")		// Debug MS SDK
+			#elif _MT
+				#pragma comment( lib, "_2RealKinectMicrosoftSDK_d.lib")			// Debug MS SDK
+			#endif
+		#else
+			#ifdef _DLL
+				#pragma comment( lib, "_2RealKinectMicrosoftSDK_mtd.lib")		// Release MS SDK
+			#elif _MT
+				#pragma comment( lib, "_2RealKinectMicrosoftSDK.lib")			// Release MS SDK
+			#endif
+		#endif
+	#endif
 #endif

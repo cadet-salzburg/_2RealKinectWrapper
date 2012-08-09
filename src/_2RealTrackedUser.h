@@ -119,8 +119,11 @@ class _2RealTrackedUser
 		_2RealJointConfidences						m_JointConfidences;
 		uint32_t									m_ID;
 
+		#ifndef TARGET_MSKINECTSDK
 		friend class OpenNIDevice;
+		#else
 		friend class WSDKDevice;
+		#endif
 };
 
 }

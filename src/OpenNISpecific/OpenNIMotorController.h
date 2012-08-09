@@ -1,4 +1,5 @@
 #pragma once
+#ifndef TARGET_MSKINECTSDK
 #include <XnUSB.h>
 #include <XnTypes.h>
 
@@ -42,3 +43,4 @@ namespace _2RealKinectWrapper {
 		XN_USB_DEV_HANDLE	m_xDevice;
 	};
 };
+#endif

@@ -76,7 +76,9 @@ class _2RealTrackedJoint
 		_2RealJointConfidence						m_Confidence;
 
 		friend class _2RealTrackedUser;
+		#ifndef TARGET_MSKINECTSDK
 		friend class OpenNIDepthGenerator;
+		#endif
 
 		void setScreenPosition( const _2RealVector3f& position );
 };

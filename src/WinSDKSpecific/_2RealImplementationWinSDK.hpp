@@ -25,10 +25,10 @@
 
 #pragma once
 #ifdef TARGET_MSKINECTSDK
+#include <Windows.h>
 #include "_2RealConfig.h"
 #include "I_2RealImplementation.h"
 #include "_2RealUtility.h"
-#include <Windows.h>
 #include "NuiApi.h" // enumerate devices, access multiple devices
 #include "NuiImageCamera.h" //adjust camera angle, open streams, read image frames
 #include "NuiSkeleton.h" //enable skeleton tracking, skeleton data, transforming skeleton
@@ -37,37 +37,55 @@
 #include "WSDKDevice.h"
 #include <sstream>
 
-
 //Implementation WinSDK
 
 namespace _2RealKinectWrapper
 {
 
-class _2RealImplementationWinSDK : public I_2RealImplementation
+// Holding information about configurations of a WSDK-Generator
+class WSDKDeviceConfiguration
 {
-private:
-	uint32_t										m_NumDevices;
-	std::vector<boost::shared_ptr<WSDKDevice>>		m_Devices;
-	bool											m_IsInitialized;
-	uint32_t										m_GeneratorConfig;
-	uint32_t										m_ImageConfig;
-
-	void checkDeviceRunning(uint8_t deviceID, std::string strError) const
+	struct ImageRes
 	{
-		//checking device id
-		if ( deviceID > (m_NumDevices - 1) )
-			throwError((strError+" error, deviceID out of bounds!").c_str());
+		ImageRes() : WSDKResType( NUI_IMAGE_RESOLUTION_INVALID ), width( 0 ), height( 0 ) {}
+
+		NUI_IMAGE_RESOLUTION	WSDKResType;
+		uint16_t				width;
+		uint16_t				height;
+	};
+
+	public:
+	WSDKDeviceConfiguration(): m_Generators2Real( 0 ), m_GeneratorsWSDK( 0 ), m_ImageConfig2Real( 0 ) {}
+
+	/*! /brief     Resets all the stored values to its default
+	!*/
+	void					reset()
+	{
+		m_Generators2Real = m_GeneratorsWSDK = m_ImageConfig2Real = 0;
+		m_ImageResColor = m_ImageResDepth = m_ImageResUser = m_ImageResInfrared = ImageRes();
 	}
 
+	uint32_t				m_Generators2Real;		// 2real per bit information about generators
+	uint32_t				m_GeneratorsWSDK;		// NUI per bit information about generators
+	uint32_t				m_ImageConfig2Real;		// 2real per bit information about image configuration
+	ImageRes				m_ImageResColor;
+	ImageRes				m_ImageResDepth;
+	ImageRes				m_ImageResUser;
+	ImageRes				m_ImageResInfrared;
+};
+
+class _2RealImplementationWinSDK : public I_2RealImplementation
+{
 public:
 
+
+
+	// called by pimple idiom
 	_2RealImplementationWinSDK()
 		: m_NumDevices( 0 ),
-		m_IsInitialized( 0 ),
-		m_GeneratorConfig( CONFIG_DEFAULT ),
-		m_ImageConfig( IMAGE_CONFIG_DEFAULT )
+		  m_IsInitialized( 0 )
 	{
-		
+		Initialize();
 	}
 
 	~_2RealImplementationWinSDK()
@@ -75,423 +93,70 @@ public:
 		shutdown();
 	}
 
-	virtual bool start( uint32_t startGenerators, uint32_t configureImages ) 
+
+	virtual bool configureDevice( const uint32_t deviceID, uint32_t startGenerators, uint32_t configureImages ) 
 	{
-		if( m_IsInitialized )
+		if( !isValidDevice( deviceID ) )
+		{
+			_2REAL_LOG( error ) << "_2Real: configureDevice() Error, deviceID is not valid!" << std::endl;
 			return false;
-		m_GeneratorConfig = startGenerators;
-		m_ImageConfig = configureImages;
-
-		//initialization --------------------------------------------------------->
-		_2REAL_LOG(info) << "_2Real: Initializing Microsoft Kinect SDK" << std::endl;
-		
-		HRESULT status = 0;
-		//get number of devices
-		int deviceCount = 0;
-		if( FAILED( status = NuiGetSensorCount( &deviceCount ) ) )
-		{
-			throwError( "_2Real: Error when trying to enumerate devices\n" );
 		}
-
-		//abort if no devices found
-		if( ( m_NumDevices = deviceCount ) == 0 )
+		if( m_Devices[deviceID]->isDeviceStarted() )
 		{
-			_2REAL_LOG(error) << "_2Real: No devices found" << std::endl;
+			_2REAL_LOG( error ) << "_2Real: Device: " << deviceID << " has to be stopped before configuring it! Use shutdown()" << std::endl;
 			return false;
 		}
 
-		_2REAL_LOG(info) << "_2Real: detected number of sensors: " << deviceCount << std::endl;
-		std::stringstream ss;
+		WSDKDeviceConfiguration& config = m_Configurations[deviceID];
+		config.reset();
+		config.m_Generators2Real = startGenerators;
+		config.m_ImageConfig2Real = configureImages;
 
-		//initialization putting device instances to m_devices vector
-	
-		INuiSensor *pSensor;
-		for( int i = 0; i < deviceCount; ++i )
+		// setting NUI config flags depending on _2real-flags
+		if( startGenerators & COLORIMAGE )
 		{
-			//creating instance
-			if( FAILED( status = NuiCreateSensorByIndex( i, &pSensor ) ) )
+			config.m_GeneratorsWSDK |= NUI_INITIALIZE_FLAG_USES_COLOR;
+			configureImageColor( config );
+		}
+		if( startGenerators & USERIMAGE )
+		{
+			if( deviceID == 0 ) // user-image + skeleton-tracking only on device 0
 			{
-				throwError(("_2Real: Error when trying to create device: " + i));
+				config.m_GeneratorsWSDK |= NUI_INITIALIZE_FLAG_USES_DEPTH_AND_PLAYER_INDEX;
+				config.m_GeneratorsWSDK |= NUI_INITIALIZE_FLAG_USES_SKELETON;
 			}
-	
-			//saving to vector
-			ss.str( "" ); 
-			ss << "kinect_device_" << i;
-			m_Devices.push_back( boost::shared_ptr<WSDKDevice>(new WSDKDevice( boost::shared_ptr<INuiSensor>(pSensor), startGenerators, configureImages, ss.str().c_str() ) ));
+			else // enabling on other devices depth image instead
+			{
+				_2REAL_LOG( warn ) << "_2Real: Disabling user image and skeleton on device: " << deviceID << " due it is not supported..." << std::endl;
+				_2REAL_LOG( warn ) << "_2Real: Enabling depth-sensor ONLY on device: " << deviceID << " ..." << std::endl;
+				config.m_GeneratorsWSDK |= NUI_INITIALIZE_FLAG_USES_DEPTH;
+			}
+			configureImageDepthUser( config );
 		}
-		m_IsInitialized = 1;
-		_2REAL_LOG(info) << "_2Real: Initialization: OK" << std::endl;
+		else if( startGenerators & DEPTHIMAGE )
+		{	
+			config.m_GeneratorsWSDK |= NUI_INITIALIZE_FLAG_USES_DEPTH;
+			configureImageDepthUser( config );
+		}
+
+		if( ( startGenerators & INFRAREDIMAGE ) )
+		{
+			_2REAL_LOG( info ) << "_2Real: Infrared capability is not supported by Win-SDK!" << std::endl;
+		}
+
 		return true;
 	}
 
-	virtual const bool isNewData(const uint32_t deviceID, _2RealGenerator type) const
+
+	virtual void update() 
 	{
-		checkDeviceRunning(deviceID, "_2Real: isNewData()" );
-		return m_Devices[deviceID]->isNewData(type);
+
 	}
 
-	virtual const _2RealTrackedUserVector getUsers( const uint32_t deviceID, bool waitAndBlock ) 
+	virtual void convertProjectiveToWorld( const uint32_t deviceID, const uint32_t coordinateCount, const _2RealVector3f* inProjective, _2RealVector3f* outWorld ) 
 	{
-		checkDeviceRunning(deviceID, "_2Real: getUsers()" );
-		return m_Devices[deviceID]->getUsers( waitAndBlock );
-	}
-
-	virtual const _2RealVector3f getJointWorldPosition( const uint32_t deviceID, const uint8_t userID, _2RealJointType type )
-	{
-		checkDeviceRunning(deviceID, "_2Real: getJointWorldPosition()" );
-		_2RealTrackedUserVector users = m_Devices[deviceID]->getUsers( false ); 
-		if( userID >= users.size() )
-			throwError( "_2Real: getJointWorldPosition() Error, userID out of bounds!" );
-		if( int( type ) < 0 || int( type ) > _2REAL_NUMBER_OF_JOINTS - 1 )
-			throwError( "_2Real: getJointWorldPosition() Error, joint id out of bounds!" );
-		return users[userID]->getJointWorldPosition( type );
-	}
-
-	virtual const _2RealPositionsVector3f& getSkeletonWorldPositions( const uint32_t deviceID, const uint8_t userID )
-	{
-		checkDeviceRunning(deviceID, "_2Real: getSkeletonWorldPositions()" );
-		_2RealTrackedUserVector users = m_Devices[deviceID]->getUsers( 0 ); 
-		if( userID >= users.size() )
-			throwError( "_2Real: getSkeletonWorldPositions() Error, userID out of bounds!" );
-		return users[userID]->getSkeletonWorldPositions();
-	}
-
-	virtual const _2RealVector3f getJointScreenPosition( const uint32_t deviceID, const uint8_t userID, _2RealJointType type )
-	{
-		checkDeviceRunning(deviceID, "_2Real: getJointScreen()" );
-		_2RealTrackedUserVector users = m_Devices[deviceID]->getUsers( 0 ); 
-		if( userID >= users.size() )
-			throwError( "_2Real:getJointScreen() Error, userID out of bounds!" );
-		if( int( type ) < 0 || int( type ) > _2REAL_NUMBER_OF_JOINTS - 1 )
-			throwError( "_2Real: getJointScreen() Error, joint id out of bounds!" );
-		return users[userID]->getJointScreenPosition( type );
-	}
-
-	virtual const _2RealPositionsVector3f& getSkeletonScreenPositions( const uint32_t deviceID, const uint8_t userID )
-	{
-		checkDeviceRunning(deviceID, "_2Real: getSkeletonScreenPositions()" );
-		_2RealTrackedUserVector users = m_Devices[deviceID]->getUsers( 0 ); 
-		if( userID >= users.size() )
-			throwError( "_2Real: getSkeletonScreenPositions() Error, userID out of bounds!" );
-		return users[userID]->getSkeletonScreenPositions();
-	}
-
-	virtual const _2RealMatrix3x3 getJointWorldOrientation( const uint32_t deviceID, const uint8_t userID, _2RealJointType type )
-	{
-		_2REAL_LOG(warn) << "_2Real: Joint rotations aren't supported yet by MS Kinect SDK" << std::endl;
-		checkDeviceRunning(deviceID, "_2Real: getJointScreen()" );
-		_2RealTrackedUserVector users = m_Devices[deviceID]->getUsers( 0 ); 
-		if( userID >= users.size() )
-			throwError( "_2Real: getJointScreen() Error, userID out of bounds!" );
-		if( int( type ) < 0 || int( type ) > _2REAL_NUMBER_OF_JOINTS - 1 )
-			throwError( "_2Real: getJointScreen() Error, joint id out of bounds!" );
-		return users[userID]->getJointWorldOrientation( type );
-	}
-
-	virtual const _2RealOrientationsMatrix3x3& getSkeletonWorldOrientations( const uint32_t deviceID, const uint8_t userID )
-	{
-		_2REAL_LOG(warn) << "_2Real: Joint rotations aren't supported yet by MS Kinect SDK" << std::endl;
-		checkDeviceRunning(deviceID, "_2Real: getSkeletonWorldOrientations()" );
-		_2RealTrackedUserVector users = m_Devices[deviceID]->getUsers( 0 ); 
-		if( userID >= users.size() )
-			throwError( "_2Real: getSkeletonWorldOrientations() Error, userID out of bounds!" );
-		return users[userID]->getSkeletonWorldOrientations();
-	}
-
-	virtual const _2RealJointConfidence getSkeletonJointConfidence(const uint32_t deviceID, const uint8_t userID, _2RealJointType type)
-	{
-		checkDeviceRunning(deviceID, "_2Real: getJointConfidence()" );
-
-		_2RealTrackedUserVector users = m_Devices[deviceID]->getUsers( 0 ); 
-		if( userID >= users.size() )
-			throwError( "_2Real: getJointConfidence() Error, userID out of bounds!\n" );
-		return users[userID]->getJointConfidence(type);
-	}
-
-	virtual const _2RealJointConfidences getSkeletonJointConfidences(const uint32_t deviceID, const uint8_t userID)
-	{
-		checkDeviceRunning(deviceID, "_2Real: getJointConfidence()" );
-
-		_2RealTrackedUserVector users = m_Devices[deviceID]->getUsers( 0 ); 
-		if( userID >= users.size() )
-			throwError( "_2Real: getJointConfidences() Error, userID out of bounds!\n" );
-		return users[userID]->getJointConfidences();
-	}
-
-	virtual const uint32_t getNumberOfUsers( const uint32_t deviceID ) const
-	{
-		checkDeviceRunning(deviceID, "_2Real: getNumberOfUsers()" );
-		return m_Devices[deviceID]->getUsers( false ).size();
-	}
-
-	virtual const uint32_t getNumberOfSkeletons( const uint32_t deviceID ) const
-	{
-		checkDeviceRunning(deviceID, "_2Real: getNumberOfSkeletons()" );
-		return m_Devices[deviceID]->getUsers( false ).size();		
-	}
-
-	virtual bool isJointAvailable( _2RealJointType type ) const
-	{
-		if( int( type ) < 0 || int( type ) > _2REAL_NUMBER_OF_JOINTS - 1 )
-			throwError( "_2RealKinectWrapper::isJointAvailable()" );
-
-		switch( int( type ) )
-		{
-		case JOINT_LEFT_COLLAR:
-		case JOINT_LEFT_FINGERTIP:
-		case JOINT_RIGHT_COLLAR:
-		case  JOINT_RIGHT_FINGERTIP:
-			return false;
-		default:
-			return true;
-		}
-	}
-
-	virtual bool hasFeatureJointOrientation() const
-	{
-		return false;
-	}
-
-	virtual void resetAllSkeletons() 
-	{
-		_2REAL_LOG(warn) << "_2Real: There is no use for this functionality in the WSDK" << std::endl;
-	}
-
-	virtual void resetSkeleton( const uint32_t deviceID, const uint32_t id ) 
-	{
-		_2REAL_LOG(warn) << "_2Real: There is no use for this functionality in the WSDK" << std::endl;
-	}
-
-	virtual bool isMirrored( const uint32_t deviceID, _2RealGenerator type ) const
-	{
-		checkDeviceRunning(deviceID, "_2RealKinectWrapper::setMirrored()" );
-
-		bool value = 0;
-		switch( type )
-		{
-		case COLORIMAGE:
-			{
-				value = m_Devices[deviceID]->isMirroringColor();
-				break;
-			}
-		case DEPTHIMAGE:
-			{
-				value = m_Devices[deviceID]->isMirroringDepth();
-				break;
-			}
-		case INFRAREDIMAGE:
-			{
-				_2REAL_LOG(warn) << "_2Real: Infrared image isn't supported at the moment!" << std::endl;
-				value = 0;
-				break;
-			}
-		case USERIMAGE_COLORED:
-		case USERIMAGE:
-			{
-				value = m_Devices[deviceID]->isMirroringUser();
-				break;
-			}
-		default:
-			throwError( "_2RealKinectWrapper::setMirrored() Error: Wrong type of generator assigned?!" );
-		}
-		return value;
-	}
-
-	virtual void setMirrored( const uint32_t deviceID, _2RealGenerator type, bool flag ) 
-	{
-		checkDeviceRunning(deviceID, "_2RealKinectWrapper::setMirrored()" );
-
-		switch( type )
-		{
-		case COLORIMAGE:
-			{
-				m_Devices[deviceID]->setMirroringColor( flag );
-				break;
-			}
-		case DEPTHIMAGE:
-			{
-				m_Devices[deviceID]->setMirroringDetph( flag );
-
-				break;
-			}
-		case INFRAREDIMAGE:
-			{
-				_2REAL_LOG(warn) << "_2Real: Infrared image isn't supported at the moment!" << std::endl;
-				break;
-			}
-		case USERIMAGE_COLORED:
-		case USERIMAGE:
-			{
-				m_Devices[deviceID]->setMirroringUser( flag );
-				break;
-			}
-		default:
-			throwError( "_2RealKinectWrapper::setMirrored() Error: Wrong type of generator assigned?!" );
-		}
-	}
-
-	virtual uint32_t getNumberOfDevices() const
-	{
-		return m_NumDevices;
-	}
-
-	virtual bool shutdown() 
-	{
-		if( m_IsInitialized )
-		{
-			_2REAL_LOG(info)  << std::endl << "_2Real: Shutting down system..." << std::endl;
-			m_IsInitialized = 0;
-			// delete devices (shared_ptrs do the rest)
-			for(unsigned int i=0; i<m_Devices.size(); i++)
-				m_Devices[i]->shutdown();
-			//m_Devices.clear();	// this seems not to be needed due to shared_ptr
-			_2REAL_LOG(info) << "OK" << std::endl;
-			return true;
-		}
-		_2REAL_LOG(warn) << std::endl << "_2Real: System not shutdown correctly..." << std::endl;
-		return false;
-	}
-
-	virtual uint32_t getImageHeight( const uint32_t deviceID, _2RealGenerator type ) 
-	{
-		checkDeviceRunning(deviceID, "_2RealKinectWrapper::getImageHeight()" );
-
-		uint32_t value = 0;
-		switch( type )
-		{
-		case COLORIMAGE:
-			{
-				value = m_Devices[deviceID]->m_HeightImageColor;
-				break;
-			}
-		case DEPTHIMAGE:
-			{
-				value = m_Devices[deviceID]->m_HeightImageDepthAndUser;
-				break;
-			}
-		case INFRAREDIMAGE:
-			{
-				_2REAL_LOG(warn) << "_2Real: Infrared image isn't supported at the moment!" << std::endl;
-				value = 0;
-				break;
-			}
-		case USERIMAGE_COLORED:
-		case USERIMAGE:
-			{
-				value = m_Devices[deviceID]->m_HeightImageDepthAndUser;
-				break;
-			}
-		default:
-			throwError( "_2RealKinectWrapper::getImageHeight() Error: Wrong type of generator assigned?!" );
-		}
-		return value;
-	}
-
-	virtual uint32_t getImageWidth( const uint32_t deviceID, _2RealGenerator type ) 
-	{
-		checkDeviceRunning(deviceID, "_2RealKinectWrapper::getImageWidth()" );
-
-		uint32_t value = 0;
-		switch( type )
-		{
-		case COLORIMAGE:
-			{
-				value = m_Devices[deviceID]->m_WidthImageColor;
-				break;
-			}
-		case DEPTHIMAGE:
-			{
-				value = m_Devices[deviceID]->m_WidthImageDepthAndUser;
-				break;
-			}
-		case INFRAREDIMAGE:
-			{
-				_2REAL_LOG(warn) << "_2Real: Infrared image isn't supported at the moment!" << std::endl;
-				value = 0;
-				break;
-			}
-		case USERIMAGE_COLORED:
-		case USERIMAGE:
-			{
-				value = m_Devices[deviceID]->m_WidthImageDepthAndUser;
-				break;
-			}
-		default:
-			throwError( "_2RealKinectWrapper::getImageWidth() Error: Wrong type of generator assigned?!" );
-		}
-		return value;
-	}
-
-	virtual uint32_t getBytesPerPixel( _2RealGenerator type ) const
-	{
-		if( type == COLORIMAGE || type == USERIMAGE_COLORED ) //rgb image 3byte/Pixel
-			return 3;
-		return 1; //depth-, and userimage will be converted to 1byte/Pixel (8bit uchar*)
-	}
-
-	virtual boost::shared_array<unsigned char> getImageData( const uint32_t deviceID, _2RealGenerator type, bool waitAndBlock=false, const uint8_t userId=0 ) 
-	{
-		checkDeviceRunning(deviceID, "_2RealKinectWrapper::getUsers" );
-
-		boost::shared_array<unsigned char> return_ptr =  boost::shared_array<unsigned char>();
-		switch( type )
-		{
-		case COLORIMAGE:
-			{
-				return_ptr = m_Devices[deviceID]->getColorImageBuffer( waitAndBlock );
-				break;
-			}
-		case DEPTHIMAGE:
-			{
-				return_ptr = m_Devices[deviceID]->getDepthImageBuffer( waitAndBlock );
-				break;
-			}
-		case INFRAREDIMAGE:
-			{
-				_2REAL_LOG(warn) << "_2Real: Infrared image isn't supported at the moment!" << std::endl;
-				break;
-			}
-
-		case USERIMAGE_COLORED:
-			{
-				return_ptr = m_Devices[deviceID]->getColoredUserImageBuffer( waitAndBlock );			
-				break;
-			}
-		case USERIMAGE:
-			{							
-				return_ptr = m_Devices[deviceID]->getUserImageBuffer( waitAndBlock );
-				break;
-			}
-		default:
-			throwError( "_2RealKinectWrapper::getImageDataOf() Error: Wrong type of generator assigned?!" );
-		}
-
-		return return_ptr;
-	}
-
-	virtual boost::shared_array<uint16_t> getImageDataDepth16Bit( const uint32_t deviceID, bool waitAndBlock=false)
-	{
-		checkDeviceRunning(deviceID, "_2RealKinectWrapper::getDepthImageData16Bit" );
-		return m_Devices[deviceID]->getDepthImageBuffer16Bit( waitAndBlock );
-	}
-
-	virtual void setAlignColorDepthImage( const uint32_t deviceID, bool flag ) 
-	{
-		throwError("The method or operation is not implemented.");
-	}
-
-	virtual bool restart()
-	{
-		shutdown();
-		m_Devices.clear();
-		Sleep( 3000 ); //preventing reinitialization t00 fast
-		_2REAL_LOG(info) << "_2Real: Restarting system..." << std::endl;
-		return start( m_GeneratorConfig, m_ImageConfig );
-	}
-
-	virtual void convertProjectiveToWorld( const uint32_t deviceID, const uint32_t coordinateCount, const _2RealVector3f* inProjective, _2RealVector3f* outWorld )
-	{
-		checkDeviceRunning(deviceID,  "_2RealKinectWrapper::convertProjectiveToWorld()" );
+		if( !isDeviceStarted( deviceID ) )
+			throwError( "_2Real: convertProjectiveToWorld() Error, device not started!" );
 
 		//fetching and writing data to array
 		Vector4 out;
@@ -504,9 +169,10 @@ public:
 		}
 	}
 
-	virtual void convertWorldToProjective( const uint32_t deviceID, const uint32_t coordinateCount, const _2RealVector3f* inWorld, _2RealVector3f* outProjective )
+	virtual void convertWorldToProjective( const uint32_t deviceID, const uint32_t coordinateCount, const _2RealVector3f* inWorld, _2RealVector3f* outProjective ) 
 	{
-		checkDeviceRunning(deviceID, "_2RealKinectWrapper::convertWorldToProjective()" );
+		if( !isDeviceStarted( deviceID ) )
+			throwError( "_2Real: convertWorldToProjective() Error, device not started!" );
 
 		//fetching and writing data
 		Vector4 in;
@@ -524,37 +190,454 @@ public:
 		}
 	}
 
-	virtual const _2RealVector3f getUsersWorldCenterOfMass(const uint32_t deviceID, const uint8_t userID)
+	virtual bool isMirrored( const uint32_t deviceID, _2RealGenerator type ) const
 	{
-		throwError("The method or operation is not implemented yet");
-		return _2RealVector3f();
+		return true;
 	}
 
-	virtual const _2RealVector3f getUsersScreenCenterOfMass(const uint32_t deviceID, const uint8_t userID)
+	virtual bool generatorIsActive( const uint32_t deviceID, _2RealGenerator type ) 
 	{
-		throwError("The method or operation is not implemented yet");
-		return _2RealVector3f();
+		throw std::exception("The method or operation is not implemented.");
 	}
 
-	virtual bool setMotorAngle(int deviceID, int& angle)
+	virtual void setResolution( const uint32_t deviceID, _2RealGenerator type, unsigned int hRes, unsigned int vRes ) 
+	{
+		throw std::exception("The method or operation is not implemented.");
+	}
+
+	virtual void setLogLevel( _2RealLogLevel iLevel ) 
+	{
+		_2RealLogger::getInstance().setLogLevel(iLevel);
+	}
+
+	virtual void resetSkeleton( const uint32_t deviceID, const uint32_t id ) 
+	{
+		_2REAL_LOG(warn) << "_2Real: There is no use for this functionality in the WSDK" << std::endl;
+	}
+
+	virtual void resetAllSkeletons() 
+	{
+		_2REAL_LOG(warn) << "_2Real: There is no use for this functionality in the WSDK" << std::endl;
+	}
+
+	virtual void addGenerator( const uint32_t deviceID, uint32_t configureGenerators, uint32_t configureImages ) 
+	{
+		throw std::exception("The method or operation is not implemented.");
+	}
+
+	virtual bool isJointAvailable( _2RealJointType type ) const
+	{
+		if( int( type ) < 0 || int( type ) > _2REAL_NUMBER_OF_JOINTS - 1 )
+			throwError( "_2Real: isJointAvailable() Error, type index out of bounds!" );
+
+		switch( int( type ) )
+		{
+		case JOINT_LEFT_COLLAR:
+		case JOINT_LEFT_FINGERTIP:
+		case JOINT_RIGHT_COLLAR:
+		case  JOINT_RIGHT_FINGERTIP:
+			return false;
+		default:
+			return true;
+		}
+	}
+
+	virtual void setMirrored( const uint32_t deviceID, _2RealGenerator type, bool flag ) 
+	{
+		
+	}
+
+	virtual void removeGenerator( const uint32_t deviceID, uint32_t configureGenerators ) 
+	{
+		throw std::exception("The method or operation is not implemented.");
+	}
+
+	virtual const bool isNewData( const uint32_t deviceID, _2RealGenerator type ) const
+	{
+		if( isDeviceStarted( deviceID ) )
+			return m_Devices[deviceID]->isNewData(type);
+		return false;
+	}
+
+	virtual void setLogOutputStream( std::ostream* outStream ) 
+	{
+		_2RealLogger::getInstance().setLogOutputStream(outStream); 
+	}
+
+	virtual bool hasFeatureJointOrientation() const
+	{
+		throw std::exception("The method or operation is not implemented.");
+	}
+
+	virtual bool setMotorAngle( int deviceID, int& angle ) 
 	{
 		return m_Devices[deviceID]->setMotorAngle(angle);
 	}
 
-	virtual int getMotorAngle(int deviceID)
+	virtual bool depthIsAlignedToColor( const uint32_t deviceID ) 
 	{
+		throw std::exception("The method or operation is not implemented.");
+	}
+
+	virtual const _2RealOrientationsMatrix3x3& getSkeletonWorldOrientations( const uint32_t deviceID, const uint8_t userID ) 
+	{
+		return getCheckedUser( "getSkeletonWorlOrientations", deviceID, userID )->getSkeletonWorldOrientations();
+	}
+	
+	virtual const _2RealJointConfidence getSkeletonJointConfidence( const uint32_t deviceID, const uint8_t userID, _2RealJointType type ) 
+	{
+		return getCheckedUser( "getSkeletonJointConfidence", deviceID, userID )->getJointConfidence(type);
+	}
+
+	virtual const _2RealJointConfidences getSkeletonJointConfidences( const uint32_t deviceID, const uint8_t userID ) 
+	{
+		return getCheckedUser( "getSkeletonJointConfidences", deviceID, userID )->getJointConfidences();
+	}
+
+	virtual const _2RealPositionsVector3f& getSkeletonWorldPositions( const uint32_t deviceID, const uint8_t userID ) 
+	{
+		return getCheckedUser( "getSkeletonWorldPositions", deviceID, userID )->getSkeletonWorldPositions();
+	}
+
+	virtual const _2RealPositionsVector3f& getSkeletonScreenPositions( const uint32_t deviceID, const uint8_t userID ) 
+	{
+		return getCheckedUser( "getSkeletonScreenPositions", deviceID, userID )->getSkeletonScreenPositions();
+	}
+
+	virtual boost::shared_array<unsigned char> getImageData( const uint32_t deviceID, _2RealGenerator type, bool waitAndBlock=false, const uint8_t userId=0 ) 
+	{
+		if( !isDeviceStarted( deviceID ) )
+			throwError( "_2Real: getImageData() Error, device is not started!" );
+
+		boost::shared_array<unsigned char> return_ptr;
+		if( type == COLORIMAGE )
+			return_ptr = m_Devices[deviceID]->getColorImageBuffer( waitAndBlock );
+		else if( type == DEPTHIMAGE )
+			return_ptr = m_Devices[deviceID]->getDepthImageBuffer( waitAndBlock );
+		else if( type == USERIMAGE_COLORED )
+			return_ptr = m_Devices[deviceID]->getColoredUserImageBuffer( waitAndBlock );			
+		else if( type == USERIMAGE )
+			return_ptr = m_Devices[deviceID]->getUserImageBuffer( waitAndBlock );
+		else if( type == INFRAREDIMAGE )
+		{
+			_2REAL_LOG(warn) << "_2Real: Infrared image isn't supported at the moment!" << std::endl;
+		}
+		else
+		{
+			throwError( "_2RealKinectWrapper::getImageDataOf() Error: Wrong type of generator assigned?!" );
+		}
+		return return_ptr;
+	}
+
+	virtual boost::shared_array<uint16_t> getImageDataDepth16Bit( const uint32_t deviceID, bool waitAndBlock=false ) 
+	{
+		if( !isDeviceStarted( deviceID ) )
+			throwError( "_2Real: getImageDataDepth16Bit() Error, device is not started!" );
+		return m_Devices[deviceID]->getDepthImageBuffer16Bit( waitAndBlock );
+	}
+
+	virtual uint32_t getImageHeight( const uint32_t deviceID, _2RealGenerator type ) 
+	{
+		if( !isValidDevice( deviceID ) || type == INFRAREDIMAGE )
+			return 0;
+
+		if( type == COLORIMAGE )
+			return m_Devices[deviceID]->m_HeightImageColor;
+		else if( type == DEPTHIMAGE ||
+			type == USERIMAGE ||
+			type == USERIMAGE_COLORED )
+			return m_Devices[deviceID]->m_HeightImageDepthAndUser;
+		return 0;
+	}
+
+	virtual uint32_t getImageWidth( const uint32_t deviceID, _2RealGenerator type ) 
+	{
+		if( !isValidDevice( deviceID ) || type == INFRAREDIMAGE )
+			return 0;
+
+		if( type == COLORIMAGE )
+			return m_Devices[deviceID]->m_WidthImageColor;
+		else if( type == DEPTHIMAGE ||
+			type == USERIMAGE ||
+			type == USERIMAGE_COLORED )
+			return m_Devices[deviceID]->m_WidthImageDepthAndUser;
+		return 0;
+	}
+
+	virtual const _2RealMatrix3x3 getJointWorldOrientation( const uint32_t deviceID, const uint8_t userID, _2RealJointType type ) 
+	{
+		if( int( type ) < 0 || int( type ) > _2REAL_NUMBER_OF_JOINTS - 1 )
+			throwError( "_2Real: getJointWorldOrientation() Error, joint id out of bounds!" );
+		return getCheckedUser( "getJointWorldOrientation", deviceID, userID )->getJointWorldOrientation( type );
+	}
+
+	virtual const _2RealVector3f getJointWorldPosition( const uint32_t deviceID, const uint8_t userID, _2RealJointType type ) 
+	{
+		if( int( type ) < 0 || int( type ) > _2REAL_NUMBER_OF_JOINTS - 1 )
+			throwError( "_2Real: getJointWorldPosition() Error, joint id out of bounds!" );
+		return getCheckedUser( "getJointWorldPosition", deviceID, userID )->getJointWorldPosition( type );
+	}
+
+	virtual const _2RealVector3f getJointScreenPosition( const uint32_t deviceID, const uint8_t userID, _2RealJointType type ) 
+	{
+		if( int( type ) < 0 || int( type ) > _2REAL_NUMBER_OF_JOINTS - 1 )
+			throwError( "_2Real: getJointScreenPosition() Error, joint id out of bounds!" );
+		return 	getCheckedUser( "getJointScreenPosition", deviceID, userID )->getJointScreenPosition( type );
+	}
+
+	virtual uint32_t getBytesPerPixel( _2RealGenerator type ) const
+	{
+		if( type == COLORIMAGE || type == USERIMAGE_COLORED ) //rgb image 3byte/Pixel
+			return 3;
+		return 1; //depth-, and userimage will be converted to 1byte/Pixel (8bit uchar*)
+	}
+
+	virtual uint32_t getNumberOfDevices() const
+	{
+		return m_NumDevices;
+	}
+
+	virtual const uint32_t getNumberOfUsers( const uint32_t deviceID ) const
+	{
+		if( !isDeviceStarted( deviceID ) )
+			throwError( "_2Real: getNumberOfUsers() Error, device is not started!" );
+		return m_Devices[deviceID]->getUsers( false ).size();
+	}
+
+	virtual const uint32_t getNumberOfSkeletons( const uint32_t deviceID ) const
+	{
+		return getNumberOfUsers( deviceID );
+	}
+
+	virtual int getMotorAngle( int deviceID ) 
+	{
+		if( !isValidDevice( deviceID ) )
+			throwError( "_2Real: getMotorAngle() Error, deviceID is not valid!" );
 		return m_Devices[deviceID]->getMotorAngle();
 	}
 
-	virtual void setLogLevel(_2RealLogLevel iLevel) 
-	{ 
-		_2RealLogger::getInstance().setLogLevel(iLevel); 
-	};
+	virtual const _2RealVector3f getUsersScreenCenterOfMass( const uint32_t deviceID, const uint8_t userID ) 
+	{
+		throw std::exception("The method or operation is not implemented.");
+	}
 
-	virtual void setLogOutputStream(std::ostream* outStream) 
-	{  
-		_2RealLogger::getInstance().setLogOutputStream(outStream); 
-	};
+	virtual const _2RealVector3f getUsersWorldCenterOfMass( const uint32_t deviceID, const uint8_t userID ) 
+	{
+		throw std::exception("The method or operation is not implemented.");
+	}
+
+	virtual bool restart() 
+	{
+		shutdown();
+		
+		Sleep( 1000 ); //preventing reinitialization t00 fast
+
+		_2REAL_LOG(info) << "_2Real: Restarting system..." << std::endl;
+		for( uint8_t i = 0; i < m_NumDevices; ++i )
+			startGenerator( i, m_Configurations[i].m_Generators2Real );
+		_2REAL_LOG(info) << "_2Real: Restart: OK" << std::endl;
+
+		return true;
+	}
+
+	virtual bool shutdown() 
+	{
+		if( m_IsInitialized )
+		{
+			_2REAL_LOG( info )  << std::endl << "_2Real: Shutting down system..." << std::endl;
+			//m_IsInitialized = 0;
+			// stopping all devices
+			for(unsigned int i=0; i<m_Devices.size(); i++)
+				m_Devices[i]->shutdown();
+			_2REAL_LOG( info ) << "OK" << std::endl;
+			return true;
+		}
+		_2REAL_LOG( warn ) << std::endl << "_2Real: System not shutdown correctly..." << std::endl;
+		return false;
+	}
+
+	virtual void startGenerator( const uint32_t deviceID, uint32_t configureGenerators ) 
+	{
+		if( !isValidDevice( deviceID ) )
+			throwError( "_2Real: Error, passing wrong index to startGenerator()" );
+
+		// runtime configuration change
+		if( isDeviceStarted( deviceID ) )
+		{
+			m_Devices[deviceID]->startGenerator( configureGenerators );
+		}
+		// called on first start/restart
+		else if( m_Devices[deviceID]->isDeviceShutDown() )
+		{
+			m_Devices[deviceID]->start();
+			_2REAL_LOG(info) << "_2Real: Initialization: OK" << std::endl;
+		}
+	}
+
+	virtual void stopGenerator( const uint32_t deviceID, uint32_t configureGenerators ) 
+	{
+		if( isValidDevice( deviceID ) && isDeviceStarted( deviceID ) )
+		{
+			m_Devices[deviceID]->stopGenerator( configureGenerators );
+		}
+	}
+
+	virtual void alignDepthToColor( const uint32_t deviceID, bool flag ) 
+	{
+		throw std::exception("The method or operation is not implemented.");
+	}
+
+
+	private:
+
+		/*! /brief     Determines if a given device-id/index is valid/has been detected
+			/param     uint8_t deviceID - Device-id to check
+			/return    bool - If device-id is valid
+		!*/
+		bool isValidDevice( uint8_t deviceID ) const
+		{
+			if ( deviceID > (m_NumDevices - 1) )
+				return false;
+			return true;
+		}
+
+		bool isDeviceStarted( uint8_t deviceID ) const
+		{
+			if( !isValidDevice( deviceID ) )
+				throwError( "_2Real: isDeviceStarted() Error, deviceID is not valid!" );
+			return m_Devices[deviceID]->isDeviceStarted();
+		}
+
+		// Todo: Solution for copy over _2realtrackeduservector 3times to "final" user
+		/*! /brief     Checking method for getter functions
+		!*/ 
+		boost::shared_ptr<_2RealTrackedUser> getCheckedUser( const std::string& methodName, uint8_t deviceID, uint8_t userID ) const
+		{
+			if( !isDeviceStarted( deviceID ) )
+				throwError( "_2Real: " + methodName + "() Error, device is not started" );
+			_2RealTrackedUserVector OutUsers = m_Devices[deviceID]->getUsers( false ); 
+			if( userID >= OutUsers.size() )
+				throwError( "_2Real: " + methodName + "() Error, userID out of bounds!" );
+			return OutUsers[userID];
+		}
+
+		/*! /brief     Assembles image-configuration for the color image of this device
+			/param     uint32_t config - Configuration of the given device
+		!*/
+		void configureImageColor( WSDKDeviceConfiguration& config  )
+		{
+			if( config.m_ImageConfig2Real & IMAGE_COLOR_1280X960 )
+			{
+				config.m_ImageResColor.WSDKResType = NUI_IMAGE_RESOLUTION_1280x960;
+				config.m_ImageResColor.width = 1280; 
+				config.m_ImageResColor.height = 960;
+			}
+			else if( config.m_ImageConfig2Real & IMAGE_COLOR_640X480 )
+			{
+				config.m_ImageResColor.WSDKResType = NUI_IMAGE_RESOLUTION_640x480;
+				config.m_ImageResColor.width = 640;
+				config.m_ImageResColor.height = 480;
+			}
+			else if( config.m_ImageConfig2Real & IMAGE_COLOR_320X240 )
+			{
+				config.m_ImageResColor.WSDKResType = NUI_IMAGE_RESOLUTION_320x240;
+				config.m_ImageResColor.width = 320;
+				config.m_ImageResColor.height = 240;
+			}
+			else
+			{
+				config.m_ImageResColor.WSDKResType = NUI_IMAGE_RESOLUTION_640x480;
+				config.m_ImageResColor.width = 640;
+				config.m_ImageResColor.height = 480;
+			}
+			_2REAL_LOG(info)	<< "_2Real: Set COLOR-IMAGE to resolution: " << config.m_ImageResColor.width << "x"
+								<< config.m_ImageResColor.height << std::endl;
+		}
+
+		/*! /brief     Assembles image-configuration for the user & color image of this device
+			/param     uint32_t config - Configuration of the given device
+		!*/
+		void configureImageDepthUser( WSDKDeviceConfiguration& config )
+		{
+			if( config.m_ImageConfig2Real & IMAGE_USER_DEPTH_640X480 )
+			{
+				config.m_ImageResDepth.WSDKResType = config.m_ImageResUser.WSDKResType = NUI_IMAGE_RESOLUTION_640x480;
+				config.m_ImageResDepth.width = config.m_ImageResUser.width = 640;
+				config.m_ImageResDepth.height = config.m_ImageResUser.height = 480;
+			}
+			else if( config.m_ImageConfig2Real & IMAGE_USER_DEPTH_320X240 )
+			{
+				config.m_ImageResDepth.WSDKResType = config.m_ImageResUser.WSDKResType = NUI_IMAGE_RESOLUTION_320x240;
+				config.m_ImageResDepth.width = config.m_ImageResUser.width = 320;
+				config.m_ImageResDepth.height = config.m_ImageResUser.height = 240;
+			}
+			else if( config.m_ImageConfig2Real & IMAGE_USER_DEPTH_80X60 )
+			{
+				config.m_ImageResDepth.WSDKResType = config.m_ImageResUser.WSDKResType = NUI_IMAGE_RESOLUTION_80x60;
+				config.m_ImageResDepth.width = config.m_ImageResUser.width = 80;
+				config.m_ImageResDepth.height = config.m_ImageResUser.height = 60;
+			}
+			else
+			{
+				config.m_ImageResDepth.WSDKResType = config.m_ImageResUser.WSDKResType = NUI_IMAGE_RESOLUTION_320x240;					// !!!!! depth with 640x480 and 640x480 color will only work in release mode for some strange reaseon, so default set to 320x240
+				config.m_ImageResDepth.width = config.m_ImageResUser.width = 320;
+				config.m_ImageResDepth.height = config.m_ImageResUser.height = 240;
+			}
+			_2REAL_LOG(info)	<< "_2Real: Set USER_DEPTH-IMAGE to resolution: " << config.m_ImageResUser.width << "x"
+								<< config.m_ImageResUser.height << std::endl;
+		}
+
+		void Initialize()
+		{
+			if( !m_IsInitialized )
+			{
+				_2REAL_LOG( info ) << "_2Real: Initializing Microsoft-Kinect-SDK" << std::endl;
+				m_IsInitialized = true;
+
+				HRESULT status = 0;
+				//get number of devices
+				int deviceCount = 0;
+				if( FAILED( status = NuiGetSensorCount( &deviceCount ) ) )
+				{
+					throwError( "_2Real: Error when trying to enumerate devices" );
+				}
+
+				//abort if no devices found
+				if( ( m_NumDevices = deviceCount ) == 0 )
+				{
+					_2REAL_LOG( error ) << "_2Real: No devices found" << std::endl;
+				}
+				else
+				{
+					m_Configurations = boost::shared_array<WSDKDeviceConfiguration>( new WSDKDeviceConfiguration[deviceCount] );
+					m_Devices.resize( deviceCount ); // deviceID is also unique vector-index
+
+					char cBuf[16];
+					strcpy_s( cBuf, "kinect_device_" );
+					for( int i = 0; i < deviceCount; ++i )
+					{
+						//creating instance
+						INuiSensor *pSensor;
+						if( FAILED( NuiCreateSensorByIndex( i, &pSensor ) ) )
+							throwError( ( "_2Real: Error when trying to create device: " + i ) );
+
+						_itoa_s( i, &cBuf[14], 2, 10 );
+						boost::shared_ptr<WSDKDevice> device( new WSDKDevice(	boost::shared_ptr<INuiSensor>( pSensor ),
+																				m_Configurations[i],
+																				cBuf ) );
+						m_Devices[i] = device; // put device to according index
+					}			
+				}
+
+				
+				_2REAL_LOG( info ) << "_2Real: detected number of sensors: " << deviceCount << std::endl;
+			}
+		}
+
+		uint32_t										m_NumDevices;		// number of detected kinect sensors
+		std::vector<boost::shared_ptr<WSDKDevice>>		m_Devices;			// array holding references to device-implementation
+		bool											m_IsInitialized;	// information if wrapper has been initialized
+		boost::shared_array<WSDKDeviceConfiguration>	m_Configurations;	// configurations for the given devices
 };
 
 }

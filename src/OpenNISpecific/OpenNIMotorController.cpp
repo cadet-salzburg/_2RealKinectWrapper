@@ -1,3 +1,4 @@
+#ifndef TARGET_MSKINECTSDK
 #include "OpenNIMotorController.h"
 #include <iostream>
 
@@ -159,5 +160,5 @@ namespace _2RealKinectWrapper {
 		}
 		return res;
 	}
-};
- //end namespace
+}; //end namespace
+#endif

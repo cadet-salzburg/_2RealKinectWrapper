@@ -34,6 +34,7 @@
 #include "cinder/Utilities.h"
 #include "cinder/Camera.h"
 
+
 // _2RealKinect Include
 //#define TARGET_MSKINECTSDK		// use this for MS Kinect SDK, comment it or just not define it for using OpenNI
 #include "_2RealKinect.h"
@@ -112,6 +113,7 @@ void MultipleKinectApp::setup()
 	try
 	{
 		m_2RealKinect = _2RealKinect::getInstance();
+		m_2RealKinect->setLogLevel( debug );
 		std::cout << "_2RealKinectWrapper Version: " << m_2RealKinect->getVersion() << std::endl;
 		bool bResult = false;
 		m_iNumberOfDevices = m_2RealKinect->getNumberOfDevices();
@@ -120,10 +122,12 @@ void MultipleKinectApp::setup()
 			bResult = m_2RealKinect->configure( devIdx, COLORIMAGE | DEPTHIMAGE | USERIMAGE, IMAGE_COLOR_640X480 );
 			if( bResult )
 			{
-				std::cout << "_2RealKinectWrapper Device " << devIdx << " started successfully!..." << std::endl;
+				std::cout << "_2RealKinectWrapper Device " << devIdx << " configured successfully!..." << std::endl;
 			}
 			//m_iMotorValue = m_2RealKinect->getMotorAngle( devIdx );	// just make motor device 0 controllable
 			m_2RealKinect->startGenerator( devIdx,  DEPTHIMAGE | COLORIMAGE | USERIMAGE );
+			std::cout << "_2RealKinectWrapper Device " << devIdx << " started successfully!..." << std::endl;
+
 		}
 		resizeImages();
 	}
@@ -168,7 +172,7 @@ void MultipleKinectApp::drawKinectImages()
 
 
 
- 	for( int i = 0; i < m_iNumberOfDevices; ++i)
+	for( int i = 0; i < m_iNumberOfDevices; ++i)
 	{
 		//---------------Color Image---------------------//
 		m_iKinectWidth  = m_2RealKinect->getImageWidth(i, COLORIMAGE );

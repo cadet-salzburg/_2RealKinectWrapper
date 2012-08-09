@@ -4,7 +4,7 @@
 #include <sstream>
 #include "_2RealTypes.h"
 #include "_2RealTrackedUser.h"
-
+#include "_2RealImplementationWinSDK.hpp"
 
 namespace _2RealKinectWrapper
 {
@@ -26,12 +26,15 @@ unsigned char Colors[][3] =
 	
 WSDKDevice::~WSDKDevice(void)
 {
+
 }
 
 
-WSDKDevice::WSDKDevice( boost::shared_ptr<INuiSensor> devicePtr, const uint32_t configSensor, const uint32_t configImage, const std::string& name )
+WSDKDevice::WSDKDevice( boost::shared_ptr<INuiSensor> devicePtr, const WSDKDeviceConfiguration& deviceConfig, const std::string& name )
 	: m_pNuiSensor( devicePtr ),
-	  m_name( name ),
+	  m_Name( name ),
+	  m_DeviceID( devicePtr->NuiInstanceIndex() ),
+	  m_Configuration( deviceConfig ),
 	  m_EventColorImage( CreateEvent( NULL, TRUE, FALSE, NULL ) ), //creating event handles
 	  m_EventDepthImage( CreateEvent( NULL, TRUE, FALSE, NULL ) ),
 	  m_EventSkeletonData( CreateEvent( NULL, TRUE, FALSE, NULL ) ),
@@ -44,223 +47,124 @@ WSDKDevice::WSDKDevice( boost::shared_ptr<INuiSensor> devicePtr, const uint32_t 
 	  m_ImageUser_8bit( NULL ),
 	  m_ImageColoredUser_8bit( NULL ),
 	  m_ImageDepth_16bit( NULL ),
-	  m_WidthImageDepthAndUser( 0 ),
-	  m_WidthImageColor( 0 ),
-	  m_HeightImageDepthAndUser( 0 ),
-	  m_HeightImageColor( 0 ),
+	  m_WidthImageDepthAndUser( deviceConfig.m_ImageResDepth.width ),
+	  m_WidthImageColor( deviceConfig.m_ImageResColor.width ),
+	  m_HeightImageDepthAndUser( deviceConfig.m_ImageResDepth.height ),
+	  m_HeightImageColor( deviceConfig.m_ImageResColor.height ),
+	  m_isDeviceStarted( false ),
+	  m_isDeviceShutDown( true ),
 	  m_bIsDepthOnly( true ),
 	  m_bIsMirroringColor( false ),
 	  m_bIsMirroringDepth( false ),
 	  m_bIsMirroringUser( false ),
 	  m_bIsDeletingDevice( false ),
 	  m_bIsNewColorData( false),
-      m_bIsNewDepthData( false ),
+	  m_bIsNewDepthData( false ),
 	  m_bIsNewUserData( false ),
 	  m_bIsNewSkeletonData( false ),
 	  m_bIsNewInfraredData( false )
 {
-	uint32_t config = 0;
-	//setting NUI config flags depending on _2real-flags
-	if( configSensor & COLORIMAGE )
-		config |= NUI_INITIALIZE_FLAG_USES_COLOR;
 
-	if( configSensor & USERIMAGE )
+}
+
+
+void WSDKDevice::initColorStream()
+{
+	_2REAL_LOG( info ) << "_2Real: Initializing COLOR-STREAM on device: " << m_Name
+					   << " ; setting RGB resolution to "
+					   << "width: " << m_WidthImageColor
+					   << " / height: " << m_HeightImageColor << " ...";
+
+	//allocating image buffer
+	m_ImageColor_8bit = boost::shared_array<uchar>( new uchar[m_WidthImageColor*m_HeightImageColor*3] );
+
+	//starting stream
+	HRESULT status = m_pNuiSensor->NuiImageStreamOpen( NUI_IMAGE_TYPE_COLOR,
+													   m_Configuration.m_ImageResColor.WSDKResType,
+													   0,
+													   2,
+													   m_EventColorImage,
+													   &m_HandleColorStream );
+
+	if( FAILED( status ) )
 	{
-		config |= NUI_INITIALIZE_FLAG_USES_DEPTH_AND_PLAYER_INDEX;
-		config |= NUI_INITIALIZE_FLAG_USES_SKELETON;
+		std::stringstream ss( "" );
+		ss	<< "_2Real: Error when trying to open COLOR-IMAGE-STREAM on device: " << m_Name
+			<< "; Try another resolution for sensor!!" << std::endl;
+		throwError( ss.str().c_str() );
 	}
-	else if( configSensor & DEPTHIMAGE )
-		config |= NUI_INITIALIZE_FLAG_USES_DEPTH;
+	_2REAL_LOG( info ) << "OK" << std::endl;
+}
 
-	if( configSensor & INFRAREDIMAGE )
-		_2REAL_LOG(info) << "_2Real: Infrared image capability is not supported by win sdk yet!" << std::endl;
-	
+void WSDKDevice::initDepthStream()
+{
+	_2REAL_LOG( info )	<< "_2Real: Initializing DEPTH(ONLY)-STREAM on device: " << m_Name
+						<< " ; setting RGB resolution to "
+						<< "width: " << m_WidthImageDepthAndUser
+						<< " / height: " << m_HeightImageDepthAndUser << " ...";
 
-	int deviceID = devicePtr->NuiInstanceIndex();
-	//delete block if supporting player indices + skeleton on other sensors ------>
-	//player indices only available on default device 0
-	//no player ids, no skeleton
-	//enabling depth sensor data
-	
-	if( deviceID>0 && ( config & NUI_INITIALIZE_FLAG_USES_DEPTH_AND_PLAYER_INDEX ) )
+	m_bIsDepthOnly = true;
+	const uint32_t size = m_WidthImageDepthAndUser * m_HeightImageDepthAndUser;
+	m_ImageDepth_8bit = boost::shared_array<uchar>( new uchar[size] );
+	m_ImageDepth_16bit = boost::shared_array<uint16_t>( new uint16_t[size] );
+
+	HRESULT status = m_pNuiSensor->NuiImageStreamOpen(	NUI_IMAGE_TYPE_DEPTH,
+														m_Configuration.m_ImageResDepth.WSDKResType,
+														0,
+														2,
+														m_EventDepthImage,
+														&m_HandleDepthStream );
+
+	if( FAILED( status ) )
 	{
-		_2REAL_LOG(info) << "_2Real: Disabling user image and skeleton on device: " << deviceID << " due it is not supported..." << std::endl;
-		config &= ~NUI_INITIALIZE_FLAG_USES_DEPTH_AND_PLAYER_INDEX;
-		config &= ~NUI_INITIALIZE_FLAG_USES_SKELETON;
-		_2REAL_LOG(info) << "_2Real: Enabling depth-sensor on device: " << deviceID << " ..." << std::endl;
-		config |= NUI_INITIALIZE_FLAG_USES_DEPTH;
+		std::stringstream ss( "" );
+		ss	<< "_2Real: Error when trying to open DEPTH(ONLY)-STREAM on device: " << m_Name
+			<< "; Try another resolution for sensor!!" << std::endl;
+		throwError( ss.str().c_str() );
 	}
+	_2REAL_LOG( info ) << "OK" << std::endl;
+}
 
-	//initializing
-	HRESULT status = 0;
-	if( FAILED( status = devicePtr->NuiInitialize( config ) ) )
-	{ 
-		throwError( "_2Real: Error when trying to initialize device");
-	}
+void WSDKDevice::initUserDepthStream()
+{
+	_2REAL_LOG( info )	<< "_2Real: Initializing USER_DEPTH-STREAM on device: " << m_Name
+						<< " ; setting RGB resolution to "
+						<< "width: " << m_WidthImageDepthAndUser
+						<< " / height: " << m_HeightImageDepthAndUser << " ...";
 
-	//opening NUI streams depending on config flags------------------------------->
-	//COLOR STREAM---------------------------------------------------------------->
-	NUI_IMAGE_RESOLUTION imageRes;
-	if( configSensor & COLORIMAGE )
+	m_bIsDepthOnly = false;
+	const uint32_t size = m_WidthImageDepthAndUser * m_HeightImageDepthAndUser;
+
+	m_ImageDepth_8bit =  boost::shared_array<uchar>( new uchar[size] );
+	m_ImageDepth_16bit =  boost::shared_array<uint16_t>( new uint16_t[size] );
+	m_ImageUser_8bit = boost::shared_array<uchar>( new uchar[size] );
+	m_ImageColoredUser_8bit = boost::shared_array<uchar>( new uchar[size*3] );
+
+	//starting depth stream
+	HRESULT status = m_pNuiSensor->NuiImageStreamOpen(	NUI_IMAGE_TYPE_DEPTH_AND_PLAYER_INDEX,
+														m_Configuration.m_ImageResUser.WSDKResType,
+														0,
+														2,
+														m_EventDepthImage,
+														&m_HandleDepthStream );
+
+	if( FAILED( status ) )
 	{
-		uint32_t& width = const_cast<uint32_t&>( m_WidthImageColor );
-		uint32_t& height = const_cast<uint32_t&>( m_HeightImageColor );
-
-		if( configImage == IMAGE_CONFIG_DEFAULT )
-		{
-			imageRes = NUI_IMAGE_RESOLUTION_640x480;
-			width = 640;
-			height = 480;
-		}
-		else if( configImage & IMAGE_COLOR_1280X960 )
-		{
-			imageRes = NUI_IMAGE_RESOLUTION_1280x960;
-			width = 1280; 
-			height = 960;
-		}
-		else if( configImage & IMAGE_COLOR_640X480 )
-		{
-			imageRes = NUI_IMAGE_RESOLUTION_640x480;
-			width = 640;
-			height = 480;
-		}
-		else if( configImage & IMAGE_COLOR_320X240 )
-		{
-			imageRes = NUI_IMAGE_RESOLUTION_320x240;
-			width = 320;
-			height = 240;
-		}
-
-		_2REAL_LOG(info) << "_2Real: setting RGB resolution to " << width << " x " << height << " for device: " << m_name << std::endl;
-		
-		//allocating image buffer
-		m_ImageColor_8bit = boost::shared_array<uchar>(new uchar[m_WidthImageColor*m_HeightImageColor*3]());
-
-		_2REAL_LOG(info) << "_2Real: Starting image stream on device: " << m_name << std::endl;;
-		//starting stream
-		status = devicePtr->NuiImageStreamOpen( NUI_IMAGE_TYPE_COLOR, imageRes, 0, 2, m_EventColorImage, &m_HandleColorStream );
-		
-		if( FAILED( status ) )
-		{
-			throwError( ( std::string( "_2Real: Error when trying to open image stream on device: " ).append( m_name.c_str() ).append( " Try another resolution for sensor!!! ") ).c_str() );
-		}
+		std::stringstream ss( "" );
+		ss	<< "_2Real: Error when trying to open USER_DEPTH-STREAM on device: " << m_Name
+			<< "; Try another resolution for sensor!!" << std::endl;
+		throwError( ss.str().c_str() );
 	}
+	_2REAL_LOG( info ) << "OK" << std::endl;
 
-	//DEPTH, USER, SKELETON------------------------------------------------------->
-	if( config & NUI_INITIALIZE_FLAG_USES_DEPTH_AND_PLAYER_INDEX )
-	{
-		uint32_t& width = const_cast<uint32_t&>( m_WidthImageDepthAndUser );
-		uint32_t& height = const_cast<uint32_t&>( m_HeightImageDepthAndUser );
-		
-		if( configImage == IMAGE_CONFIG_DEFAULT)
-		{
-			imageRes = NUI_IMAGE_RESOLUTION_320x240;					// !!!!! depth with 640x480 and 640x480 color will only work in release mode for some strange reaseon, so default set to 320x240
-			width = 320;
-			height = 240;
-		}
-		else if( configImage & IMAGE_USER_DEPTH_640X480 )
-		{
-			imageRes = NUI_IMAGE_RESOLUTION_640x480;
-			width = 640;
-			height = 480;
-		}
-		else if( configImage & IMAGE_USER_DEPTH_320X240 )
-		{
-			imageRes = NUI_IMAGE_RESOLUTION_320x240;
-			width = 320;
-			height = 240;
-		}
-		else if( configImage & IMAGE_USER_DEPTH_80X60 )
-		{
-			imageRes = NUI_IMAGE_RESOLUTION_80x60;
-			width = 80;
-			height = 60;
-		}
+	//skeleton tracking
+	_2REAL_LOG( info ) << "_2Real: Starting skeleton tracking on device: " << m_Name << " ..." << std::endl;
 
-		m_bIsDepthOnly = false;
+	status = m_pNuiSensor->NuiSkeletonTrackingEnable( m_EventSkeletonData, 0 );
+	if( FAILED( status ) )
+		throwError( std::string( "_2Real: Error when trying to enable skeleton tracking on device: " ).append( m_Name ) );
 
-		m_ImageDepth_8bit =  boost::shared_array<uchar>(new uchar[m_WidthImageDepthAndUser*m_HeightImageDepthAndUser]());
-		m_ImageDepth_16bit =  boost::shared_array<uint16_t>(new uint16_t[m_WidthImageDepthAndUser*m_HeightImageDepthAndUser]());
-		m_ImageUser_8bit = boost::shared_array<uchar>(new uchar[m_WidthImageDepthAndUser*m_HeightImageDepthAndUser]());
-		m_ImageColoredUser_8bit = boost::shared_array<uchar>(new uchar[m_WidthImageDepthAndUser*m_HeightImageDepthAndUser*3]());
-		
-		_2REAL_LOG(info) << "_2Real: setting depth, user resolution to " << width << " x " << height << " for device: " << m_name << std::endl;
-		_2REAL_LOG(info) << "_2Real: Starting depth, user stream on device: " << m_name << " ..." << std::endl;
-		//starting depth stream
-		status = devicePtr->NuiImageStreamOpen( NUI_IMAGE_TYPE_DEPTH_AND_PLAYER_INDEX, imageRes, 
-												0, 2, m_EventDepthImage, &m_HandleDepthStream );
-		if( FAILED( status ) )
-		{
-			throwError( ( std::string( "_2Real: Error when trying to open depth, user stream on device: " ).append( m_name.c_str() ).append( " Try another resolution for sensor!!! ") ).c_str() );
-		}
-		
-		//skeleton tracking
-		_2REAL_LOG(info) << "_2Real: Starting skeleton tracking on device: " << m_name << " ..." << std::endl;
-		status = devicePtr->NuiSkeletonTrackingEnable( m_EventSkeletonData, 0 );
-		if( FAILED( status ) )
-		{
-			throwError( ( std::string( "_2Real: Error when trying to enable skeleton tracking on device: " ).append( m_name.c_str() ) ).c_str() );
-		}
-	}
-
-	//DEPTH ONLY ----------------------------------------------------------------->
-	else if( config & NUI_INITIALIZE_FLAG_USES_DEPTH )
-	{
-		uint32_t& width = const_cast<uint32_t&>( m_WidthImageDepthAndUser );
-		uint32_t& height = const_cast<uint32_t&>( m_HeightImageDepthAndUser );
-
-		if( configImage == IMAGE_CONFIG_DEFAULT)
-		{
-			imageRes = NUI_IMAGE_RESOLUTION_320x240;				// !!!!! depth with 640x480 and 640x480 color will only work in release mode for some strange reaseon, so default set to 320x240
-			width = 320;
-			height = 240;
-		}
-		else if( configImage & IMAGE_USER_DEPTH_640X480 )
-		{
-			imageRes = NUI_IMAGE_RESOLUTION_640x480;
-			width = 640;
-			height = 480;
-		}
-		else if( configImage & IMAGE_USER_DEPTH_320X240 )
-		{
-			imageRes = NUI_IMAGE_RESOLUTION_320x240;
-			width = 320;
-			height = 240;
-		}
-		else if( configImage & IMAGE_USER_DEPTH_80X60 )
-		{
-			imageRes = NUI_IMAGE_RESOLUTION_80x60;
-			width = 80;
-			height = 60;
-		}
-		
-		m_ImageDepth_8bit = boost::shared_array<uchar>(new uchar[m_WidthImageDepthAndUser*m_HeightImageDepthAndUser]());
-		m_ImageDepth_16bit = boost::shared_array<uint16_t>(new uint16_t[m_WidthImageDepthAndUser*m_HeightImageDepthAndUser]());
-		_2REAL_LOG(info) << "_2Real: setting depth, user resolution to " << width << " x " << height << " for device: " << m_name << std::endl;
-		_2REAL_LOG(info) << "_2Real: Starting depth stream on device: " << m_name << " ...";
-		status = devicePtr->NuiImageStreamOpen( NUI_IMAGE_TYPE_DEPTH, imageRes, 
-												0, 2, m_EventDepthImage, &m_HandleDepthStream );
-		if( FAILED( status ) )
-		{
-			throwError( ( std::string( "_2Real: Error when trying to open depth stream on device: " ).append( m_name.c_str() ).append( " Try another resolution for sensor!!! ") ).c_str() );
-		}
-	}
-	
-	// set mirror flags default to true
-	m_bIsMirroringColor = m_bIsMirroringDepth = m_bIsMirroringUser = 1;
-	
-	_2REAL_LOG(info) << "_2Real: Starting own thread for fetching sensor data...";
-	m_HandleThread = CreateThread( NULL, 0, threadEventsFetcher, this, NULL, NULL );
-	if( m_HandleThread )
-	{
-		_2REAL_LOG(info) << "OK" << std::endl;
-	}
-	else
-	{
-		_2REAL_LOG(error) << "Starting thread failed" << std::endl;
-	}
-
-	_2REAL_LOG(info) << ( std::string( "Initialized device >>" ) += name ).c_str() << "<< successfully..." << std::endl;
+	_2REAL_LOG( info ) << "OK" << std::endl;
 }
 
 const bool WSDKDevice::isNewData(_2RealGenerator type) const
@@ -272,13 +176,6 @@ const bool WSDKDevice::isNewData(_2RealGenerator type) const
 DWORD WINAPI WSDKDevice::threadEventsFetcher( LPVOID pParam )
 {
 	WSDKDevice* pThis = static_cast<WSDKDevice*>( pParam );
-
-	//list of events being waited
-	HANDLE events[] = { pThis->m_EventStopThread,			//eventIndex 0
-						pThis->m_EventColorImage,			//eventIndex 1
-						pThis->m_EventDepthImage,			//eventIndex 2
-						pThis->m_EventSkeletonData };		//eventIndex 3
-
 	_2REAL_LOG(info) << "\nStarted thread id: " << int( pThis->m_HandleThread ) << std::endl;
 
 	int eventIndex = 0;
@@ -286,19 +183,19 @@ DWORD WINAPI WSDKDevice::threadEventsFetcher( LPVOID pParam )
 	while( true )
 	{
 		//waiting for events
-		eventIndex = WaitForMultipleObjects( 4, events, false, INFINITE );
+		eventIndex = WaitForMultipleObjects( 4, pThis->m_WTEvents, false, INFINITE );
 
 		switch( eventIndex )
 		{
-		case 0:			//exit thread
+		case WT_STOP_THREAD:
 			return 0;
-		case 1:			//process image event
+		case WT_EVENT_COLOR:
 			pThis->processColorImageEvent();
 			break;
-		case 2:			//process depth event
+		case WT_EVENT_DEPTH:
 			pThis->processDepthImageEvent();
 			break;
-		case 3:			//process skeleton event
+		case WT_EVENT_SKELETON:
 			pThis->processSkeletonEvent();
 			break;
 		}
@@ -313,20 +210,20 @@ void WSDKDevice::processColorImageEvent()
 	if( m_bIsDeletingDevice )
 		return;
 
-    HRESULT hr = m_pNuiSensor->NuiImageStreamGetNextFrame( m_HandleColorStream, 0, &imageFrame );
+	HRESULT hr = m_pNuiSensor->NuiImageStreamGetNextFrame( m_HandleColorStream, 0, &imageFrame );
 
-    if ( FAILED( hr ) )
-    {
-		_2REAL_LOG(error) << "_2Real: Device " << m_name << " skipping frame. Error while trying to fetch color data..." << std::endl;
-        return;
-    }
+	if ( FAILED( hr ) )
+	{
+		_2REAL_LOG(error) << "_2Real: Device " << m_Name << " skipping frame. Error while trying to fetch color data..." << std::endl;
+		return;
+	}
 
 	boost::mutex::scoped_lock lock(m_MutexImage);
-    INuiFrameTexture * pTexture = imageFrame.pFrameTexture;
-    NUI_LOCKED_RECT LockedRect;
-    pTexture->LockRect( 0, &LockedRect, NULL, 0 );
-    if ( LockedRect.Pitch != 0 )
-    {
+	INuiFrameTexture * pTexture = imageFrame.pFrameTexture;
+	NUI_LOCKED_RECT LockedRect;
+	pTexture->LockRect( 0, &LockedRect, NULL, 0 );
+	if ( LockedRect.Pitch != 0 )
+	{
 		//copy over pixels from BGRX to RGB
 		int size = m_WidthImageColor * m_HeightImageColor; //get number of pixels
 		uint32_t width = m_WidthImageColor;
@@ -346,15 +243,15 @@ void WSDKDevice::processColorImageEvent()
 			pDestination[index].g = pSource[i].g;
 			pDestination[index].b = pSource[i].b;
 		}
-    }
-    else
-    {
-        OutputDebugString( L"Buffer length of received texture is bogus\r\n" );
-    }
+	}
+	else
+	{
+		OutputDebugString( L"Buffer length of received texture is bogus\r\n" );
+	}
 
-    pTexture->UnlockRect( 0 );
+	pTexture->UnlockRect( 0 );
 
-    m_pNuiSensor->NuiImageStreamReleaseFrame( m_HandleColorStream, &imageFrame );
+	m_pNuiSensor->NuiImageStreamReleaseFrame( m_HandleColorStream, &imageFrame );
 	m_NotificationNewColorImageData.notify_all();
 	m_bIsNewColorData = true;
 }
@@ -368,14 +265,14 @@ void WSDKDevice::processDepthImageEvent()
 	HRESULT hr = m_pNuiSensor->NuiImageStreamGetNextFrame( m_HandleDepthStream, 0, &imageFrame );
 	if(FAILED(hr))
 	{
-		_2REAL_LOG(error) << "_2Real: Device " << m_name << " skipping frame. Error while trying to fetch depth data..." << std::endl;
+		_2REAL_LOG(error) << "_2Real: Device " << m_Name << " skipping frame. Error while trying to fetch depth data..." << std::endl;
 		return;
 	}
 	boost::mutex::scoped_lock lock(m_MutexDepth);
 	INuiFrameTexture * pTexture = imageFrame.pFrameTexture;
-    NUI_LOCKED_RECT LockedRect;
-    pTexture->LockRect( 0, &LockedRect, NULL, 0 );
-    
+	NUI_LOCKED_RECT LockedRect;
+	pTexture->LockRect( 0, &LockedRect, NULL, 0 );
+	
 	int size = m_WidthImageDepthAndUser * m_HeightImageDepthAndUser; //get number of pixels
 	uint32_t width = m_WidthImageDepthAndUser;
 
@@ -445,7 +342,7 @@ void WSDKDevice::processSkeletonEvent()
 	
 	if( FAILED( m_pNuiSensor->NuiSkeletonGetNextFrame( 0, &nuiFrame ) ) )
 	{
-		_2REAL_LOG(error) << "_2Real: Device " << m_name << " skipping frame. Error while trying to fetch skeleton data..." << std::endl;
+		_2REAL_LOG(error) << "_2Real: Device " << m_Name << " skipping frame. Error while trying to fetch skeleton data..." << std::endl;
 		return;
 	}
 
@@ -542,39 +439,7 @@ boost::shared_ptr<_2RealTrackedJoint> WSDKDevice::getJoint( _2RealJointType type
 	worldPos.z = data.SkeletonPositions[nuiType].z;
 	
 	
-	return boost::shared_ptr<_2RealTrackedJoint>(new _2RealTrackedJoint( type, screenPos, worldPos, _2RealMatrix3x3(),  _2RealJointConfidence(1, 0)));		// orientation cofidence set to 0 because it is not yet supported
-}
-
-
-
-void WSDKDevice::setMirroringColor( const bool flag )
-{
-	m_bIsMirroringColor = flag;
-}
-
-void WSDKDevice::setMirroringDepth( const bool flag )
-{
-	m_bIsMirroringDepth = flag;
-}
-
-void WSDKDevice::setMirroringUser( const bool flag )
-{
-	m_bIsMirroringUser = flag;
-}
-
-bool WSDKDevice::isMirroringColor() const
-{
-	return m_bIsMirroringColor;
-}
-
-bool WSDKDevice::isMirroringDetph() const
-{
-	return m_bIsMirroringDepth;
-}
-
-bool WSDKDevice::isMirroringUser() const
-{
-	return m_bIsMirroringUser;
+	return boost::shared_ptr<_2RealTrackedJoint>(new _2RealTrackedJoint( type, screenPos, worldPos, _2RealMatrix3x3(),  _2RealJointConfidence(1, 0)));		// orientation confidence set to 0 because it is not yet supported
 }
 
 _2RealTrackedUserVector WSDKDevice::getUsers( bool waitForNewData )
@@ -665,25 +530,133 @@ int WSDKDevice::getMotorAngle()
 
 void WSDKDevice::shutdown()
 {
+	if( m_isDeviceShutDown ) return;
+
 	m_bIsDeletingDevice = 1;
-	SetEvent( m_EventStopThread );
-	WaitForSingleObject( m_HandleThread, INFINITE );
+	m_isDeviceShutDown = true; //needs to be set before stop()
+	stop( true );
 
-	CloseHandle( m_EventStopThread );
-	CloseHandle( m_EventColorImage );
-	CloseHandle( m_EventDepthImage );
-	CloseHandle( m_EventSkeletonData );
-	CloseHandle( m_HandleThread );
-
-	//shutting down + destroy of instance
-	if(m_pNuiSensor)
+	if( m_pNuiSensor )
 	{
 		m_pNuiSensor->NuiShutdown();
+		m_pNuiSensor->Release();
 	}
-	if ( m_pNuiSensor )
-    {
-        m_pNuiSensor->Release();
-    }
+}
+
+void WSDKDevice::start()
+{
+	if( m_isDeviceStarted ) return;
+
+	// initializing
+	_2REAL_LOG( info ) << "_2Real: Initialize device: " << m_DeviceID << " ...";
+
+	HRESULT status = 0;
+	if( FAILED( status = m_pNuiSensor->NuiInitialize( m_Configuration.m_GeneratorsWSDK ) ) )
+	{ 
+		throwError( "_2Real: Error when trying to initialize device");
+	}
+	_2REAL_LOG( info ) << "OK" << std::endl;
+
+
+	// opening NUI streams depending on config flags------------------------------->
+	if( m_Configuration.m_GeneratorsWSDK & NUI_INITIALIZE_FLAG_USES_COLOR )
+		initColorStream();
+	if( m_Configuration.m_GeneratorsWSDK & NUI_INITIALIZE_FLAG_USES_DEPTH_AND_PLAYER_INDEX )
+		initUserDepthStream();
+	else if( m_Configuration.m_GeneratorsWSDK & NUI_INITIALIZE_FLAG_USES_DEPTH )
+		initDepthStream();
+
+
+	// set mirror flags default to true
+	m_bIsMirroringColor = m_bIsMirroringDepth = m_bIsMirroringUser = 1;
+
+	// if it was not a complete shutdown 
+	if( !m_HandleThread )
+	{
+		_2REAL_LOG( info ) << "_2Real: Starting own thread for fetching sensor data...";
+		m_HandleThread = CreateThread( NULL, 0, threadEventsFetcher, this, NULL, NULL );
+		if( m_HandleThread )
+		{
+			_2REAL_LOG( info ) << "OK" << std::endl;
+		}
+		else
+		{
+			_2REAL_LOG( error ) << "Starting thread failed" << std::endl;
+		}
+	}
+
+	// settings handles for worker thread
+	m_WTEvents[WT_EVENT_COLOR] = m_EventColorImage;
+	m_WTEvents[WT_EVENT_DEPTH] = m_EventDepthImage;
+	m_WTEvents[WT_EVENT_SKELETON] = m_EventSkeletonData;
+	m_WTEvents[WT_STOP_THREAD] = m_EventStopThread;
+	m_isDeviceStarted = true;
+	m_isDeviceShutDown = false;
+}
+
+void WSDKDevice::stop( const bool shutdown )
+{
+	// i.e called by shutdown() stop thread thingys too
+	if( m_isDeviceShutDown == true && shutdown ) 
+	{
+		// wait for WT to finish
+		SetEvent( m_EventStopThread );
+		WaitForSingleObject( m_HandleThread, INFINITE );
+
+		CloseHandle( m_EventStopThread );
+		CloseHandle( m_HandleThread );
+		CloseHandle( m_EventColorImage );
+		CloseHandle( m_EventDepthImage );
+		CloseHandle( m_EventSkeletonData );
+
+		m_WTEvents[WT_STOP_THREAD] = nullptr;
+		m_EventStopThread = nullptr;
+	}
+	if( !m_isDeviceStarted ) return;
+
+	// prevent from WT to fetch events
+	m_WTEvents[WT_EVENT_COLOR] = nullptr;
+	m_WTEvents[WT_EVENT_DEPTH] = nullptr;
+	m_WTEvents[WT_EVENT_SKELETON] = nullptr;
+	m_isDeviceStarted = false;
+}
+
+bool WSDKDevice::isDeviceStarted() const
+{
+	return m_isDeviceStarted;
+}
+
+void WSDKDevice::startGenerator( uint32_t generators )
+{
+	if( generators & COLORIMAGE )
+		m_WTEvents[WT_EVENT_COLOR] = m_EventColorImage;
+	if( generators & USERIMAGE )
+		m_WTEvents[WT_EVENT_SKELETON] = m_EventSkeletonData;
+	if( generators & DEPTHIMAGE )
+		m_WTEvents[WT_EVENT_DEPTH] = m_EventDepthImage;
+	if( ( generators & INFRAREDIMAGE ) )
+	{
+		_2REAL_LOG( info ) << "_2Real: Infrared capability is not supported by Win-SDK!" << std::endl;
+	}
+}
+
+void WSDKDevice::stopGenerator( uint32_t generators )
+{
+	if( generators & COLORIMAGE )
+		m_WTEvents[WT_EVENT_COLOR] = nullptr;
+	if( generators & USERIMAGE )
+		m_WTEvents[WT_EVENT_SKELETON] = nullptr;
+	if( generators & DEPTHIMAGE )
+		m_WTEvents[WT_EVENT_DEPTH] = nullptr;
+	if( ( generators & INFRAREDIMAGE ) )
+	{
+		_2REAL_LOG( info ) << "_2Real: Infrared capability is not supported by Win-SDK!" << std::endl;
+	}
+}
+
+bool WSDKDevice::isDeviceShutDown() const
+{
+	return m_isDeviceShutDown;
 }
 
 }

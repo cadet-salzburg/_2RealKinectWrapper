@@ -1,3 +1,4 @@
+#ifndef TARGET_MSKINECTSDK
 #include "OpenNIDevice.h"
 #include "_2RealUtility.h"
 #include "_2RealTypes.h"
@@ -145,7 +146,7 @@ OpenNIDevice::OpenNIDevice( const xn::Context context,  NodeInfoRef deviceInfo, 
 void OpenNIDevice::addDeviceToContext()
 {
 	xn::Device m_Device;
-    m_DeviceInfo->SetInstanceName( m_DeviceName.c_str() );
+	m_DeviceInfo->SetInstanceName( m_DeviceName.c_str() );
 	
 	//ToDo: There is a verified bug in the unstable version of OpenNi that prevents adding a user generator after a device.
 	// for more info see:  http://groups.google.com/group/openni-dev/browse_thread/thread/96331acca1ed7ce3?pli=1
@@ -187,14 +188,14 @@ void OpenNIDevice::addDeviceToContext()
 		////printf("image: usb bus %s address %s\n", bus, address); 
 
 
-        const XnProductionNodeDescription& description = m_DeviceInfo->GetDescription();
-        //printf("device: vendor %s name %s, instance %s\n", description.strVendor, description.strName, m_DeviceInfo->GetInstanceName());
-        //unsigned short vendor_id;
-        //unsigned short product_id;
-        //unsigned char bus;
-        //unsigned char address;
-        //sscanf( m_DeviceInfo->GetCreationInfo(), "%hx/%hx@%hhu/%hhu", &vendor_id, &product_id, &bus, &address );
-        //printf("vendor_id %i product_id %i bus %i address %i connection %s\n", vendor_id, product_id, bus, address );
+		const XnProductionNodeDescription& description = m_DeviceInfo->GetDescription();
+		//printf("device: vendor %s name %s, instance %s\n", description.strVendor, description.strName, m_DeviceInfo->GetInstanceName());
+		//unsigned short vendor_id;
+		//unsigned short product_id;
+		//unsigned char bus;
+		//unsigned char address;
+		//sscanf( m_DeviceInfo->GetCreationInfo(), "%hx/%hx@%hhu/%hhu", &vendor_id, &product_id, &bus, &address );
+		//printf("vendor_id %i product_id %i bus %i address %i connection %s\n", vendor_id, product_id, bus, address );
 	}
 }
 
@@ -208,7 +209,7 @@ void OpenNIDevice::addGenerator( const XnPredefinedProductionNodeType &nodeType,
 		checkError( m_Context.EnumerateProductionTrees( nodeType, &query, nodeList, NULL ), "Error when enumerating production trees" );
 		if ( nodeList.IsEmpty() )
 		{
-            _2RealKinectWrapper::throwError("Requested NodeType is not supported by the device");
+			_2RealKinectWrapper::throwError("Requested NodeType is not supported by the device");
 		}
 		xn::NodeInfo node = *nodeList.Begin();
 		//Give a name to the generator
@@ -549,7 +550,7 @@ XnMapOutputMode OpenNIDevice::getRequestedOutputMode( const XnPredefinedProducti
 
 void OpenNIDevice::getExistingProductionNode( const XnPredefinedProductionNodeType &nodeType, xn::ProductionNode& productionNode ) const
 {
-    std::string nodeName =  xnNodeTypeToString( nodeType ) + "_" + m_DeviceName;
+	std::string nodeName =  xnNodeTypeToString( nodeType ) + "_" + m_DeviceName;
 	checkError( m_Context.GetProductionNodeByName(nodeName.c_str(), productionNode), " Requested production node has not been created" );
 }
 
@@ -994,3 +995,4 @@ void OpenNIDevice::registerUserCallbacks()
 }
 
 } //namespace
+#endif

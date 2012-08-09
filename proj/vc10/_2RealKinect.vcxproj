@@ -154,10 +154,10 @@
     <IncludePath>$(BOOST_DIR);$(IncludePath);$(OPEN_NI_INCLUDE)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug (MS KINECT SDK)|Win32'">
-    <IncludePath>$(BOOST_ROOT);$(IncludePath);$(OPEN_NI_INCLUDE)</IncludePath>
+    <IncludePath>$(BOOST_ROOT);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug MTD (MS KINECT SDK)|Win32'">
-    <IncludePath>$(BOOST_DIR);$(IncludePath);$(OPEN_NI_INCLUDE)</IncludePath>
+    <IncludePath>$(BOOST_DIR);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug (OpenNI)|Win32'">
     <LibraryPath>$(LibraryPath)</LibraryPath>
@@ -184,10 +184,10 @@
     <IntDir>.\obj\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release (MS KINECT SDK)|Win32'">
-    <IncludePath>$(BOOST_DIR);$(IncludePath);$(OPEN_NI_INCLUDE)</IncludePath>
+    <IncludePath>$(BOOST_DIR);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release MTD (MS KINECT SDK)|Win32'">
-    <IncludePath>$(BOOST_DIR);$(IncludePath);$(OPEN_NI_INCLUDE)</IncludePath>
+    <IncludePath>$(BOOST_DIR);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release (OpenNI)|Win32'">
     <IncludePath>$(BOOST_DIR);$(IncludePath);$(OPEN_NI_INCLUDE)</IncludePath>
@@ -275,6 +275,8 @@
       <PreprocessorDefinitions>TARGET_MSKINECTSDK;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <AdditionalIncludeDirectories>$(SolutionDir)\..\..\include;$(SolutionDir)\..\..\src;$(BOOST_DIR);$(KINECTSDK10_DIR)\inc</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>
+      </MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -285,7 +287,7 @@
       </AdditionalDependencies>
     </Lib>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)\..\..\lib;$(OPEN_NI_LIB);$(KINECTSDK_DIR)\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\..\..\lib;$(KINECTSDK10_DIR)\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
@@ -309,7 +311,7 @@
       </AdditionalDependencies>
     </Lib>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)\..\..\lib;$(OPEN_NI_LIB);$(KINECTSDK_DIR)\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\..\..\lib;$(KINECTSDK10_DIR)\lib\x86</AdditionalLibraryDirectories>
     </Lib>
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
@@ -338,7 +340,7 @@
       </AdditionalDependencies>
     </Lib>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)\..\..\lib;$(OPEN_NI_LIB);;$(KINECTSDK_DIR)\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\..\..\lib;$(KINECTSDK10_DIR)\lib\x86</AdditionalLibraryDirectories>
     </Lib>
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
@@ -367,7 +369,7 @@
       </AdditionalDependencies>
     </Lib>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)\..\..\lib;$(OPEN_NI_LIB);;$(KINECTSDK_DIR)\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\..\..\lib;$(KINECTSDK10_DIR)\lib\x86</AdditionalLibraryDirectories>
     </Lib>
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>

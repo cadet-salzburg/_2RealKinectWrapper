@@ -1,4 +1,6 @@
 #pragma once
+
+#ifndef TARGET_MSKINECTSDK
 #include <iostream>
 #include <string>
 #include <vector>
@@ -13,7 +15,6 @@
 
 
 namespace _2RealKinectWrapper {
-
 	typedef boost::shared_array< unsigned char >				ImageDataRef;
 	typedef boost::shared_array< uint16_t >						ImageData16Ref;
 	typedef boost::shared_ptr< xn::NodeInfo >					NodeInfoRef;
@@ -118,3 +119,5 @@ namespace _2RealKinectWrapper {
 	};
 } //namespace
 
+
+#endif
