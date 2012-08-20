@@ -45,6 +45,7 @@
     <ClInclude Include="..\..\src\OpenNISpecific\OpenNiUtils.hpp" />
     <ClInclude Include="..\..\src\OpenNISpecific\_2RealImplementationOpenNI.hpp" />
     <ClInclude Include="..\..\src\WinSDKSpecific\WSDKDevice.h" />
+    <ClInclude Include="..\..\src\WinSDKSpecific\WSDKDeviceConfiguration.h" />
     <ClInclude Include="..\..\src\WinSDKSpecific\_2RealImplementationWinSDK.hpp" />
     <ClInclude Include="..\..\src\_2RealConfig.h" />
     <ClInclude Include="..\..\src\_2RealLogger.h" />
@@ -57,6 +58,7 @@
     <ClCompile Include="..\..\src\OpenNISpecific\OpenNIDevice.cpp" />
     <ClCompile Include="..\..\src\OpenNISpecific\OpenNIMotorController.cpp" />
     <ClCompile Include="..\..\src\WinSDKSpecific\WSDKDevice.cpp" />
+    <ClCompile Include="..\..\src\WinSDKSpecific\WSDKDeviceConfiguration.cpp" />
     <ClCompile Include="..\..\src\_2RealKinect.cpp" />
     <ClCompile Include="..\..\src\_2RealLogger.cpp" />
     <ClCompile Include="..\..\src\_2RealTrackedJoint.cpp" />

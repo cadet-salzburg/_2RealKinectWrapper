@@ -28,6 +28,9 @@
     <ClCompile Include="..\..\src\_2RealVector2f.cpp">
       <Filter>_2RealKinectWrapper\Wrapper Source</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\WinSDKSpecific\WSDKDeviceConfiguration.cpp">
+      <Filter>_2RealKinectWrapper\MS Kinect SDK</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\_2RealKinect.h">
@@ -80,6 +83,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\I_2RealImplementation.h">
       <Filter>_2RealKinectWrapper\Wrapper Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\WinSDKSpecific\WSDKDeviceConfiguration.h">
+      <Filter>_2RealKinectWrapper\MS Kinect SDK</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

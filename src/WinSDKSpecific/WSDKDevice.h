@@ -25,7 +25,6 @@
 */
 
 #pragma once
-#include "_2RealTypes.h"
 #include "_2RealUtility.h"
 #include <Windows.h>
 #include "NuiApi.h"
@@ -33,22 +32,22 @@
 #include <stdint.h>
 #include <boost/thread/shared_mutex.hpp>
 #include <boost/thread/condition.hpp>
+#include "WSDKDeviceConfiguration.h"
+#include "_2RealTypes.h"
 
 
 namespace _2RealKinectWrapper
 {
-	typedef unsigned char uchar;
-	class _2RealTrackedUser;
-	class _2RealTrackedJoint;
-	typedef std::vector<boost::shared_ptr<_2RealTrackedUser>>	_2RealTrackedUserVector;
 
-class WSDKDeviceConfiguration;
 
-// Representing a kinect sensors functionality
+/*!
+* Representing a kinect sensors functionality
+*/
 class WSDKDevice
 {
+
 	public:
-		WSDKDevice( boost::shared_ptr<INuiSensor> devicePtr, const WSDKDeviceConfiguration& deviceConfig, const std::string& name );
+		WSDKDevice( INuiSensor* devicePtr, const std::string& name );
 		virtual ~WSDKDevice(void);
 
 		struct BGRX
@@ -76,7 +75,7 @@ class WSDKDevice
 		boost::shared_array<uchar>		getColoredUserImageBuffer( bool waitForNewData );
 		boost::shared_array<uint16_t>	getDepthImageBuffer16Bit( bool waitForNewData );
 		int								getMotorAngle();
-
+		WSDKDeviceConfiguration&		getDeviceConfiguration() const;
 
 		bool							setMotorAngle(int angle);
 		void							setMirroringColor( const bool flag );
@@ -86,7 +85,7 @@ class WSDKDevice
 		void							startGenerator( uint32_t generators );
 		/*! /brief     Stopping Generators + Worker-Thread for this device
 			/param     const bool shutdown - False(Default): Stop Generators Color, Depth, Skeleton; True: Stop Generators + Worker Thread and closing handles
-		!*/
+		*/
 		void							stop( const bool shutdown = false );
 		void							stopGenerator( uint32_t generators );
 		void							shutdown();
@@ -109,10 +108,10 @@ class WSDKDevice
 								
 
 	// Member
-		boost::shared_ptr<INuiSensor>		m_pNuiSensor;
+		INuiSensor*		m_pNuiSensor;
 		std::string							m_Name;
 		int									m_DeviceID;
-		const WSDKDeviceConfiguration&		m_Configuration;
+		mutable WSDKDeviceConfiguration		m_Configuration;
 
 		//events
 		HANDLE								m_EventColorImage;

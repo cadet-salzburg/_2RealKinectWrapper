@@ -33,6 +33,7 @@ class _2RealTrackedJoint
 {
 	public:
 		_2RealTrackedJoint( void );
+		 _2RealTrackedJoint( const _2RealJointType jointType ); 	/*!< empty joint with id */
 		_2RealTrackedJoint( const _2RealJointType jointType, const _2RealVector3f& screenPosition, const _2RealVector3f& worldPosition,
 							const _2RealMatrix3x3& worldOrientation, const _2RealJointConfidence& confidence );
 		virtual ~_2RealTrackedJoint(void);

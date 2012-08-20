@@ -47,7 +47,7 @@ class _2RealTrackedUser
 		/*! /brief     returns the ID of the user
 			/return    std::uint32_t - ID
 		!*/
-		uint32_t								getUserID() const;
+		uint32_t									getUserID() const;
 
 		/*! /brief returns the object of a particular joint
 			/param jointType the name of the joint

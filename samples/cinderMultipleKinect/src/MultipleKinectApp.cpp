@@ -33,7 +33,7 @@
 #include "cinder/Rect.h"
 #include "cinder/Utilities.h"
 #include "cinder/Camera.h"
-
+#include <vld.h>
 
 // _2RealKinect Include
 //#define TARGET_MSKINECTSDK		// use this for MS Kinect SDK, comment it or just not define it for using OpenNI
@@ -67,7 +67,7 @@ class MultipleKinectApp : public AppBasic
 		void								mirrorImages();
 		boost::shared_array<unsigned char>	getImageData( int deviceID, _2RealGenerator imageType, int& imageWidth, int& imageHeight, int& bytePerPixel );
 
-		_2RealKinect*				m_2RealKinect;
+		_2RealInstance				m_2RealKinect;
 		bool						m_bIsMirroring;
 		int							m_iKinectWidth;
 		int							m_iKinectHeight;
@@ -87,7 +87,8 @@ MultipleKinectApp::MultipleKinectApp() : m_iScreenWidth(1280), m_iScreenHeight(1
 
 MultipleKinectApp::~MultipleKinectApp()
 {
-	m_2RealKinect->shutdown();
+	//m_2RealKinect->shutdown();
+	delete m_2RealKinect;
 }
 
 void MultipleKinectApp::prepareSettings( Settings* settings )
@@ -195,9 +196,9 @@ void MultipleKinectApp::drawKinectImages()
 		if( i == 0 )						
 #endif
 		{
-			m_iKinectWidth = m_2RealKinect->getImageWidth(i, USERIMAGE );
-			m_iKinectHeight = m_2RealKinect->getImageHeight(i, USERIMAGE );
-			imgRef = getImageData( i, USERIMAGE, m_iKinectWidth, m_iKinectHeight, numberChannels);
+			m_iKinectWidth = m_2RealKinect->getImageWidth(i, USERIMAGE_COLORED );
+			m_iKinectHeight = m_2RealKinect->getImageHeight(i, USERIMAGE_COLORED );
+			imgRef = getImageData( i, USERIMAGE_COLORED, m_iKinectWidth, m_iKinectHeight, numberChannels);
 			if( imgRef )
 			{
 				Surface8u userColored( imgRef.get(), m_iKinectWidth, m_iKinectHeight, m_iKinectWidth*3, SurfaceChannelOrder::RGB );

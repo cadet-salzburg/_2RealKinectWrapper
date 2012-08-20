@@ -26,34 +26,30 @@ unsigned char Colors[][3] =
 	
 WSDKDevice::~WSDKDevice(void)
 {
-
+	shutdown();
 }
 
 
-WSDKDevice::WSDKDevice( boost::shared_ptr<INuiSensor> devicePtr, const WSDKDeviceConfiguration& deviceConfig, const std::string& name )
-	: m_pNuiSensor( devicePtr ),
+WSDKDevice::WSDKDevice( INuiSensor* devicePtr, const std::string& name )
+	//respect member initialization order -> order as declarations in header
+	: m_WidthImageDepthAndUser( m_Configuration.m_ImageResDepth.width ),
+	  m_WidthImageColor( m_Configuration.m_ImageResColor.width ),
+	  m_HeightImageDepthAndUser( m_Configuration.m_ImageResDepth.height ),
+	  m_HeightImageColor( m_Configuration.m_ImageResColor.height ),
+	  m_pNuiSensor( devicePtr ),
 	  m_Name( name ),
 	  m_DeviceID( devicePtr->NuiInstanceIndex() ),
-	  m_Configuration( deviceConfig ),
 	  m_EventColorImage( CreateEvent( NULL, TRUE, FALSE, NULL ) ), //creating event handles
 	  m_EventDepthImage( CreateEvent( NULL, TRUE, FALSE, NULL ) ),
 	  m_EventSkeletonData( CreateEvent( NULL, TRUE, FALSE, NULL ) ),
 	  m_EventStopThread( CreateEvent( NULL, TRUE, FALSE, NULL ) ),
-	  m_HandleDepthStream( NULL ),
 	  m_HandleColorStream( NULL ),
+	  m_HandleDepthStream( NULL ),
 	  m_HandleThread( NULL ),
-	  m_ImageColor_8bit( NULL ),
-	  m_ImageDepth_8bit( NULL ),
-	  m_ImageUser_8bit( NULL ),
-	  m_ImageColoredUser_8bit( NULL ),
-	  m_ImageDepth_16bit( NULL ),
-	  m_WidthImageDepthAndUser( deviceConfig.m_ImageResDepth.width ),
-	  m_WidthImageColor( deviceConfig.m_ImageResColor.width ),
-	  m_HeightImageDepthAndUser( deviceConfig.m_ImageResDepth.height ),
-	  m_HeightImageColor( deviceConfig.m_ImageResColor.height ),
 	  m_isDeviceStarted( false ),
 	  m_isDeviceShutDown( true ),
-	  m_bIsDepthOnly( true ),
+	  // needed?!? ---->
+	  m_bIsDepthOnly( true ), 
 	  m_bIsMirroringColor( false ),
 	  m_bIsMirroringDepth( false ),
 	  m_bIsMirroringUser( false ),
@@ -62,7 +58,13 @@ WSDKDevice::WSDKDevice( boost::shared_ptr<INuiSensor> devicePtr, const WSDKDevic
 	  m_bIsNewDepthData( false ),
 	  m_bIsNewUserData( false ),
 	  m_bIsNewSkeletonData( false ),
-	  m_bIsNewInfraredData( false )
+	  m_bIsNewInfraredData( false ),
+	  //<----
+	  m_ImageColor_8bit( NULL ),
+	  m_ImageDepth_8bit( NULL ),
+	  m_ImageUser_8bit( NULL ),
+	  m_ImageColoredUser_8bit( NULL ),
+	  m_ImageDepth_16bit( NULL )
 {
 
 }
@@ -371,13 +373,13 @@ void WSDKDevice::processSkeletonEvent()
 
 	NuiTransformSmooth( &nuiFrame, &params );
 
-	boost::shared_ptr<_2RealTrackedUser> user = boost::shared_ptr<_2RealTrackedUser>();
+	_2RealTrackedUser_sptr user;
 	//get or create user
 	for( int i = 0; i < NUI_SKELETON_COUNT; ++i )
 	{
 		if( nuiFrame.SkeletonData[i].eTrackingState == NUI_SKELETON_TRACKED )
 		{
-			m_Users.push_back( boost::shared_ptr<_2RealTrackedUser>( new _2RealTrackedUser(nuiFrame.SkeletonData[i].dwTrackingID) ) );
+			m_Users.push_back( _2RealTrackedUser_sptr( new _2RealTrackedUser( nuiFrame.SkeletonData[i].dwTrackingID ) ) );
 			user = m_Users.back();
 		}
 		else
@@ -389,19 +391,19 @@ void WSDKDevice::processSkeletonEvent()
 		user->setJoint( JOINT_TORSO, getJoint( JOINT_TORSO, NUI_SKELETON_POSITION_SPINE, nuiFrame.SkeletonData[i] ) );
 		user->setJoint( JOINT_WAIST, getJoint( JOINT_WAIST, NUI_SKELETON_POSITION_HIP_CENTER, nuiFrame.SkeletonData[i] ) );
 
-		user->setJoint( JOINT_LEFT_COLLAR, boost::shared_ptr<_2RealTrackedJoint>( new _2RealTrackedJoint( JOINT_LEFT_COLLAR, _2RealVector3f(), _2RealVector3f(), _2RealMatrix3x3(), _2RealJointConfidence()) ) );
+		user->setJoint( JOINT_LEFT_COLLAR, boost::shared_ptr<_2RealTrackedJoint>( new _2RealTrackedJoint( JOINT_LEFT_COLLAR ) ) ); //empty joint -> not supported
 		user->setJoint( JOINT_LEFT_SHOULDER, getJoint( JOINT_LEFT_SHOULDER, NUI_SKELETON_POSITION_SHOULDER_LEFT, nuiFrame.SkeletonData[i] ) );
 		user->setJoint( JOINT_LEFT_ELBOW, getJoint( JOINT_LEFT_ELBOW, NUI_SKELETON_POSITION_ELBOW_LEFT, nuiFrame.SkeletonData[i] ) );
 		user->setJoint( JOINT_LEFT_WRIST, getJoint( JOINT_LEFT_WRIST, NUI_SKELETON_POSITION_WRIST_LEFT, nuiFrame.SkeletonData[i] ) );
 		user->setJoint( JOINT_LEFT_HAND, getJoint( JOINT_LEFT_HAND, NUI_SKELETON_POSITION_HAND_LEFT, nuiFrame.SkeletonData[i] ) );
-		user->setJoint( JOINT_LEFT_FINGERTIP, boost::shared_ptr<_2RealTrackedJoint>( new _2RealTrackedJoint( JOINT_LEFT_FINGERTIP, _2RealVector3f(), _2RealVector3f(), _2RealMatrix3x3(), _2RealJointConfidence()) ) );
+		user->setJoint( JOINT_LEFT_FINGERTIP, boost::shared_ptr<_2RealTrackedJoint>( new _2RealTrackedJoint( JOINT_LEFT_FINGERTIP ) ) ); //empty joint -> not supported
 
-		user->setJoint( JOINT_RIGHT_COLLAR, boost::shared_ptr<_2RealTrackedJoint>( new _2RealTrackedJoint( JOINT_LEFT_COLLAR, _2RealVector3f(), _2RealVector3f(), _2RealMatrix3x3(), _2RealJointConfidence()) ) );
+		user->setJoint( JOINT_RIGHT_COLLAR, boost::shared_ptr<_2RealTrackedJoint>( new _2RealTrackedJoint( JOINT_LEFT_COLLAR ) ) ); //empty joint -> not supported
 		user->setJoint( JOINT_RIGHT_SHOULDER, getJoint( JOINT_RIGHT_SHOULDER, NUI_SKELETON_POSITION_SHOULDER_RIGHT, nuiFrame.SkeletonData[i] ) );
 		user->setJoint( JOINT_RIGHT_ELBOW, getJoint( JOINT_RIGHT_ELBOW, NUI_SKELETON_POSITION_ELBOW_RIGHT, nuiFrame.SkeletonData[i] ) );
 		user->setJoint( JOINT_RIGHT_WRIST, getJoint( JOINT_RIGHT_WRIST, NUI_SKELETON_POSITION_WRIST_RIGHT, nuiFrame.SkeletonData[i] ) );
 		user->setJoint( JOINT_RIGHT_HAND, getJoint( JOINT_RIGHT_HAND, NUI_SKELETON_POSITION_HAND_RIGHT, nuiFrame.SkeletonData[i] ) );
-		user->setJoint( JOINT_RIGHT_FINGERTIP, boost::shared_ptr<_2RealTrackedJoint>( new _2RealTrackedJoint( JOINT_RIGHT_FINGERTIP, _2RealVector3f(), _2RealVector3f(), _2RealMatrix3x3(), _2RealJointConfidence()) ) );
+		user->setJoint( JOINT_RIGHT_FINGERTIP, boost::shared_ptr<_2RealTrackedJoint>( new _2RealTrackedJoint( JOINT_RIGHT_FINGERTIP ) ) ); //empty joint -> not supported
 		
 		user->setJoint( JOINT_LEFT_HIP, getJoint( JOINT_LEFT_HIP, NUI_SKELETON_POSITION_HIP_LEFT, nuiFrame.SkeletonData[i] ) );
 		user->setJoint( JOINT_LEFT_KNEE, getJoint( JOINT_LEFT_KNEE, NUI_SKELETON_POSITION_KNEE_LEFT, nuiFrame.SkeletonData[i] ) );
@@ -657,6 +659,11 @@ void WSDKDevice::stopGenerator( uint32_t generators )
 bool WSDKDevice::isDeviceShutDown() const
 {
 	return m_isDeviceShutDown;
+}
+
+WSDKDeviceConfiguration& WSDKDevice::getDeviceConfiguration() const
+{
+	return m_Configuration;
 }
 
 }

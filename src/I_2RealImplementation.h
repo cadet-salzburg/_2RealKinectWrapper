@@ -35,7 +35,7 @@
 namespace _2RealKinectWrapper
 {
 	// Fwds
-	typedef std::vector<boost::shared_ptr< class _2RealTrackedUser> >	_2RealTrackedUserVector;
+
 	struct _2RealVector2f;
 	struct _2RealVector3f;
 

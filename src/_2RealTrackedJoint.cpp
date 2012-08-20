@@ -32,6 +32,12 @@ _2RealTrackedJoint::_2RealTrackedJoint( const _2RealTrackedJoint& o )
 {
 }
 
+_2RealTrackedJoint::_2RealTrackedJoint( const _2RealJointType jointType )
+	: m_JointType( jointType )
+{
+
+}
+
 
 _2RealTrackedJoint::~_2RealTrackedJoint(void)
 {

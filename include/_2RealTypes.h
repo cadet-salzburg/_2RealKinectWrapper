@@ -32,17 +32,28 @@
 #include "_2RealImageSource.h"
 
 
+
 namespace _2RealKinectWrapper
 {
 	struct _2RealVector3f;		// forward decls
 	struct _2RealVector2f;
 	struct _2RealMatrix3x3;
 	struct _2RealJointConfidence;
+	class _2RealTrackedUser;
+	class _2RealKinect;
+	class _2RealTrackedJoint;
 
-	typedef std::vector<_2RealVector3f>				_2RealPositionsVector3f;
-	typedef std::vector<_2RealVector2f>				_2RealPositionsVector2f;
-	typedef std::vector<_2RealJointConfidence>		_2RealJointConfidences;
-	typedef std::vector<_2RealMatrix3x3>			_2RealOrientationsMatrix3x3;
+	typedef _2RealKinect*									_2RealInstance;
+	typedef std::vector<_2RealVector3f>						_2RealPositionsVector3f;
+	typedef std::vector<_2RealVector2f>						_2RealPositionsVector2f;
+	typedef std::vector<_2RealJointConfidence>				_2RealJointConfidences;
+	typedef std::vector<_2RealMatrix3x3>					_2RealOrientationsMatrix3x3;
+	typedef boost::shared_ptr<_2RealTrackedUser>			_2RealTrackedUser_sptr;
+	typedef std::vector<_2RealTrackedUser_sptr>				_2RealTrackedUserVector;
+
+	typedef unsigned char uchar;
+
+
 
 	enum _2RealKinectLimit
 	{

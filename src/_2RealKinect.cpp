@@ -15,14 +15,16 @@ namespace _2RealKinectWrapper
 {
 
 boost::mutex _global_2RealMutex;
-_2RealKinectWrapper::_2RealKinect* _2RealKinect::m_Instance = NULL;
+_2RealInstance _2RealKinect::m_Instance;
 
-_2RealKinect* _2RealKinect::getInstance()
+_2RealInstance _2RealKinect::getInstance()
 {
 	boost::interprocess::scoped_lock<boost::mutex> lock( _global_2RealMutex );
 	if( !m_Instance )
 	{
+		//m_Instance = boost::shared_ptr<_2RealKinect>( new _2RealKinect(), blu );
 		m_Instance = new _2RealKinect();
+		//m_Instance = shared_from_this();
 	}
 	return m_Instance;
 }
@@ -51,7 +53,6 @@ _2RealKinect::~_2RealKinect()
 {
 	//shutdown && freeing memory
 	shutdown();
-	delete m_Instance;
 }
 void _2RealKinect::update()
 {
@@ -87,7 +88,8 @@ bool _2RealKinect::generatorIsActive( const uint32_t deviceID, _2RealGenerator t
 
 bool _2RealKinect::shutdown()
 {
-	return m_Implementation->shutdown();
+	//return m_Implementation->shutdown();
+	return true;
 }
 
 const bool _2RealKinect::isNewData(const uint32_t deviceID, _2RealGenerator type) const

@@ -42,55 +42,22 @@
 namespace _2RealKinectWrapper
 {
 
-// Holding information about configurations of a WSDK-Generator
-class WSDKDeviceConfiguration
-{
-	struct ImageRes
-	{
-		ImageRes() : WSDKResType( NUI_IMAGE_RESOLUTION_INVALID ), width( 0 ), height( 0 ) {}
-
-		NUI_IMAGE_RESOLUTION	WSDKResType;
-		uint16_t				width;
-		uint16_t				height;
-	};
-
-	public:
-	WSDKDeviceConfiguration(): m_Generators2Real( 0 ), m_GeneratorsWSDK( 0 ), m_ImageConfig2Real( 0 ) {}
-
-	/*! /brief     Resets all the stored values to its default
-	!*/
-	void					reset()
-	{
-		m_Generators2Real = m_GeneratorsWSDK = m_ImageConfig2Real = 0;
-		m_ImageResColor = m_ImageResDepth = m_ImageResUser = m_ImageResInfrared = ImageRes();
-	}
-
-	uint32_t				m_Generators2Real;		// 2real per bit information about generators
-	uint32_t				m_GeneratorsWSDK;		// NUI per bit information about generators
-	uint32_t				m_ImageConfig2Real;		// 2real per bit information about image configuration
-	ImageRes				m_ImageResColor;
-	ImageRes				m_ImageResDepth;
-	ImageRes				m_ImageResUser;
-	ImageRes				m_ImageResInfrared;
-};
 
 class _2RealImplementationWinSDK : public I_2RealImplementation
 {
 public:
-
-
 
 	// called by pimple idiom
 	_2RealImplementationWinSDK()
 		: m_NumDevices( 0 ),
 		  m_IsInitialized( 0 )
 	{
-		Initialize();
+		initialize();
 	}
 
 	~_2RealImplementationWinSDK()
 	{
-		shutdown();
+		
 	}
 
 
@@ -107,7 +74,7 @@ public:
 			return false;
 		}
 
-		WSDKDeviceConfiguration& config = m_Configurations[deviceID];
+		WSDKDeviceConfiguration& config = m_Devices[deviceID]->getDeviceConfiguration();
 		config.reset();
 		config.m_Generators2Real = startGenerators;
 		config.m_ImageConfig2Real = configureImages;
@@ -434,7 +401,7 @@ public:
 
 		_2REAL_LOG(info) << "_2Real: Restarting system..." << std::endl;
 		for( uint8_t i = 0; i < m_NumDevices; ++i )
-			startGenerator( i, m_Configurations[i].m_Generators2Real );
+			startGenerator( i, m_Devices[i]->getDeviceConfiguration().m_Generators2Real );
 		_2REAL_LOG(info) << "_2Real: Restart: OK" << std::endl;
 
 		return true;
@@ -449,6 +416,7 @@ public:
 			// stopping all devices
 			for(unsigned int i=0; i<m_Devices.size(); i++)
 				m_Devices[i]->shutdown();
+			m_IsInitialized = false;
 			_2REAL_LOG( info ) << "OK" << std::endl;
 			return true;
 		}
@@ -587,7 +555,7 @@ public:
 								<< config.m_ImageResUser.height << std::endl;
 		}
 
-		void Initialize()
+		void initialize()
 		{
 			if( !m_IsInitialized )
 			{
@@ -609,7 +577,7 @@ public:
 				}
 				else
 				{
-					m_Configurations = boost::shared_array<WSDKDeviceConfiguration>( new WSDKDeviceConfiguration[deviceCount] );
+					//m_Configurations = boost::shared_array<WSDKDeviceConfiguration>( new WSDKDeviceConfiguration[deviceCount] );
 					m_Devices.resize( deviceCount ); // deviceID is also unique vector-index
 
 					char cBuf[16];
@@ -622,9 +590,8 @@ public:
 							throwError( ( "_2Real: Error when trying to create device: " + i ) );
 
 						_itoa_s( i, &cBuf[14], 2, 10 );
-						boost::shared_ptr<WSDKDevice> device( new WSDKDevice(	boost::shared_ptr<INuiSensor>( pSensor ),
-																				m_Configurations[i],
-																				cBuf ) );
+
+						boost::shared_ptr<WSDKDevice> device( new WSDKDevice( pSensor, cBuf ) );
 						m_Devices[i] = device; // put device to according index
 					}			
 				}
@@ -637,7 +604,6 @@ public:
 		uint32_t										m_NumDevices;		// number of detected kinect sensors
 		std::vector<boost::shared_ptr<WSDKDevice>>		m_Devices;			// array holding references to device-implementation
 		bool											m_IsInitialized;	// information if wrapper has been initialized
-		boost::shared_array<WSDKDeviceConfiguration>	m_Configurations;	// configurations for the given devices
 };
 
 }

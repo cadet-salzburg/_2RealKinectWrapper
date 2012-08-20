@@ -29,21 +29,19 @@
 
 #include "_2RealTypes.h"
 
-
 namespace _2RealKinectWrapper
 {
 class I_2RealImplementation;
 
-
 //singleton implementation of _2Real-Wrapper for Windows-Kinect-SDK && OpenNI
-class _2RealKinect
+class _2RealKinect 
 {
 	public:
 
 		/*! /brief     Returns the pointer to the singleton _2real-implementation and offers an opportunity to use main functions of kinect-device
 			/return    _2RealKinect* Pointer to _2Real-Object
 		!*/
-		static _2RealKinect*				getInstance();
+		static _2RealInstance				getInstance();
 
 		/*! /brief     Returns the version of the _2RealKinectWrapper as string formatted major.minor.patch
 			/return    std::string version number
@@ -303,15 +301,16 @@ class _2RealKinect
 		void								mapColorToDepth(){};
 		
 
+		static _2RealInstance							m_Instance;
+		~_2RealKinect();
 	private:
 
 		_2RealKinect();
-		~_2RealKinect();
 		_2RealKinect( const _2RealKinect& o );
 		_2RealKinect& operator=( const _2RealKinect& o );
 
 		boost::shared_ptr<I_2RealImplementation>		m_Implementation;
-		static _2RealKinect*							m_Instance;
+		//template <class T> friend void boost::checked_delete(T*);	/*!< make m_Instance deletion possible through boost::shared_ptr */
 };
 
 }	// namespace _2RealKinectWrapper
