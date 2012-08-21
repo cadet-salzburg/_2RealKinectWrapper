@@ -104,12 +104,12 @@ namespace _2RealKinectWrapper
 	*/
 	enum _2RealGenerator
 	{
-		COLORIMAGE			= 1,
-		DEPTHIMAGE			= 2,
-		INFRAREDIMAGE		= 4,
-		USERIMAGE			= 8,
-		USERIMAGE_COLORED	= 16,
-		CONFIG_DEFAULT		= 3
+		COLORIMAGE					= 1,
+		DEPTHIMAGE					= 2,
+		INFRAREDIMAGE				= 4,
+		USERIMAGE					= 8,
+		USERIMAGE_COLORED			= 16,
+		CONFIG_DEFAULT				= 3
 	};
 
 
@@ -153,16 +153,18 @@ namespace _2RealKinectWrapper
 		float z;
 	};
 
-
+	/*!
+	* Used for rotations of skeleton-joints
+	*/
 	struct _2RealMatrix3x3
 	{
 		_2RealMatrix3x3()	// default constructor generates identity matrix
+			: m11( 1 ), m12( 0 ), m13( 0 ),
+			  m21( 0 ), m22( 1 ), m23( 0 ),
+			  m31( 0 ), m32( 0 ), m33( 1 )
 		{
-			elements[0]=1; elements[3]=0; elements[6]=0;
-			elements[1]=0; elements[4]=1; elements[7]=0;
-			elements[2]=0; elements[5]=0; elements[8]=1;
 		}
-		float elements[9];
+		float m11, m12, m13, m21, m22, m23, m31, m32, m33;
 	};
 
 	struct _2RealJointConfidence

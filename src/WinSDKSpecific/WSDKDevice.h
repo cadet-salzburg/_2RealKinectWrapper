@@ -105,7 +105,7 @@ class WSDKDevice
 		void										processColorImageEvent();
 		void										processDepthImageEvent();
 		void										processSkeletonEvent();
-		_2RealTrackedJoint_sptr						getJoint( _2RealJointType type, _NUI_SKELETON_POSITION_INDEX nuiType, const NUI_SKELETON_DATA& data );
+		_2RealTrackedJoint_sptr						createJointFromNUI( _2RealJointType type, _NUI_SKELETON_POSITION_INDEX nuiType, const NUI_SKELETON_DATA& nuiData, const NUI_SKELETON_BONE_ORIENTATION* nuiOrientation );
 								
 
 	// Member

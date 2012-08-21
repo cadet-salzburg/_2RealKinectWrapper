@@ -233,7 +233,7 @@ public:
 
 	virtual bool hasFeatureJointOrientation() const
 	{
-		return false;
+		return true;
 	}
 
 	virtual bool setMotorAngle( int deviceID, int& angle ) 

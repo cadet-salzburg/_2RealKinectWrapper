@@ -269,15 +269,15 @@ void MultipleKinectApp::drawSkeletons(int deviceID, ci::Rectf rect)
 					if(m_2RealKinect->hasFeatureJointOrientation() && jointConfidence.orientationConfidence > 0.0)
 					{
 						Matrix44<float> rotMat  = gl::getModelView();
-						rotMat.m00 = skeletonOrientations[j].elements[0];
-						rotMat.m01 = skeletonOrientations[j].elements[1];
-						rotMat.m02 = skeletonOrientations[j].elements[2];
-						rotMat.m10 = skeletonOrientations[j].elements[3];
-						rotMat.m11 = skeletonOrientations[j].elements[4];
-						rotMat.m12 = skeletonOrientations[j].elements[5];
-						rotMat.m20 = skeletonOrientations[j].elements[6];
-						rotMat.m21 = skeletonOrientations[j].elements[7];
-						rotMat.m22 = skeletonOrientations[j].elements[8];
+						rotMat.m00 = skeletonOrientations[j].m11;
+						rotMat.m01 = skeletonOrientations[j].m12;
+						rotMat.m02 = skeletonOrientations[j].m13;
+						rotMat.m10 = skeletonOrientations[j].m21;
+						rotMat.m11 = skeletonOrientations[j].m22;
+						rotMat.m12 = skeletonOrientations[j].m23;
+						rotMat.m20 = skeletonOrientations[j].m31;
+						rotMat.m21 = skeletonOrientations[j].m32;
+						rotMat.m22 = skeletonOrientations[j].m33;
 						glLoadMatrixf(rotMat);		
 						gl::drawCoordinateFrame(fRadius);
 					}

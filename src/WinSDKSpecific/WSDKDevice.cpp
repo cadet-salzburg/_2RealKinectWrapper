@@ -184,27 +184,25 @@ DWORD WINAPI WSDKDevice::threadEventsFetcher( LPVOID pParam )
 
 	while( true )
 	{
-		try{
-
-		//waiting for events
-		eventIndex = WaitForMultipleObjects( 4, pThis->m_WTEvents, false, INFINITE );
-
-		switch( eventIndex )
+		try
 		{
-		case WT_STOP_THREAD:
-			return 0;
-		case WT_EVENT_COLOR:
-			pThis->processColorImageEvent();
-			break;
-		case WT_EVENT_DEPTH:
-			pThis->processDepthImageEvent();
-			break;
-		case WT_EVENT_SKELETON:
-			pThis->processSkeletonEvent();
-			break;
-		}
+			//waiting for events
+			eventIndex = WaitForMultipleObjects( 4, pThis->m_WTEvents, false, INFINITE );
 
-		pThis->getNumberOfUsers();
+			switch( eventIndex )
+			{
+			case WT_STOP_THREAD:
+				return 0;
+			case WT_EVENT_COLOR:
+				pThis->processColorImageEvent();
+				break;
+			case WT_EVENT_DEPTH:
+				pThis->processDepthImageEvent();
+				break;
+			case WT_EVENT_SKELETON:
+				pThis->processSkeletonEvent();
+				break;
+			}
 		}
 		catch( std::exception& e )
 		{
@@ -398,68 +396,86 @@ void WSDKDevice::processSkeletonEvent()
 		else
 			continue;
 
+		//calculate nui-orientations
+		NUI_SKELETON_BONE_ORIENTATION nuiOrientations[NUI_SKELETON_POSITION_COUNT];
+		NuiSkeletonCalculateBoneOrientations( &nuiFrame.SkeletonData[i], nuiOrientations );
 
 		//setting/updating joints
-		user->setJoint( JOINT_HEAD, getJoint( JOINT_HEAD, NUI_SKELETON_POSITION_HEAD, nuiFrame.SkeletonData[i] ) );
-		user->setJoint( JOINT_NECK, getJoint( JOINT_NECK, NUI_SKELETON_POSITION_SHOULDER_CENTER, nuiFrame.SkeletonData[i] ) ); 
-		user->setJoint( JOINT_TORSO, getJoint( JOINT_TORSO, NUI_SKELETON_POSITION_SPINE, nuiFrame.SkeletonData[i] ) );
-		user->setJoint( JOINT_WAIST, getJoint( JOINT_WAIST, NUI_SKELETON_POSITION_HIP_CENTER, nuiFrame.SkeletonData[i] ) );
+		user->setJoint( JOINT_HEAD, createJointFromNUI( JOINT_HEAD, NUI_SKELETON_POSITION_HEAD, nuiFrame.SkeletonData[i], nuiOrientations ) );
+		user->setJoint( JOINT_NECK, createJointFromNUI( JOINT_NECK, NUI_SKELETON_POSITION_SHOULDER_CENTER, nuiFrame.SkeletonData[i], nuiOrientations ) ); 
+		user->setJoint( JOINT_TORSO, createJointFromNUI( JOINT_TORSO, NUI_SKELETON_POSITION_SPINE, nuiFrame.SkeletonData[i], nuiOrientations ) );
+		user->setJoint( JOINT_WAIST, createJointFromNUI( JOINT_WAIST, NUI_SKELETON_POSITION_HIP_CENTER, nuiFrame.SkeletonData[i], nuiOrientations ) );
 
 		user->setJoint( JOINT_LEFT_COLLAR, _2RealTrackedJoint_sptr( new _2RealTrackedJoint( JOINT_LEFT_COLLAR ) ) ); //empty joint -> not supported
-		user->setJoint( JOINT_LEFT_SHOULDER, getJoint( JOINT_LEFT_SHOULDER, NUI_SKELETON_POSITION_SHOULDER_LEFT, nuiFrame.SkeletonData[i] ) );
-		user->setJoint( JOINT_LEFT_ELBOW, getJoint( JOINT_LEFT_ELBOW, NUI_SKELETON_POSITION_ELBOW_LEFT, nuiFrame.SkeletonData[i] ) );
-		user->setJoint( JOINT_LEFT_WRIST, getJoint( JOINT_LEFT_WRIST, NUI_SKELETON_POSITION_WRIST_LEFT, nuiFrame.SkeletonData[i] ) );
-		user->setJoint( JOINT_LEFT_HAND, getJoint( JOINT_LEFT_HAND, NUI_SKELETON_POSITION_HAND_LEFT, nuiFrame.SkeletonData[i] ) );
+		user->setJoint( JOINT_LEFT_SHOULDER, createJointFromNUI( JOINT_LEFT_SHOULDER, NUI_SKELETON_POSITION_SHOULDER_LEFT, nuiFrame.SkeletonData[i], nuiOrientations ) );
+		user->setJoint( JOINT_LEFT_ELBOW, createJointFromNUI( JOINT_LEFT_ELBOW, NUI_SKELETON_POSITION_ELBOW_LEFT, nuiFrame.SkeletonData[i], nuiOrientations ) );
+		user->setJoint( JOINT_LEFT_WRIST, createJointFromNUI( JOINT_LEFT_WRIST, NUI_SKELETON_POSITION_WRIST_LEFT, nuiFrame.SkeletonData[i], nuiOrientations ) );
+		user->setJoint( JOINT_LEFT_HAND, createJointFromNUI( JOINT_LEFT_HAND, NUI_SKELETON_POSITION_HAND_LEFT, nuiFrame.SkeletonData[i], nuiOrientations ) );
 		user->setJoint( JOINT_LEFT_FINGERTIP, _2RealTrackedJoint_sptr( new _2RealTrackedJoint( JOINT_LEFT_FINGERTIP ) ) ); //empty joint -> not supported
 
 		user->setJoint( JOINT_RIGHT_COLLAR, _2RealTrackedJoint_sptr( new _2RealTrackedJoint( JOINT_LEFT_COLLAR ) ) ); //empty joint -> not supported
-		user->setJoint( JOINT_RIGHT_SHOULDER, getJoint( JOINT_RIGHT_SHOULDER, NUI_SKELETON_POSITION_SHOULDER_RIGHT, nuiFrame.SkeletonData[i] ) );
-		user->setJoint( JOINT_RIGHT_ELBOW, getJoint( JOINT_RIGHT_ELBOW, NUI_SKELETON_POSITION_ELBOW_RIGHT, nuiFrame.SkeletonData[i] ) );
-		user->setJoint( JOINT_RIGHT_WRIST, getJoint( JOINT_RIGHT_WRIST, NUI_SKELETON_POSITION_WRIST_RIGHT, nuiFrame.SkeletonData[i] ) );
-		user->setJoint( JOINT_RIGHT_HAND, getJoint( JOINT_RIGHT_HAND, NUI_SKELETON_POSITION_HAND_RIGHT, nuiFrame.SkeletonData[i] ) );
+		user->setJoint( JOINT_RIGHT_SHOULDER, createJointFromNUI( JOINT_RIGHT_SHOULDER, NUI_SKELETON_POSITION_SHOULDER_RIGHT, nuiFrame.SkeletonData[i], nuiOrientations ) );
+		user->setJoint( JOINT_RIGHT_ELBOW, createJointFromNUI( JOINT_RIGHT_ELBOW, NUI_SKELETON_POSITION_ELBOW_RIGHT, nuiFrame.SkeletonData[i], nuiOrientations ) );
+		user->setJoint( JOINT_RIGHT_WRIST, createJointFromNUI( JOINT_RIGHT_WRIST, NUI_SKELETON_POSITION_WRIST_RIGHT, nuiFrame.SkeletonData[i], nuiOrientations ) );
+		user->setJoint( JOINT_RIGHT_HAND, createJointFromNUI( JOINT_RIGHT_HAND, NUI_SKELETON_POSITION_HAND_RIGHT, nuiFrame.SkeletonData[i], nuiOrientations ) );
 		user->setJoint( JOINT_RIGHT_FINGERTIP, _2RealTrackedJoint_sptr( new _2RealTrackedJoint( JOINT_RIGHT_FINGERTIP ) ) ); //empty joint -> not supported
 		
-		user->setJoint( JOINT_LEFT_HIP, getJoint( JOINT_LEFT_HIP, NUI_SKELETON_POSITION_HIP_LEFT, nuiFrame.SkeletonData[i] ) );
-		user->setJoint( JOINT_LEFT_KNEE, getJoint( JOINT_LEFT_KNEE, NUI_SKELETON_POSITION_KNEE_LEFT, nuiFrame.SkeletonData[i] ) );
-		user->setJoint( JOINT_LEFT_ANKLE, getJoint( JOINT_LEFT_ANKLE, NUI_SKELETON_POSITION_ANKLE_LEFT, nuiFrame.SkeletonData[i] ) );
-		user->setJoint( JOINT_LEFT_FOOT, getJoint( JOINT_LEFT_FOOT, NUI_SKELETON_POSITION_FOOT_LEFT, nuiFrame.SkeletonData[i] ) );
+		user->setJoint( JOINT_LEFT_HIP, createJointFromNUI( JOINT_LEFT_HIP, NUI_SKELETON_POSITION_HIP_LEFT, nuiFrame.SkeletonData[i], nuiOrientations ) );
+		user->setJoint( JOINT_LEFT_KNEE, createJointFromNUI( JOINT_LEFT_KNEE, NUI_SKELETON_POSITION_KNEE_LEFT, nuiFrame.SkeletonData[i], nuiOrientations ) );
+		user->setJoint( JOINT_LEFT_ANKLE, createJointFromNUI( JOINT_LEFT_ANKLE, NUI_SKELETON_POSITION_ANKLE_LEFT, nuiFrame.SkeletonData[i], nuiOrientations ) );
+		user->setJoint( JOINT_LEFT_FOOT, createJointFromNUI( JOINT_LEFT_FOOT, NUI_SKELETON_POSITION_FOOT_LEFT, nuiFrame.SkeletonData[i], nuiOrientations ) );
 
-		user->setJoint( JOINT_RIGHT_HIP, getJoint( JOINT_RIGHT_HIP, NUI_SKELETON_POSITION_HIP_RIGHT, nuiFrame.SkeletonData[i] ) );
-		user->setJoint( JOINT_RIGHT_KNEE, getJoint( JOINT_RIGHT_KNEE, NUI_SKELETON_POSITION_KNEE_RIGHT, nuiFrame.SkeletonData[i] ) );
-		user->setJoint( JOINT_RIGHT_ANKLE, getJoint( JOINT_RIGHT_ANKLE, NUI_SKELETON_POSITION_ANKLE_RIGHT, nuiFrame.SkeletonData[i] ) );
-		user->setJoint( JOINT_RIGHT_FOOT, getJoint( JOINT_RIGHT_FOOT, NUI_SKELETON_POSITION_FOOT_RIGHT, nuiFrame.SkeletonData[i] ) );
+		user->setJoint( JOINT_RIGHT_HIP, createJointFromNUI( JOINT_RIGHT_HIP, NUI_SKELETON_POSITION_HIP_RIGHT, nuiFrame.SkeletonData[i], nuiOrientations ) );
+		user->setJoint( JOINT_RIGHT_KNEE, createJointFromNUI( JOINT_RIGHT_KNEE, NUI_SKELETON_POSITION_KNEE_RIGHT, nuiFrame.SkeletonData[i], nuiOrientations ) );
+		user->setJoint( JOINT_RIGHT_ANKLE, createJointFromNUI( JOINT_RIGHT_ANKLE, NUI_SKELETON_POSITION_ANKLE_RIGHT, nuiFrame.SkeletonData[i], nuiOrientations ) );
+		user->setJoint( JOINT_RIGHT_FOOT, createJointFromNUI( JOINT_RIGHT_FOOT, NUI_SKELETON_POSITION_FOOT_RIGHT, nuiFrame.SkeletonData[i], nuiOrientations ) );
 	}
 	m_NotificationNewUserdata.notify_all();
 	m_bIsNewUserData = m_bIsNewSkeletonData = true;
 }
 
-_2RealTrackedJoint_sptr WSDKDevice::getJoint( _2RealJointType type, _NUI_SKELETON_POSITION_INDEX nuiType, const NUI_SKELETON_DATA& data )
+_2RealTrackedJoint_sptr WSDKDevice::createJointFromNUI( _2RealJointType type, _NUI_SKELETON_POSITION_INDEX nuiType, const NUI_SKELETON_DATA& data, const NUI_SKELETON_BONE_ORIENTATION* nuiOrientation )
 {
 	_2RealVector3f screenPos;
 	_2RealVector3f worldPos;
 	
 	// Mirror skeleton joints when user image is mirrored
+	Vector4 position = data.SkeletonPositions[nuiType];
 	if(!m_bIsMirroringUser)
 	{
-		Vector4 tmp = data.SkeletonPositions[nuiType];
-		tmp.x = (FLOAT)1.0 -tmp.x;
-		NuiTransformSkeletonToDepthImage( tmp, (FLOAT*)&screenPos.x, (FLOAT*)&screenPos.y );
+		position.x = (FLOAT)1.0 -position.x;
 	}
 	else
-		NuiTransformSkeletonToDepthImage( data.SkeletonPositions[nuiType], (FLOAT*)&screenPos.x, (FLOAT*)&screenPos.y );
-
+		NuiTransformSkeletonToDepthImage( position, (FLOAT*)&screenPos.x, (FLOAT*)&screenPos.y );
+	
 	screenPos.z = data.SkeletonPositions[nuiType].z;
-
 	worldPos.x = data.SkeletonPositions[nuiType].x;
 	worldPos.y = data.SkeletonPositions[nuiType].y;
 	worldPos.z = data.SkeletonPositions[nuiType].z;
 	
+	// fetch orientations
+	
+	const NUI_SKELETON_BONE_ORIENTATION& boneOrientation = nuiOrientation[nuiType];
+	
+	_2RealMatrix3x3 rotMatrix;
+	rotMatrix.m11 = boneOrientation.absoluteRotation.rotationMatrix.M11;
+	rotMatrix.m12 = boneOrientation.absoluteRotation.rotationMatrix.M12;
+	rotMatrix.m13 = boneOrientation.absoluteRotation.rotationMatrix.M13;
+
+	rotMatrix.m21 = boneOrientation.absoluteRotation.rotationMatrix.M21;
+	rotMatrix.m22 = boneOrientation.absoluteRotation.rotationMatrix.M22;
+	rotMatrix.m23 = boneOrientation.absoluteRotation.rotationMatrix.M23;
+
+	rotMatrix.m31 = boneOrientation.absoluteRotation.rotationMatrix.M31;
+	rotMatrix.m32 = boneOrientation.absoluteRotation.rotationMatrix.M32;
+	rotMatrix.m33 = boneOrientation.absoluteRotation.rotationMatrix.M33;
+
 	
 	return _2RealTrackedJoint_sptr( new _2RealTrackedJoint( type,
-														 screenPos,
-														 worldPos,
-														 _2RealMatrix3x3(),
-														 _2RealJointConfidence(1, 0)));		// orientation confidence set to 0 because it is not yet supported
+															screenPos,
+															worldPos,
+															rotMatrix,
+															_2RealJointConfidence( 1, 1 )));
 }
 
 void WSDKDevice::getUsers( bool waitForNewData, _2RealTrackedUserVector& out )
