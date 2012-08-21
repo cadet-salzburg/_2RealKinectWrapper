@@ -59,18 +59,18 @@ class _2RealTrackedUser
 			Use _2RealJointType enum to return a specific joint through the operator[] ( getJointWorldPositions()[JOINT_HEAD] )
 			/param jointVertices a vector of floats where the xyz coordinates of the users' joints will be stored
 			*/
-		_2RealPositionsVector3f&					getSkeletonWorldPositions( );
+		_2RealPositionsVector3f					getSkeletonWorldPositions( );
 
 		/*! /brief		returns a vector containing the users' joint positions in screen space; if confidence expectations aren't met position for joint will be (0,0,0)
 						Use _2RealJointType enum to return a specific joint through the operator[] ( getJointWorldPositions()[JOINT_HEAD] )
 			/param		jointVertices a vector of floats where the xyz coordinates of the users' joints will be stored
 		*/
-		_2RealPositionsVector3f&					getSkeletonScreenPositions( );
+		_2RealPositionsVector3f					getSkeletonScreenPositions( );
 
 		/*! /brief		returns a vector containing the users' joint orientations; if confidence expectations aren't met position for joint will be (0,0,0)
 						Use _2RealJointType enum to return a specific joint through the operator[] ( getJointWorldPositions()[JOINT_HEAD] )
 		*/
-		_2RealOrientationsMatrix3x3& getSkeletonWorldOrientations( );
+		_2RealOrientationsMatrix3x3 getSkeletonWorldOrientations( );
 
 		/*! /brief     returns the world position of a specific user joint
 			/return    _2RealKinectWrapper::_2RealVector3f

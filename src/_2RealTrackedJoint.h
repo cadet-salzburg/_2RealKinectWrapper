@@ -26,8 +26,6 @@
 //enum XnSkeletonJoint;
 namespace _2RealKinectWrapper
 {
-	class _2RealTrackedJoint;
-	typedef std::vector<boost::shared_ptr<_2RealTrackedJoint> >	_2RealTrackedJointVector;
 
 class _2RealTrackedJoint
 {
@@ -67,14 +65,14 @@ class _2RealTrackedJoint
 
 		// name of the joint
 		_2RealJointType							m_JointType;
-		// xy screen corrdinates, z = 0
+		// xy screen coordinates, z = 0
 		_2RealVector3f							m_ScreenPosition;
 		// xyz world coordinates
 		_2RealVector3f							m_WorldPosition;
 		// orientation, represented by 3x3-Matrix
 		_2RealMatrix3x3							m_WorldOrientation;
 		// orientation, position confidence
-		_2RealJointConfidence						m_Confidence;
+		_2RealJointConfidence					m_Confidence;
 
 		friend class _2RealTrackedUser;
 		#ifndef TARGET_MSKINECTSDK

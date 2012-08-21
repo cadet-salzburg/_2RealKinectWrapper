@@ -68,7 +68,7 @@ class WSDKDevice
 		bool							isDeviceStarted() const;
 		bool							isDeviceShutDown() const;
 
-		_2RealTrackedUserVector  		getUsers( bool waitForNewData );
+		void  		getUsers( bool waitForNewData, _2RealTrackedUserVector& out );
 		boost::shared_array<uchar>		getColorImageBuffer( bool waitForNewData );
 		boost::shared_array<uchar>		getDepthImageBuffer( bool waitForNewData );
 		boost::shared_array<uchar>		getUserImageBuffer( bool waitForNewData );
@@ -76,6 +76,7 @@ class WSDKDevice
 		boost::shared_array<uint16_t>	getDepthImageBuffer16Bit( bool waitForNewData );
 		int								getMotorAngle();
 		WSDKDeviceConfiguration&		getDeviceConfiguration() const;
+		unsigned int					getNumberOfUsers();
 
 		bool							setMotorAngle(int angle);
 		void							setMirroringColor( const bool flag );
@@ -104,7 +105,7 @@ class WSDKDevice
 		void										processColorImageEvent();
 		void										processDepthImageEvent();
 		void										processSkeletonEvent();
-		boost::shared_ptr<_2RealTrackedJoint>		getJoint( _2RealJointType type, _NUI_SKELETON_POSITION_INDEX nuiType, const NUI_SKELETON_DATA& data );
+		_2RealTrackedJoint_sptr						getJoint( _2RealJointType type, _NUI_SKELETON_POSITION_INDEX nuiType, const NUI_SKELETON_DATA& data );
 								
 
 	// Member

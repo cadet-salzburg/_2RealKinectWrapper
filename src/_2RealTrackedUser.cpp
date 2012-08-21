@@ -46,10 +46,10 @@ _2RealTrackedUser& _2RealTrackedUser::operator=( const _2RealTrackedUser& o )
 
 _2RealTrackedUser::~_2RealTrackedUser()
 {
-	m_Joints.clear();
+	
 }
 
-_2RealPositionsVector3f& _2RealTrackedUser::getSkeletonWorldPositions()
+_2RealPositionsVector3f _2RealTrackedUser::getSkeletonWorldPositions()
 {
 	m_JointWorldPositions.clear(); //empty world position vector
 	int size = (int)m_Joints.size();
@@ -61,7 +61,7 @@ _2RealPositionsVector3f& _2RealTrackedUser::getSkeletonWorldPositions()
 	return m_JointWorldPositions;
 }
 
-_2RealPositionsVector3f& _2RealTrackedUser::getSkeletonScreenPositions()
+_2RealPositionsVector3f _2RealTrackedUser::getSkeletonScreenPositions()
 {
 	m_JointScreenPositions.clear(); //empty world position vector
 	int size = (int)m_Joints.size();
@@ -73,7 +73,7 @@ _2RealPositionsVector3f& _2RealTrackedUser::getSkeletonScreenPositions()
 	return m_JointScreenPositions;
 }
 
-_2RealOrientationsMatrix3x3& _2RealTrackedUser::getSkeletonWorldOrientations()
+_2RealOrientationsMatrix3x3 _2RealTrackedUser::getSkeletonWorldOrientations()
 {
 	m_JointWorldOrientations.clear(); //empty world position vector
 	int size = (int)m_Joints.size();

@@ -33,7 +33,7 @@
 #include "cinder/Rect.h"
 #include "cinder/Utilities.h"
 #include "cinder/Camera.h"
-#include <vld.h>
+//#include <vld.h>
 
 // _2RealKinect Include
 //#define TARGET_MSKINECTSDK		// use this for MS Kinect SDK, comment it or just not define it for using OpenNI
@@ -176,16 +176,12 @@ void MultipleKinectApp::drawKinectImages()
 	for( int i = 0; i < m_iNumberOfDevices; ++i)
 	{
 		//---------------Color Image---------------------//
-		m_iKinectWidth  = m_2RealKinect->getImageWidth(i, COLORIMAGE );
-		m_iKinectHeight = m_2RealKinect->getImageHeight(i, COLORIMAGE );
 		ci::Rectf destinationRectangle( m_ImageSize.x * i, 0, m_ImageSize.x * (i+1), m_ImageSize.y);
 		imgRef = getImageData( i, COLORIMAGE, m_iKinectWidth, m_iKinectHeight, numberChannels);
 		Surface8u color( imgRef.get(), m_iKinectWidth, m_iKinectHeight, m_iKinectWidth*numberChannels, SurfaceChannelOrder::RGB );
 		gl::draw( gl::Texture( color ), destinationRectangle );
 
 		//---------------Depth Image---------------------//
-		m_iKinectWidth = m_2RealKinect->getImageWidth(i, DEPTHIMAGE );
-		m_iKinectHeight = m_2RealKinect->getImageHeight(i, DEPTHIMAGE );
 		imgRef = getImageData( i, DEPTHIMAGE, m_iKinectWidth, m_iKinectHeight, numberChannels);
 		Channel depth( m_iKinectWidth, m_iKinectHeight, m_iKinectWidth, numberChannels, imgRef.get() );
 		destinationRectangle.offset( ci::Vec2f( 0, m_ImageSize.y) );
@@ -196,8 +192,6 @@ void MultipleKinectApp::drawKinectImages()
 		if( i == 0 )						
 #endif
 		{
-			m_iKinectWidth = m_2RealKinect->getImageWidth(i, USERIMAGE_COLORED );
-			m_iKinectHeight = m_2RealKinect->getImageHeight(i, USERIMAGE_COLORED );
 			imgRef = getImageData( i, USERIMAGE_COLORED, m_iKinectWidth, m_iKinectHeight, numberChannels);
 			if( imgRef )
 			{

@@ -233,7 +233,7 @@ public:
 
 	virtual bool hasFeatureJointOrientation() const
 	{
-		throw std::exception("The method or operation is not implemented.");
+		return false;
 	}
 
 	virtual bool setMotorAngle( int deviceID, int& angle ) 
@@ -246,7 +246,7 @@ public:
 		throw std::exception("The method or operation is not implemented.");
 	}
 
-	virtual const _2RealOrientationsMatrix3x3& getSkeletonWorldOrientations( const uint32_t deviceID, const uint8_t userID ) 
+	virtual const _2RealOrientationsMatrix3x3 getSkeletonWorldOrientations( const uint32_t deviceID, const uint8_t userID ) 
 	{
 		return getCheckedUser( "getSkeletonWorlOrientations", deviceID, userID )->getSkeletonWorldOrientations();
 	}
@@ -261,12 +261,12 @@ public:
 		return getCheckedUser( "getSkeletonJointConfidences", deviceID, userID )->getJointConfidences();
 	}
 
-	virtual const _2RealPositionsVector3f& getSkeletonWorldPositions( const uint32_t deviceID, const uint8_t userID ) 
+	virtual const _2RealPositionsVector3f getSkeletonWorldPositions( const uint32_t deviceID, const uint8_t userID ) 
 	{
 		return getCheckedUser( "getSkeletonWorldPositions", deviceID, userID )->getSkeletonWorldPositions();
 	}
 
-	virtual const _2RealPositionsVector3f& getSkeletonScreenPositions( const uint32_t deviceID, const uint8_t userID ) 
+	virtual const _2RealPositionsVector3f getSkeletonScreenPositions( const uint32_t deviceID, const uint8_t userID ) 
 	{
 		return getCheckedUser( "getSkeletonScreenPositions", deviceID, userID )->getSkeletonScreenPositions();
 	}
@@ -368,7 +368,7 @@ public:
 	{
 		if( !isDeviceStarted( deviceID ) )
 			throwError( "_2Real: getNumberOfUsers() Error, device is not started!" );
-		return m_Devices[deviceID]->getUsers( false ).size();
+		return m_Devices[deviceID]->getNumberOfUsers();
 	}
 
 	virtual const uint32_t getNumberOfSkeletons( const uint32_t deviceID ) const
@@ -483,7 +483,8 @@ public:
 		{
 			if( !isDeviceStarted( deviceID ) )
 				throwError( "_2Real: " + methodName + "() Error, device is not started" );
-			_2RealTrackedUserVector OutUsers = m_Devices[deviceID]->getUsers( false ); 
+			_2RealTrackedUserVector OutUsers;
+			m_Devices[deviceID]->getUsers( false, OutUsers ); 
 			if( userID >= OutUsers.size() )
 				throwError( "_2Real: " + methodName + "() Error, userID out of bounds!" );
 			return OutUsers[userID];

@@ -65,9 +65,9 @@ class I_2RealImplementation
 		virtual void								setResolution( const uint32_t deviceID, _2RealGenerator type, unsigned int hRes, unsigned int vRes ) = 0;
 		virtual const _2RealJointConfidence			getSkeletonJointConfidence(const uint32_t deviceID, const uint8_t userID, _2RealJointType type) = 0;
 		virtual const _2RealJointConfidences		getSkeletonJointConfidences(const uint32_t deviceID, const uint8_t userID) = 0;
-		virtual const _2RealPositionsVector3f&		getSkeletonScreenPositions( const uint32_t deviceID, const uint8_t userID ) = 0;
-		virtual const _2RealOrientationsMatrix3x3&	getSkeletonWorldOrientations( const uint32_t deviceID, const uint8_t userID ) = 0;
-		virtual const _2RealPositionsVector3f&		getSkeletonWorldPositions( const uint32_t deviceID, const uint8_t userID ) = 0;
+		virtual const _2RealPositionsVector3f		getSkeletonScreenPositions( const uint32_t deviceID, const uint8_t userID ) = 0;
+		virtual const _2RealOrientationsMatrix3x3	getSkeletonWorldOrientations( const uint32_t deviceID, const uint8_t userID ) = 0;
+		virtual const _2RealPositionsVector3f		getSkeletonWorldPositions( const uint32_t deviceID, const uint8_t userID ) = 0;
 
 		virtual const uint32_t						getNumberOfUsers( const uint32_t deviceID ) const = 0;
 		virtual const uint32_t						getNumberOfSkeletons( const uint32_t deviceID ) const = 0;

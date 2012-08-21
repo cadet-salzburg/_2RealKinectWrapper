@@ -184,6 +184,8 @@ DWORD WINAPI WSDKDevice::threadEventsFetcher( LPVOID pParam )
 
 	while( true )
 	{
+		try{
+
 		//waiting for events
 		eventIndex = WaitForMultipleObjects( 4, pThis->m_WTEvents, false, INFINITE );
 
@@ -200,6 +202,17 @@ DWORD WINAPI WSDKDevice::threadEventsFetcher( LPVOID pParam )
 		case WT_EVENT_SKELETON:
 			pThis->processSkeletonEvent();
 			break;
+		}
+
+		pThis->getNumberOfUsers();
+		}
+		catch( std::exception& e )
+		{
+			std::cout << e.what() << std::endl;
+		}
+		catch( ... )
+		{
+
 		}
 	}
 	return 0;
@@ -337,7 +350,7 @@ void WSDKDevice::processSkeletonEvent()
 	if( m_bIsDeletingDevice )
 		return;
 
-	boost::mutex::scoped_lock(m_MutexUser);
+	boost::mutex::scoped_lock lock(m_MutexUser);
 	
 	NUI_SKELETON_FRAME nuiFrame;
 	m_Users.clear();
@@ -385,25 +398,26 @@ void WSDKDevice::processSkeletonEvent()
 		else
 			continue;
 
+
 		//setting/updating joints
 		user->setJoint( JOINT_HEAD, getJoint( JOINT_HEAD, NUI_SKELETON_POSITION_HEAD, nuiFrame.SkeletonData[i] ) );
 		user->setJoint( JOINT_NECK, getJoint( JOINT_NECK, NUI_SKELETON_POSITION_SHOULDER_CENTER, nuiFrame.SkeletonData[i] ) ); 
 		user->setJoint( JOINT_TORSO, getJoint( JOINT_TORSO, NUI_SKELETON_POSITION_SPINE, nuiFrame.SkeletonData[i] ) );
 		user->setJoint( JOINT_WAIST, getJoint( JOINT_WAIST, NUI_SKELETON_POSITION_HIP_CENTER, nuiFrame.SkeletonData[i] ) );
 
-		user->setJoint( JOINT_LEFT_COLLAR, boost::shared_ptr<_2RealTrackedJoint>( new _2RealTrackedJoint( JOINT_LEFT_COLLAR ) ) ); //empty joint -> not supported
+		user->setJoint( JOINT_LEFT_COLLAR, _2RealTrackedJoint_sptr( new _2RealTrackedJoint( JOINT_LEFT_COLLAR ) ) ); //empty joint -> not supported
 		user->setJoint( JOINT_LEFT_SHOULDER, getJoint( JOINT_LEFT_SHOULDER, NUI_SKELETON_POSITION_SHOULDER_LEFT, nuiFrame.SkeletonData[i] ) );
 		user->setJoint( JOINT_LEFT_ELBOW, getJoint( JOINT_LEFT_ELBOW, NUI_SKELETON_POSITION_ELBOW_LEFT, nuiFrame.SkeletonData[i] ) );
 		user->setJoint( JOINT_LEFT_WRIST, getJoint( JOINT_LEFT_WRIST, NUI_SKELETON_POSITION_WRIST_LEFT, nuiFrame.SkeletonData[i] ) );
 		user->setJoint( JOINT_LEFT_HAND, getJoint( JOINT_LEFT_HAND, NUI_SKELETON_POSITION_HAND_LEFT, nuiFrame.SkeletonData[i] ) );
-		user->setJoint( JOINT_LEFT_FINGERTIP, boost::shared_ptr<_2RealTrackedJoint>( new _2RealTrackedJoint( JOINT_LEFT_FINGERTIP ) ) ); //empty joint -> not supported
+		user->setJoint( JOINT_LEFT_FINGERTIP, _2RealTrackedJoint_sptr( new _2RealTrackedJoint( JOINT_LEFT_FINGERTIP ) ) ); //empty joint -> not supported
 
-		user->setJoint( JOINT_RIGHT_COLLAR, boost::shared_ptr<_2RealTrackedJoint>( new _2RealTrackedJoint( JOINT_LEFT_COLLAR ) ) ); //empty joint -> not supported
+		user->setJoint( JOINT_RIGHT_COLLAR, _2RealTrackedJoint_sptr( new _2RealTrackedJoint( JOINT_LEFT_COLLAR ) ) ); //empty joint -> not supported
 		user->setJoint( JOINT_RIGHT_SHOULDER, getJoint( JOINT_RIGHT_SHOULDER, NUI_SKELETON_POSITION_SHOULDER_RIGHT, nuiFrame.SkeletonData[i] ) );
 		user->setJoint( JOINT_RIGHT_ELBOW, getJoint( JOINT_RIGHT_ELBOW, NUI_SKELETON_POSITION_ELBOW_RIGHT, nuiFrame.SkeletonData[i] ) );
 		user->setJoint( JOINT_RIGHT_WRIST, getJoint( JOINT_RIGHT_WRIST, NUI_SKELETON_POSITION_WRIST_RIGHT, nuiFrame.SkeletonData[i] ) );
 		user->setJoint( JOINT_RIGHT_HAND, getJoint( JOINT_RIGHT_HAND, NUI_SKELETON_POSITION_HAND_RIGHT, nuiFrame.SkeletonData[i] ) );
-		user->setJoint( JOINT_RIGHT_FINGERTIP, boost::shared_ptr<_2RealTrackedJoint>( new _2RealTrackedJoint( JOINT_RIGHT_FINGERTIP ) ) ); //empty joint -> not supported
+		user->setJoint( JOINT_RIGHT_FINGERTIP, _2RealTrackedJoint_sptr( new _2RealTrackedJoint( JOINT_RIGHT_FINGERTIP ) ) ); //empty joint -> not supported
 		
 		user->setJoint( JOINT_LEFT_HIP, getJoint( JOINT_LEFT_HIP, NUI_SKELETON_POSITION_HIP_LEFT, nuiFrame.SkeletonData[i] ) );
 		user->setJoint( JOINT_LEFT_KNEE, getJoint( JOINT_LEFT_KNEE, NUI_SKELETON_POSITION_KNEE_LEFT, nuiFrame.SkeletonData[i] ) );
@@ -419,7 +433,7 @@ void WSDKDevice::processSkeletonEvent()
 	m_bIsNewUserData = m_bIsNewSkeletonData = true;
 }
 
-boost::shared_ptr<_2RealTrackedJoint> WSDKDevice::getJoint( _2RealJointType type, _NUI_SKELETON_POSITION_INDEX nuiType, const NUI_SKELETON_DATA& data )
+_2RealTrackedJoint_sptr WSDKDevice::getJoint( _2RealJointType type, _NUI_SKELETON_POSITION_INDEX nuiType, const NUI_SKELETON_DATA& data )
 {
 	_2RealVector3f screenPos;
 	_2RealVector3f worldPos;
@@ -441,22 +455,33 @@ boost::shared_ptr<_2RealTrackedJoint> WSDKDevice::getJoint( _2RealJointType type
 	worldPos.z = data.SkeletonPositions[nuiType].z;
 	
 	
-	return boost::shared_ptr<_2RealTrackedJoint>(new _2RealTrackedJoint( type, screenPos, worldPos, _2RealMatrix3x3(),  _2RealJointConfidence(1, 0)));		// orientation confidence set to 0 because it is not yet supported
+	return _2RealTrackedJoint_sptr( new _2RealTrackedJoint( type,
+														 screenPos,
+														 worldPos,
+														 _2RealMatrix3x3(),
+														 _2RealJointConfidence(1, 0)));		// orientation confidence set to 0 because it is not yet supported
 }
 
-_2RealTrackedUserVector WSDKDevice::getUsers( bool waitForNewData )
+void WSDKDevice::getUsers( bool waitForNewData, _2RealTrackedUserVector& out )
 {
 	boost::mutex::scoped_lock lock( m_MutexFetchUser );
 	if( waitForNewData ) //wait for signal for new data of processing thread
 	{
 		m_NotificationNewUserdata.wait( lock );
 	}
-
+	out.clear();
 	//prevent changing data fetching thread to change vector while copying
-	boost::mutex::scoped_lock lock1(m_MutexUser);
-
-	return m_Users;
+	boost::mutex::scoped_lock lock1( m_MutexUser );
+	out = m_Users;
 }
+
+unsigned int WSDKDevice::getNumberOfUsers()
+{
+	//prevent changing data fetching thread to change vector while copying
+	boost::mutex::scoped_lock lock( m_MutexUser );
+	return m_Users.size();
+}
+
 
 boost::shared_array<uchar> WSDKDevice::getColorImageBuffer( bool waitForNewData )
 {
