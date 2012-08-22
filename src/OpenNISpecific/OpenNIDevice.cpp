@@ -842,8 +842,20 @@ _2RealTrackedJointRef OpenNIDevice::getUserJoint( const uint32_t userID, XnSkele
 	getExistingProductionNode( XN_NODE_TYPE_DEPTH, depthGen );	
 	xnConvertRealWorldToProjective( depthGen.GetHandle(), 1, &joint.position.position, &screenPos ); 
 	_2RealMatrix3x3 mat;
-	for( int i=0; i < 9; ++i )
-		mat.elements[i] = joint.orientation.orientation.elements[i];
+
+	//for( int i=0; i < 9; ++i )
+	//	mat.elements[i] = joint.orientation.orientation.elements[i];
+
+	mat.m11 = joint.orientation.orientation.elements[0];
+	mat.m12 = joint.orientation.orientation.elements[1];
+	mat.m13 = joint.orientation.orientation.elements[2];
+	mat.m21 = joint.orientation.orientation.elements[3];
+	mat.m22 = joint.orientation.orientation.elements[4];
+	mat.m23 = joint.orientation.orientation.elements[5];
+	mat.m31 = joint.orientation.orientation.elements[6];
+	mat.m32 = joint.orientation.orientation.elements[7];
+	mat.m33 = joint.orientation.orientation.elements[8];
+
 
 	_2RealJointConfidence confidence((float)joint.position.fConfidence, (float)joint.orientation.fConfidence);
 
