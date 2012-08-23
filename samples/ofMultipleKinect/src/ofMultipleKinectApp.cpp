@@ -140,15 +140,25 @@ void ofMultipleKinectApp::drawSkeletons(int deviceID, ofRectangle rect)
 						float modelview[16];
 						glGetFloatv(GL_MODELVIEW_MATRIX , modelview);
 
-						modelview[0] = skeletonOrientations[j].elements[0];
-						modelview[1] = skeletonOrientations[j].elements[3];
-						modelview[2] = skeletonOrientations[j].elements[6];
-						modelview[4] = skeletonOrientations[j].elements[1];
-						modelview[5] = skeletonOrientations[j].elements[4];
-						modelview[6] = skeletonOrientations[j].elements[7];
-						modelview[8] = skeletonOrientations[j].elements[2];
-						modelview[9] = skeletonOrientations[j].elements[5];
-						modelview[10] = skeletonOrientations[j].elements[8];
+						//modelview[0] = skeletonOrientations[j].elements[0];
+						//modelview[1] = skeletonOrientations[j].elements[3];
+						//modelview[2] = skeletonOrientations[j].elements[6];
+						//modelview[4] = skeletonOrientations[j].elements[1];
+						//modelview[5] = skeletonOrientations[j].elements[4];
+						//modelview[6] = skeletonOrientations[j].elements[7];
+						//modelview[8] = skeletonOrientations[j].elements[2];
+						//modelview[9] = skeletonOrientations[j].elements[5];
+						//modelview[10] = skeletonOrientations[j].elements[8];
+
+						modelview[0] = skeletonOrientations[j].m11;
+						modelview[1] = skeletonOrientations[j].m12;
+						modelview[2] = skeletonOrientations[j].m13;
+						modelview[4] = skeletonOrientations[j].m21;
+						modelview[5] = skeletonOrientations[j].m22;
+						modelview[6] = skeletonOrientations[j].m23;
+						modelview[8] = skeletonOrientations[j].m31;
+						modelview[9] = skeletonOrientations[j].m32;
+						modelview[10] = skeletonOrientations[j].m33;
 
 						glLoadMatrixf(modelview);
 						ofDrawAxis(fRadius);

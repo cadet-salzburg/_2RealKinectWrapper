@@ -1,3 +1,4 @@
+#ifdef TARGET_MSKINECTSDK
 #include "WSDKDeviceConfiguration.h"
 
 
@@ -28,3 +29,4 @@ void WSDKDeviceConfiguration::reset()
 	m_Generators2Real = m_GeneratorsWSDK = m_ImageConfig2Real = 0;
 	m_ImageResColor = m_ImageResDepth = m_ImageResUser = m_ImageResInfrared = ImageRes();
 }
+#endif

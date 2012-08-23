@@ -1,4 +1,5 @@
 #pragma once
+#ifdef TARGET_MSKINECTSDK
 #include <Windows.h>
 #include "NuiApi.h"
 #include "_2RealTypes.h"
@@ -31,3 +32,4 @@ class WSDKDeviceConfiguration
 	ImageRes				m_ImageResUser;
 	ImageRes				m_ImageResInfrared;
 };
+#endif
