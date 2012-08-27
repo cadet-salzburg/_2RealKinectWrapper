@@ -54,6 +54,7 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 		bool		 														m_IsInitialized;
 		_2RealTrackedUserVector												m_TrackedUserVector;
 		bool																m_ShouldUpdate;
+		bool																m_StopRequested;
 		boost::thread														m_ProcessingThread;
 		virtual void initialize()
 		{
@@ -132,7 +133,7 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 
 		 void update()
 		 {
-			 while ( true )
+			 while ( !m_StopRequested )
 			 {
 				 if ( m_ShouldUpdate )
 				 {
@@ -147,10 +148,11 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 	public:
 		_2RealImplementationOpenNI()
 			:m_NumDevices( 0 ),
-			 m_IsInitialized( 0 ),
+			 m_IsInitialized( false ),
 			 m_GeneratorConfig( CONFIG_DEFAULT ),
 			 m_ImageConfig( IMAGE_CONFIG_DEFAULT ),
-			 m_ShouldUpdate( false )
+			 m_ShouldUpdate( false ),
+			 m_StopRequested( false )
 		{
 			initialize();
 		}
@@ -316,7 +318,23 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 		}
 		virtual bool shutdown()
 		{
+			m_StopRequested = true;
+			m_ProcessingThread.join();
 			return false;
+
+			if( m_IsInitialized )
+			{
+				_2REAL_LOG( info )  << std::endl << "_2Real: Shutting down system..." << std::endl;
+				m_StopRequested = true;
+				m_ProcessingThread.join();
+				m_IsInitialized = false;
+				_2REAL_LOG( info ) << "OK" << std::endl;
+				return true;
+			}
+			_2REAL_LOG( warn ) << std::endl << "_2Real: System not shutdown correctly..." << std::endl;
+			return false;
+
+
 		}
 		virtual boost::shared_array<unsigned char> getImageData( const uint32_t deviceID, _2RealGenerator type, bool waitAndBlock, const uint8_t userId )
 		{
@@ -444,7 +462,7 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 			return m_TrackedUserVector[userID]->getJointWorldPosition( type );
 		}
 
-		virtual const _2RealPositionsVector3f& getSkeletonWorldPositions( const uint32_t deviceID, const uint8_t userID )
+		virtual const _2RealPositionsVector3f getSkeletonWorldPositions( const uint32_t deviceID, const uint8_t userID )
 		{
 			checkDeviceRunning(deviceID);
 
@@ -470,7 +488,7 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 			return m_TrackedUserVector[userID]->getJointScreenPosition( type );
 		}
 
-		virtual const _2RealPositionsVector3f& getSkeletonScreenPositions( const uint32_t deviceID, const uint8_t userID )
+		virtual const _2RealPositionsVector3f getSkeletonScreenPositions( const uint32_t deviceID, const uint8_t userID )
 		{
 			checkDeviceRunning(deviceID);
 
@@ -485,7 +503,7 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 			return m_TrackedUserVector[userID]->getSkeletonScreenPositions();
 		}
 
-		virtual const _2RealOrientationsMatrix3x3& getSkeletonWorldOrientations( const uint32_t deviceID, const uint8_t userID )
+		virtual const _2RealOrientationsMatrix3x3 getSkeletonWorldOrientations( const uint32_t deviceID, const uint8_t userID )
 		{
 			checkDeviceRunning(deviceID);
 
