@@ -22,9 +22,7 @@ _2RealInstance _2RealKinect::getInstance()
 	boost::interprocess::scoped_lock<boost::mutex> lock( _global_2RealMutex );
 	if( !m_Instance )
 	{
-		//m_Instance = boost::shared_ptr<_2RealKinect>( new _2RealKinect(), blu );
 		m_Instance = new _2RealKinect();
-		//m_Instance = shared_from_this();
 	}
 	return m_Instance;
 }
@@ -93,6 +91,11 @@ bool _2RealKinect::generatorIsActive( const uint32_t deviceID, _2RealGenerator t
 bool _2RealKinect::shutdown()
 {
 	m_Implementation->shutdown();
+	if( m_Instance )
+	{
+		delete m_Instance;
+		m_Instance = nullptr;
+	}
 	return true;
 }
 

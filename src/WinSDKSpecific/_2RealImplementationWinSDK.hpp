@@ -55,10 +55,6 @@ public:
 		initialize();
 	}
 
-	~_2RealImplementationWinSDK()
-	{
-		
-	}
 
 
 	virtual bool configureDevice( const uint32_t deviceID, uint32_t startGenerators, uint32_t configureImages ) 
@@ -182,7 +178,25 @@ public:
 
 	virtual bool generatorIsActive( const uint32_t deviceID, _2RealGenerator type ) 
 	{
-		throw std::exception("The method or operation is not implemented.");
+		if( !isValidDevice( deviceID ) )
+		{
+			_2REAL_LOG(warn) << "_2Real: generatorIsActive() Error, deviceid: " << deviceID
+							 << " is not valid!" << std::endl;
+			return false;
+		}
+
+		if( type & COLORIMAGE )
+			return m_Devices[deviceID]->isDeviceStarted();
+		else if( type & USERIMAGE )
+			return m_Devices[deviceID]->isDeviceStarted();
+		else if( type & DEPTHIMAGE )
+			return m_Devices[deviceID]->isDeviceStarted();
+
+		if( ( type & INFRAREDIMAGE ) )
+		{
+			_2REAL_LOG( warn ) << "_2Real: setMirrored(), Infrared capability is not supported by Win-SDK!" << std::endl;
+		}
+		return false;
 	}
 
 	virtual void setResolution( const uint32_t deviceID, _2RealGenerator type, unsigned int hRes, unsigned int vRes ) 
@@ -278,7 +292,13 @@ public:
 
 	virtual bool depthIsAlignedToColor( const uint32_t deviceID ) 
 	{
-		throw std::exception("The method or operation is not implemented.");
+		if( !isValidDevice( deviceID ) )
+		{
+			_2REAL_LOG(warn) << "_2Real: depthIsAlignedToColor() Error, deviceid: " << deviceID
+							 << " is not valid!" << std::endl;
+			return false;
+		}
+		return m_Devices[deviceID]->isFlagEnabled( DFLAG_ALIGN_COLOR_DEPTH );
 	}
 
 	virtual const _2RealOrientationsMatrix3x3 getSkeletonWorldOrientations( const uint32_t deviceID, const uint8_t userID ) 
@@ -613,6 +633,10 @@ public:
 								<< config.m_ImageResUser.height << std::endl;
 		}
 
+		/*! \brief     This function should be called in ctor and when restarting system! It is handling
+		 *!	initialization of kinect sensors which are saved to m_Devices[]; After this functioin configureDevice()
+		 *!	and startGenerator() should be called
+		*/
 		void initialize()
 		{
 			if( !m_IsInitialized )

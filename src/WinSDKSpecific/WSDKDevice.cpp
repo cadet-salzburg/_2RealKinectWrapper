@@ -171,6 +171,7 @@ void WSDKDevice::initUserDepthStream()
 bool WSDKDevice::isNewData(_2RealGenerator type) const
 {
 	//not implemented yet
+	// this function is ridiculous!!
 	return true;
 }
 
@@ -687,10 +688,10 @@ void WSDKDevice::start()
 	m_isDeviceShutDown = false;
 }
 
-void WSDKDevice::stop( const bool shutdown )
+void WSDKDevice::stop( const bool msgThread )
 {
 	// i.e called by shutdown() stop thread thingys too
-	if( m_isDeviceShutDown == true && shutdown ) 
+	if( m_isDeviceShutDown == true && msgThread ) 
 	{
 		// wait for WT to finish
 		SetEvent( m_EventStopThread );

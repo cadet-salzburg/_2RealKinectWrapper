@@ -68,7 +68,11 @@ class WSDKDevice
 		bool										isNewData(_2RealGenerator type) const;
 		inline bool									isDeviceStarted() const { return m_isDeviceStarted; }
 		inline bool									isDeviceShutDown() const { return m_isDeviceShutDown; }
-		inline bool									isFlagEnabled( WSDKDeviceFlag flags ) const; 	/*!< Check if certain capability is enabled, check one ore more flags concatenated with | */
+		/*! \brief     Check if certain capability is enabled, check one ore more flags concatenated with |
+			\param     flags - use enum WSDKDeviceFlag
+			\return    bool - If a flag is enabled on this device
+		*/
+		inline bool									isFlagEnabled( WSDKDeviceFlag flags ) const;
 
 		void  										getUsers( bool waitForNewData, _2RealTrackedUserVector& out ) const;
 		boost::shared_array<uchar>					getColorImageBuffer( bool waitForNewData );
@@ -85,14 +89,14 @@ class WSDKDevice
 		bool										setMotorAngle( int angle );
 		inline void									setFlag( const WSDKDeviceFlag flags, const bool setEnabled ); 	/*!< Switch certain capability with one or more flags concatenated with | */
 
-		void										start();
-		void										startGenerator( uint32_t generators );
+		void										start(); 	/*!< Use this function to initially start sensor with wsdkdeviceconfiguration */
+		void										startGenerator( uint32_t generators );	/*!< Use this to reenable a gernerator if it has been removed of message-processing by stopGenerator() */
 		/*! /brief     Stopping Generators + Worker-Thread for this device
 			/param     const bool shutdown - False(Default): Stop Generators Color, Depth, Skeleton; True: Stop Generators + Worker Thread and closing handles
 		*/
-		void										stop( const bool shutdown = false );
-		void										stopGenerator( uint32_t generators );
-		void										shutdown();
+		void										stop( const bool msgThread = false );	/*!< Use this function to shutdown all generators / (shutdown = true )all generators + messaging thread */
+		void										stopGenerator( uint32_t generators );	/*!< Use this to temporary disable message-processing for a certain generator */
+		void										shutdown();	/*!< Shuts down system, release all handles and frees resources of kinect-sensor */
 
 		// Member
 		//image measurements - copy from m_configuration
@@ -101,23 +105,23 @@ class WSDKDevice
 
 
 	private:
-		static DWORD WINAPI							threadEventsFetcher( LPVOID pParam );
-		void										initColorCoords( uint32_t totalPixels );
-		void										initColorStream();
-		void										initDepthStream();
-		void										initUserDepthStream();
+		static DWORD WINAPI							threadEventsFetcher( LPVOID pParam );	/*!< Message Loop function running in a separate thread fetching messages about kinect sensor data */
+		void										initColorCoords( uint32_t totalPixels );	/*!< init collor coordinate array for depth to colorpixel mapping, should be called in init depthstream/inituserdepthstream */
+		void										initColorStream();	/*!< initialize message handles and configures image buffer to a certain resolution */
+		void										initDepthStream();	/*!< initialize message handles for depth only and configures image buffer to a certain resolution */
+		void										initUserDepthStream();	/*!< initialize message handles for user and depth and configures image buffer to a certain resolution */
 		inline uint32_t								mirrorIndex( const uint32_t index, const uint32_t imageWidth ); 	/*!< Mirroring a index to a given index and image width */
-		void										processColorImageEvent();
-		void										processDepthImageEvent();
-		void										processSkeletonEvent();
-		_2RealTrackedJoint_sptr						createJointFromNUI( _2RealJointType type, _NUI_SKELETON_POSITION_INDEX nuiType, const NUI_SKELETON_DATA& nuiData, const NUI_SKELETON_BONE_ORIENTATION* nuiOrientation );
+		void										processColorImageEvent();	/*!< callback function called by threadEventFetcher function, will copy data to imagebuffer + mirror + colorToDeph handling */
+		void										processDepthImageEvent();	/*!< callback function called by threadEventFetcher function, will copy data to imagebuffer + mirror + color coords processing */
+		void										processSkeletonEvent();	/*!< Creates Users and their Skeletons/Bones which can later be fetched through getUsers() */
+		_2RealTrackedJoint_sptr						createJointFromNUI( _2RealJointType type, _NUI_SKELETON_POSITION_INDEX nuiType, const NUI_SKELETON_DATA& nuiData, const NUI_SKELETON_BONE_ORIENTATION* nuiOrientation ); 	/*!< Creates a joint from the given nui objects */
 		inline void									setMappedColorCoords( const uint32_t index, uint16_t* depthSource, const NUI_IMAGE_VIEW_AREA* vArea ); /*! function to fill mapped color coordinates, to be called from processDepthImageEvent()! */
 
 		// Member
-		INuiSensor*									m_NuiSensor;
+		INuiSensor*									m_NuiSensor;	/*!< holding the instance of the nui-sensor, coomunication with kinect through this */
 		std::string									m_Name;
 		int											m_DeviceID;
-		WSDKDeviceConfiguration						m_Configuration;
+		WSDKDeviceConfiguration						m_Configuration; 	/*!< configuration set up with configureDevice will be saved here */
 
 		//events
 		HANDLE										m_EventColorImage;
@@ -134,8 +138,10 @@ class WSDKDevice
 		bool										m_IsDeletingDevice;
 		uint32_t									m_DeviceFlags;
 
-		// used to handle kinect events in separate thread
-		// use this enum to lookup m_WTEvents
+		/*!
+		* used to handle kinect events in separate thread
+		* use this enum to lookup m_WTEvents
+		*/
 		enum WorkerThreadEvents
 		{	
 			WT_STOP_THREAD = 0,
