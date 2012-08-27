@@ -28,8 +28,8 @@
 
 //sensor reaches up to 10 meters in OpenNI
 #define _2REAL_OPENNI_DEPTH_NORMALIZATION_16_TO_8 10000
-//sensor reaches up to 3,5 meters in WSDK
-#define _2REAL_WSDK_DEPTH_NORMALIZATION_16_TO_8 3500
+#define _2REAL_WSDK_DEPTH_NORMALIZATION_16_TO_8 3500 	/*!< 3.5m for kinect */
+
 
 
 //WSDK skeleton smoothing

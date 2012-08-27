@@ -51,17 +51,20 @@ _2RealKinect::_2RealKinect() :
 
 _2RealKinect::~_2RealKinect()
 {
-	//shutdown && freeing memory
+	// shutdown && freeing memory
 	shutdown();
 }
+
 void _2RealKinect::update()
 {
 	m_Implementation->update();
 }
+
 bool _2RealKinect::configure( const uint32_t deviceID, uint32_t startGenerators, uint32_t configureImages )
 {
 	return m_Implementation->configureDevice( deviceID, startGenerators, configureImages );
 }
+
 void _2RealKinect::startGenerator( const uint32_t deviceID, uint32_t configureGenerators )
 {
 	m_Implementation->startGenerator( deviceID, configureGenerators );
@@ -71,6 +74,7 @@ void _2RealKinect::stopGenerator( const uint32_t deviceID, uint32_t configureGen
 {
 	m_Implementation->stopGenerator( deviceID, configureGenerators );
 }
+
 void _2RealKinect::addGenerator( const uint32_t deviceID, uint32_t configureGenerators, uint32_t configureImages )
 {
 	m_Implementation->addGenerator( deviceID, configureGenerators, configureImages );
@@ -88,7 +92,7 @@ bool _2RealKinect::generatorIsActive( const uint32_t deviceID, _2RealGenerator t
 
 bool _2RealKinect::shutdown()
 {
-	//return m_Implementation->shutdown();
+	m_Implementation->shutdown();
 	return true;
 }
 
@@ -131,6 +135,7 @@ uint32_t _2RealKinect::getImageHeight( const uint32_t deviceID, _2RealGenerator 
 {
 	return m_Implementation->getImageHeight( deviceID, type );
 }
+
 void _2RealKinect::setResolution( const uint32_t deviceID, _2RealGenerator type, unsigned int hRes, unsigned int vRes )
 {
 	m_Implementation->setResolution( deviceID, type, hRes, vRes );

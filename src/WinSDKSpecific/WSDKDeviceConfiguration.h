@@ -2,6 +2,10 @@
 #include <Windows.h>
 #include "NuiApi.h"
 #include "_2RealTypes.h"
+
+namespace _2RealKinectWrapper
+{
+
 /*!
 * Holding information about configurations of a WSDK-Generator
 */
@@ -31,3 +35,6 @@ class WSDKDeviceConfiguration
 	ImageRes				m_ImageResUser;
 	ImageRes				m_ImageResInfrared;
 };
+
+
+}

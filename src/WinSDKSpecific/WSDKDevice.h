@@ -39,6 +39,18 @@
 namespace _2RealKinectWrapper
 {
 
+/*!
+* Used to check or enable/disable WSDKDevice capabilities
+* To be used in WSDKDevice::isFlagEnabled(), WSDKDevice::setFlag()
+*/
+enum WSDKDeviceFlag
+{
+	DFLAG_ALIGN_COLOR_DEPTH = 1,
+	DFLAG_MIRROR_COLOR = 2,
+	DFLAG_MIRROR_DEPTH = 4,
+	DFLAG_MIRROR_USER = 8,
+	DFLAG_DEPTH_ONLY = 16
+};
 
 /*!
 * Representing a kinect sensors functionality
@@ -48,95 +60,78 @@ class WSDKDevice
 
 	public:
 		WSDKDevice( INuiSensor* devicePtr, const std::string& name );
-		virtual ~WSDKDevice(void);
 
-		struct BGRX
-		{
-			uchar		b, g, r, x;
-		};
+		struct BGRX									{	uchar	b, g, r, x;	};
+		struct RGB									{	uchar	r, g, b;	};
 
-		struct RGB
-		{
-			uchar		r, g, b;
-		};
+		bool										isNewData(_2RealGenerator type) const;
+		inline bool									isDeviceStarted() const { return m_isDeviceStarted; }
+		inline bool									isDeviceShutDown() const { return m_isDeviceShutDown; }
+		inline bool									isFlagEnabled( WSDKDeviceFlag flags ) const; 	/*!< Check if certain capability is enabled, check one ore more flags concatenated with | */
 
+		void  										getUsers( bool waitForNewData, _2RealTrackedUserVector& out ) const;
+		boost::shared_array<uchar>					getColorImageBuffer( bool waitForNewData );
+		boost::shared_array<uchar>					getDepthImageBuffer( bool waitForNewData );
+		boost::shared_array<uchar>					getUserImageBuffer( bool waitForNewData );
+		boost::shared_array<uchar>					getColoredUserImageBuffer( bool waitForNewData );
+		boost::shared_array<uint16_t>				getDepthImageBuffer16Bit( bool waitForNewData );
+		int											getMotorAngle() const;
+		WSDKDeviceConfiguration&					getDeviceConfiguration();
+		const WSDKDeviceConfiguration&				getDeviceConfiguration() const;
 
-		bool							isMirroringColor() const;
-		bool							isMirroringDepth() const;
-		bool							isMirroringUser() const;
-		const bool						isNewData(_2RealGenerator type) const;
-		bool							isDeviceStarted() const;
-		bool							isDeviceShutDown() const;
+		unsigned int								getNumberOfUsers() const;
 
-		void  		getUsers( bool waitForNewData, _2RealTrackedUserVector& out );
-		boost::shared_array<uchar>		getColorImageBuffer( bool waitForNewData );
-		boost::shared_array<uchar>		getDepthImageBuffer( bool waitForNewData );
-		boost::shared_array<uchar>		getUserImageBuffer( bool waitForNewData );
-		boost::shared_array<uchar>		getColoredUserImageBuffer( bool waitForNewData );
-		boost::shared_array<uint16_t>	getDepthImageBuffer16Bit( bool waitForNewData );
-		int								getMotorAngle();
-		WSDKDeviceConfiguration&		getDeviceConfiguration() const;
-		unsigned int					getNumberOfUsers();
+		bool										setMotorAngle( int angle );
+		inline void									setFlag( const WSDKDeviceFlag flags, const bool setEnabled ); 	/*!< Switch certain capability with one or more flags concatenated with | */
 
-		bool							setMotorAngle(int angle);
-		void							setMirroringColor( const bool flag );
-		void							setMirroringDepth( const bool flag );
-		void							setMirroringUser( const bool flag );
-		void							start();
-		void							startGenerator( uint32_t generators );
+		void										start();
+		void										startGenerator( uint32_t generators );
 		/*! /brief     Stopping Generators + Worker-Thread for this device
 			/param     const bool shutdown - False(Default): Stop Generators Color, Depth, Skeleton; True: Stop Generators + Worker Thread and closing handles
 		*/
-		void							stop( const bool shutdown = false );
-		void							stopGenerator( uint32_t generators );
-		void							shutdown();
+		void										stop( const bool shutdown = false );
+		void										stopGenerator( uint32_t generators );
+		void										shutdown();
 
 		// Member
 		//image measurements - copy from m_configuration
-		const uint16_t					&m_WidthImageColor, &m_WidthImageDepthAndUser;
-		const uint16_t					&m_HeightImageColor, &m_HeightImageDepthAndUser;
+		const uint16_t								&m_WidthImageColor, &m_WidthImageDepthAndUser;
+		const uint16_t								&m_HeightImageColor, &m_HeightImageDepthAndUser;
 
 
 	private:
 		static DWORD WINAPI							threadEventsFetcher( LPVOID pParam );
+		void										initColorCoords( uint32_t totalPixels );
 		void										initColorStream();
 		void										initDepthStream();
 		void										initUserDepthStream();
+		inline uint32_t								mirrorIndex( const uint32_t index, const uint32_t imageWidth ); 	/*!< Mirroring a index to a given index and image width */
 		void										processColorImageEvent();
 		void										processDepthImageEvent();
 		void										processSkeletonEvent();
 		_2RealTrackedJoint_sptr						createJointFromNUI( _2RealJointType type, _NUI_SKELETON_POSITION_INDEX nuiType, const NUI_SKELETON_DATA& nuiData, const NUI_SKELETON_BONE_ORIENTATION* nuiOrientation );
-								
+		inline void									setMappedColorCoords( const uint32_t index, uint16_t* depthSource, const NUI_IMAGE_VIEW_AREA* vArea ); /*! function to fill mapped color coordinates, to be called from processDepthImageEvent()! */
 
-	// Member
-		INuiSensor*		m_pNuiSensor;
-		std::string							m_Name;
-		int									m_DeviceID;
-		mutable WSDKDeviceConfiguration		m_Configuration;
+		// Member
+		INuiSensor*									m_NuiSensor;
+		std::string									m_Name;
+		int											m_DeviceID;
+		WSDKDeviceConfiguration						m_Configuration;
 
 		//events
-		HANDLE								m_EventColorImage;
-		HANDLE								m_EventDepthImage;
-		HANDLE								m_EventSkeletonData;
-		HANDLE								m_EventStopThread;
+		HANDLE										m_EventColorImage;
+		HANDLE										m_EventDepthImage;
+		HANDLE										m_EventSkeletonData;
+		HANDLE										m_EventStopThread;
 		//stream handles
-		HANDLE								m_HandleColorStream;
-		HANDLE								m_HandleDepthStream;
-		HANDLE								m_HandleThread;
+		HANDLE										m_HandleColorStream;
+		HANDLE										m_HandleDepthStream;
+		HANDLE										m_HandleThread;
 
-		bool								m_isDeviceStarted;
-		bool								m_isDeviceShutDown;
-		bool								m_bIsDepthOnly;
-		bool								m_bIsMirroringColor;
-		bool								m_bIsMirroringDepth;
-		bool								m_bIsMirroringUser;
-		bool								m_bIsDeletingDevice;
-
-		bool								m_bIsNewColorData;
-		bool								m_bIsNewDepthData;
-		bool								m_bIsNewUserData;
-		bool								m_bIsNewSkeletonData;
-		bool								m_bIsNewInfraredData;
+		bool										m_isDeviceStarted;
+		bool										m_isDeviceShutDown;
+		bool										m_IsDeletingDevice;
+		uint32_t									m_DeviceFlags;
 
 		// used to handle kinect events in separate thread
 		// use this enum to lookup m_WTEvents
@@ -147,28 +142,30 @@ class WSDKDevice
 			WT_EVENT_DEPTH,
 			WT_EVENT_SKELETON
 		};
-		HANDLE								m_WTEvents[4];
-
-		//sync
-		boost::mutex						m_MutexImage;
-		boost::mutex						m_MutexDepth;
-		boost::mutex						m_MutexUser;
-		boost::mutex						m_MutexColoredUser;
-		boost::mutex						m_MutexFetchUser;
-		boost::mutex						m_MutexFetchColorImage;
-		boost::mutex						m_MutexFetchDepthImage, m_MutexFetchDepthImage2, m_MutexFetchDepthImage3;
-		boost::condition					m_NotificationNewColorImageData;
-		boost::condition					m_NotificationNewDepthImageData;
-		boost::condition					m_NotificationNewUserdata;
+		HANDLE										m_WTEvents[4];
 
 		//image buffers
-		boost::shared_array<uchar>			m_ImageColor_8bit;
-		boost::shared_array<uchar>			m_ImageDepth_8bit;
-		boost::shared_array<uchar>			m_ImageUser_8bit;
-		boost::shared_array<uchar>			m_ImageColoredUser_8bit;
-		boost::shared_array<uint16_t>		m_ImageDepth_16bit;
+		boost::shared_array<uchar>					m_ImageColor_8bit;
+		boost::shared_array<uchar>					m_ImageDepth_8bit;
+		boost::shared_array<uchar>					m_ImageUser_8bit;
+		boost::shared_array<uchar>					m_ImageColoredUser_8bit;
+		boost::shared_array<uint16_t>				m_ImageDepth_16bit;
+		boost::shared_array<LONG>					m_ColorCoords;
+		uint32_t									m_ColorCoordsSize;
 
-		_2RealTrackedUserVector				m_Users;
+		//sync
+		mutable boost::mutex						m_MutexImage;
+		boost::mutex								m_MutexDepth;
+		mutable boost::mutex						m_MutexUser;
+		boost::mutex								m_MutexColoredUser;
+		mutable boost::mutex						m_MutexFetchUser;
+		boost::mutex								m_MutexFetchColorImage;
+		boost::mutex								m_MutexFetchDepthImage, m_MutexFetchDepthImage2, m_MutexFetchDepthImage3;
+		boost::condition							m_NotificationNewColorImageData;
+		boost::condition							m_NotificationNewDepthImageData;
+		mutable boost::condition					m_NotificationNewUserdata;
+
+		_2RealTrackedUserVector						m_Users;
 };
 
 }

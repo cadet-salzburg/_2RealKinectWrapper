@@ -127,7 +127,6 @@ void MultipleKinectApp::setup()
 			}
 			//m_iMotorValue = m_2RealKinect->getMotorAngle( devIdx );	// just make motor device 0 controllable
 			m_2RealKinect->startGenerator( devIdx,  DEPTHIMAGE | COLORIMAGE | USERIMAGE );
-			std::cout << "_2RealKinectWrapper Device " << devIdx << " started successfully!..." << std::endl;
 
 		}
 		resizeImages();
@@ -398,8 +397,9 @@ void MultipleKinectApp::mirrorImages()
 	{
 		try
 		{
-			m_2RealKinect->setMirrored( i,  COLORIMAGE , m_bIsMirroring );
-			m_2RealKinect->setMirrored( i,  DEPTHIMAGE , m_bIsMirroring );
+			m_2RealKinect->setMirrored( i,  COLORIMAGE, m_bIsMirroring );
+			m_2RealKinect->setMirrored( i,  DEPTHIMAGE, m_bIsMirroring );
+			m_2RealKinect->setMirrored( i,  USERIMAGE, m_bIsMirroring );
 		}
 		catch (...)
 		{

@@ -23,12 +23,6 @@ unsigned char Colors[][3] =
 	{255,255,127},
 	{255,255,255}
 };
-	
-WSDKDevice::~WSDKDevice(void)
-{
-	shutdown();
-}
-
 
 WSDKDevice::WSDKDevice( INuiSensor* devicePtr, const std::string& name )
 	//respect member initialization order -> order as declarations in header
@@ -36,7 +30,7 @@ WSDKDevice::WSDKDevice( INuiSensor* devicePtr, const std::string& name )
 	  m_WidthImageColor( m_Configuration.m_ImageResColor.width ),
 	  m_HeightImageDepthAndUser( m_Configuration.m_ImageResDepth.height ),
 	  m_HeightImageColor( m_Configuration.m_ImageResColor.height ),
-	  m_pNuiSensor( devicePtr ),
+	  m_NuiSensor( devicePtr ),
 	  m_Name( name ),
 	  m_DeviceID( devicePtr->NuiInstanceIndex() ),
 	  m_EventColorImage( CreateEvent( NULL, TRUE, FALSE, NULL ) ), //creating event handles
@@ -48,27 +42,25 @@ WSDKDevice::WSDKDevice( INuiSensor* devicePtr, const std::string& name )
 	  m_HandleThread( NULL ),
 	  m_isDeviceStarted( false ),
 	  m_isDeviceShutDown( true ),
-	  // needed?!? ---->
-	  m_bIsDepthOnly( true ), 
-	  m_bIsMirroringColor( false ),
-	  m_bIsMirroringDepth( false ),
-	  m_bIsMirroringUser( false ),
-	  m_bIsDeletingDevice( false ),
-	  m_bIsNewColorData( false),
-	  m_bIsNewDepthData( false ),
-	  m_bIsNewUserData( false ),
-	  m_bIsNewSkeletonData( false ),
-	  m_bIsNewInfraredData( false ),
-	  //<----
+	  m_IsDeletingDevice( false ),
+	  m_DeviceFlags( WSDKDeviceFlag( DFLAG_MIRROR_COLOR | DFLAG_MIRROR_DEPTH | DFLAG_MIRROR_USER ) ),
 	  m_ImageColor_8bit( NULL ),
 	  m_ImageDepth_8bit( NULL ),
 	  m_ImageUser_8bit( NULL ),
 	  m_ImageColoredUser_8bit( NULL ),
-	  m_ImageDepth_16bit( NULL )
+	  m_ImageDepth_16bit( NULL ),
+	  m_ColorCoords( nullptr ),
+	  m_ColorCoordsSize( 0 )
 {
 
 }
 
+
+void WSDKDevice::initColorCoords( uint32_t totalPixels )
+{
+	m_ColorCoordsSize = totalPixels;
+	m_ColorCoords = boost::shared_array<LONG>( new LONG[m_ColorCoordsSize] );
+}
 
 void WSDKDevice::initColorStream()
 {
@@ -81,7 +73,7 @@ void WSDKDevice::initColorStream()
 	m_ImageColor_8bit = boost::shared_array<uchar>( new uchar[m_WidthImageColor*m_HeightImageColor*3] );
 
 	//starting stream
-	HRESULT status = m_pNuiSensor->NuiImageStreamOpen( NUI_IMAGE_TYPE_COLOR,
+	HRESULT status = m_NuiSensor->NuiImageStreamOpen( NUI_IMAGE_TYPE_COLOR,
 													   m_Configuration.m_ImageResColor.WSDKResType,
 													   0,
 													   2,
@@ -105,12 +97,16 @@ void WSDKDevice::initDepthStream()
 						<< "width: " << m_WidthImageDepthAndUser
 						<< " / height: " << m_HeightImageDepthAndUser << " ...";
 
-	m_bIsDepthOnly = true;
+	// set depth only flag to enabled
+	setFlag( DFLAG_DEPTH_ONLY, true );
+
 	const uint32_t size = m_WidthImageDepthAndUser * m_HeightImageDepthAndUser;
+
 	m_ImageDepth_8bit = boost::shared_array<uchar>( new uchar[size] );
 	m_ImageDepth_16bit = boost::shared_array<uint16_t>( new uint16_t[size] );
+	initColorCoords( size );
 
-	HRESULT status = m_pNuiSensor->NuiImageStreamOpen(	NUI_IMAGE_TYPE_DEPTH,
+	HRESULT status = m_NuiSensor->NuiImageStreamOpen(	NUI_IMAGE_TYPE_DEPTH,
 														m_Configuration.m_ImageResDepth.WSDKResType,
 														0,
 														2,
@@ -134,16 +130,19 @@ void WSDKDevice::initUserDepthStream()
 						<< "width: " << m_WidthImageDepthAndUser
 						<< " / height: " << m_HeightImageDepthAndUser << " ...";
 
-	m_bIsDepthOnly = false;
+	// set depth only flag to disabled
+	setFlag( DFLAG_DEPTH_ONLY, false );
+
 	const uint32_t size = m_WidthImageDepthAndUser * m_HeightImageDepthAndUser;
 
 	m_ImageDepth_8bit =  boost::shared_array<uchar>( new uchar[size] );
 	m_ImageDepth_16bit =  boost::shared_array<uint16_t>( new uint16_t[size] );
 	m_ImageUser_8bit = boost::shared_array<uchar>( new uchar[size] );
 	m_ImageColoredUser_8bit = boost::shared_array<uchar>( new uchar[size*3] );
+	initColorCoords( size );
 
 	//starting depth stream
-	HRESULT status = m_pNuiSensor->NuiImageStreamOpen(	NUI_IMAGE_TYPE_DEPTH_AND_PLAYER_INDEX,
+	HRESULT status = m_NuiSensor->NuiImageStreamOpen(	NUI_IMAGE_TYPE_DEPTH_AND_PLAYER_INDEX,
 														m_Configuration.m_ImageResUser.WSDKResType,
 														0,
 														2,
@@ -162,14 +161,14 @@ void WSDKDevice::initUserDepthStream()
 	//skeleton tracking
 	_2REAL_LOG( info ) << "_2Real: Starting skeleton tracking on device: " << m_Name << " ..." << std::endl;
 
-	status = m_pNuiSensor->NuiSkeletonTrackingEnable( m_EventSkeletonData, 0 );
+	status = m_NuiSensor->NuiSkeletonTrackingEnable( m_EventSkeletonData, 0 );
 	if( FAILED( status ) )
 		throwError( std::string( "_2Real: Error when trying to enable skeleton tracking on device: " ).append( m_Name ) );
 
 	_2REAL_LOG( info ) << "OK" << std::endl;
 }
 
-const bool WSDKDevice::isNewData(_2RealGenerator type) const
+bool WSDKDevice::isNewData(_2RealGenerator type) const
 {
 	//not implemented yet
 	return true;
@@ -218,144 +217,202 @@ DWORD WINAPI WSDKDevice::threadEventsFetcher( LPVOID pParam )
 
 void WSDKDevice::processColorImageEvent()
 {	
-	NUI_IMAGE_FRAME imageFrame;
-
-	if( m_bIsDeletingDevice )
+	if( m_IsDeletingDevice )
 		return;
-
-	HRESULT hr = m_pNuiSensor->NuiImageStreamGetNextFrame( m_HandleColorStream, 0, &imageFrame );
+	
+	NUI_IMAGE_FRAME imageFrame;
+	HRESULT hr = m_NuiSensor->NuiImageStreamGetNextFrame( m_HandleColorStream, 0, &imageFrame );
 
 	if ( FAILED( hr ) )
 	{
-		_2REAL_LOG(error) << "_2Real: Device " << m_Name << " skipping frame. Error while trying to fetch color data..." << std::endl;
+		_2REAL_LOG( error ) << "_2Real: Device " << m_Name << " skipping frame. Error"
+							<< "while trying to fetch color data in processColorImageEvent()..." << std::endl;
 		return;
 	}
 
 	boost::mutex::scoped_lock lock(m_MutexImage);
-	INuiFrameTexture * pTexture = imageFrame.pFrameTexture;
+	INuiFrameTexture* pTexture = imageFrame.pFrameTexture;
 	NUI_LOCKED_RECT LockedRect;
 	pTexture->LockRect( 0, &LockedRect, NULL, 0 );
+
+	// ensure no change of flags during processing buffer-data
+	bool isMirrorColor = isFlagEnabled( DFLAG_MIRROR_COLOR );
+	bool isAlignDepthColor = isFlagEnabled( DFLAG_ALIGN_COLOR_DEPTH );
+
+	// copy over pixels from BGRX to RGB
 	if ( LockedRect.Pitch != 0 )
 	{
-		//copy over pixels from BGRX to RGB
 		int size = m_WidthImageColor * m_HeightImageColor; //get number of pixels
-		uint32_t width = m_WidthImageColor;
 		//setting pointers; structures designed for iteration over 24b and 32b image (WSDKDevice.h)
 		BGRX* pSource = reinterpret_cast<BGRX*>( LockedRect.pBits );
 		RGB* pDestination = reinterpret_cast<RGB*>( m_ImageColor_8bit.get() );
 
-		for( int i = 0;	 i < size; ++i )//loop enrolled: 10 iterations in 1 step
+		for( int i = 0;	 i < size; ++i )
 		{
-			int index = 0;
-			if( !m_bIsMirroringColor )
-				index = (( ( i / width + 1 ) *  width ) - ( i % width )) - 1;
-			else
-				index = i;
+			int index = i;
+			if( !isMirrorColor )
+				index = mirrorIndex( index, m_WidthImageColor );
 
-			pDestination[index].r = pSource[i].r;
-			pDestination[index].g = pSource[i].g;
-			pDestination[index].b = pSource[i].b;
+			if( isAlignDepthColor )
+			{
+				// ratio between image width difference to translate index between image spaces
+				int ratio = m_WidthImageColor / m_WidthImageDepthAndUser; 
+				int x = ( index % m_WidthImageColor ) / ratio;
+				int y = ( index / m_WidthImageColor ) / ratio;
+
+				// calculated index mapped from colorIndexSpace to depthIndexSpace
+				int mappedIndex = m_ColorCoords[x + y * m_WidthImageDepthAndUser];
+
+				if( !isMirrorColor )
+					mappedIndex = mirrorIndex( mappedIndex, m_WidthImageColor );
+
+				if( mappedIndex < size && mappedIndex >= 0 )
+				{
+					pDestination[index].b = pSource[mappedIndex].b;
+					pDestination[index].g = pSource[mappedIndex].g;
+					pDestination[index].r = pSource[mappedIndex].r;
+				}
+			}
+			else
+			{
+				pDestination[index].b = pSource[i].b;
+				pDestination[index].g = pSource[i].g;
+				pDestination[index].r = pSource[i].r;
+			}
 		}
 	}
 	else
 	{
-		OutputDebugString( L"Buffer length of received texture is bogus\r\n" );
+		_2REAL_LOG( error ) << "_2Real: Device " << m_Name << " skipping frame. No Image data"
+							<< "in processColorImageEvent()::LockedRect" << std::endl;
 	}
-
 	pTexture->UnlockRect( 0 );
 
-	m_pNuiSensor->NuiImageStreamReleaseFrame( m_HandleColorStream, &imageFrame );
+	m_NuiSensor->NuiImageStreamReleaseFrame( m_HandleColorStream, &imageFrame );
 	m_NotificationNewColorImageData.notify_all();
-	m_bIsNewColorData = true;
 }
 
 void WSDKDevice::processDepthImageEvent()
 {
-	if( m_bIsDeletingDevice )
+	if( m_IsDeletingDevice )
 		return;
 
 	NUI_IMAGE_FRAME imageFrame;
-	HRESULT hr = m_pNuiSensor->NuiImageStreamGetNextFrame( m_HandleDepthStream, 0, &imageFrame );
-	if(FAILED(hr))
+	HRESULT hr = m_NuiSensor->NuiImageStreamGetNextFrame( m_HandleDepthStream, 0, &imageFrame );
+	if( FAILED( hr ) )
 	{
-		_2REAL_LOG(error) << "_2Real: Device " << m_Name << " skipping frame. Error while trying to fetch depth data..." << std::endl;
+		_2REAL_LOG( error ) << "_2Real: Device " << m_Name << " skipping frame. Error while"
+							<< "trying to fetch depth data..." << std::endl;
 		return;
 	}
-	boost::mutex::scoped_lock lock(m_MutexDepth);
+
+	boost::mutex::scoped_lock lock( m_MutexDepth );
 	INuiFrameTexture * pTexture = imageFrame.pFrameTexture;
 	NUI_LOCKED_RECT LockedRect;
 	pTexture->LockRect( 0, &LockedRect, NULL, 0 );
 	
 	int size = m_WidthImageDepthAndUser * m_HeightImageDepthAndUser; //get number of pixels
-	uint32_t width = m_WidthImageDepthAndUser;
-
 	uint16_t* source = reinterpret_cast<uint16_t*>( LockedRect.pBits );
 	int colors = 8;	// max users for MS SDK
-	for( int i = 0;	 i < size; ++i ) //loop enrolled: 10 iterations in 1 step
+	float norm16to8 = NUI_IMAGE_DEPTH_MAXIMUM / 255;
+
+	bool isMirrorDepth = isFlagEnabled( DFLAG_MIRROR_DEPTH );
+	bool isAlignDepthColor = isFlagEnabled( DFLAG_ALIGN_COLOR_DEPTH );
+	bool isDepthOnly = isFlagEnabled( DFLAG_DEPTH_ONLY );
+	bool isMirrorUser = isFlagEnabled( DFLAG_MIRROR_USER );
+
+	// per pixel processing of depth buffer
+	for( int i = 0;	 i < size; ++i )
 	{
-		int index = 0;
+		int index = i;
+		if( !isMirrorDepth )
+			index = mirrorIndex( index, m_WidthImageDepthAndUser );
+		
+		// fetch depth information
+		m_ImageDepth_16bit[index] = NuiDepthPixelToDepth( source[i] );
+		m_ImageDepth_8bit[index] = uchar( m_ImageDepth_16bit[index] / norm16to8 );
+		
+		// write mapped color coords to original index i
+		if( isAlignDepthColor )
+			setMappedColorCoords( i, source, &imageFrame.ViewArea );
 
-		//mirror capability
-		if( !m_bIsMirroringDepth )
-			index = (( ( i / width + 1 ) *  width ) - ( i % width )) - 1;
-		else
-			index = i;
-
-		//writing depth only or user and depth image
-		if( m_bIsDepthOnly )
+		// processing user image
+		if( !isDepthOnly )
 		{
-			//12 low bits used of 16bit buffer
-			m_ImageDepth_16bit[index] = source[i];
-			m_ImageDepth_8bit[index] = uchar( ( (float)source[i] / _2REAL_WSDK_DEPTH_NORMALIZATION_16_TO_8 ) * 255 );
-		}
-		else
-		{
-			//using 12 high bits out of 16bit buffer
-			m_ImageDepth_16bit[index] = source[i] >> 3;
-			m_ImageDepth_8bit[index] = uchar( ( (float)( source[i] >> 3 ) / _2REAL_WSDK_DEPTH_NORMALIZATION_16_TO_8 ) * 255 ); 
-
-			//mirror capability
-			if( !m_bIsMirroringUser )
-				index = (( ( i / width + 1 ) *  width ) - ( i % width )) - 1;
+			//mirror capability of user image
+			if( !isMirrorUser )
+				index = mirrorIndex( i, m_WidthImageDepthAndUser );
 			else
 				index = i;
 
-			//getting first 3 low bits out of 16bit buffer
-			m_ImageUser_8bit[index] = source[i] & 0x0007;
+			//getting first 3 low bits out of 16bit buffer for user id
+			m_ImageUser_8bit[index] = (uchar)NuiDepthPixelToPlayerIndex( (USHORT)source[i] );
+			
+			// resetting values before
 			m_ImageColoredUser_8bit[index*3] = 0;
 			m_ImageColoredUser_8bit[index*3+1] = 0;
 			m_ImageColoredUser_8bit[index*3+2] = 0;
 
-			if(m_ImageUser_8bit[index]%colors != 0)
+			// skip indices with no user information
+			if( m_ImageUser_8bit[index]%colors != 0 )
 			{			
 				m_ImageColoredUser_8bit[index*3] = Colors[m_ImageUser_8bit[index]%colors][0];
 				m_ImageColoredUser_8bit[index*3+1] = Colors[m_ImageUser_8bit[index]%colors][1];
 				m_ImageColoredUser_8bit[index*3+2] = Colors[m_ImageUser_8bit[index]%colors][2];
 			}
 		}		
-		
 	}
 	//remove lock -> 2 imageframes buffer
-	//locking both framebuffer will cause an exception
+	//locking both frame buffer will cause an exception
 	pTexture->UnlockRect( 0 );
-	m_pNuiSensor->NuiImageStreamReleaseFrame( m_HandleDepthStream, &imageFrame );
+	m_NuiSensor->NuiImageStreamReleaseFrame( m_HandleDepthStream, &imageFrame );
 	m_NotificationNewDepthImageData.notify_all();
-	m_bIsNewDepthData = true;
+}
+
+void WSDKDevice::setMappedColorCoords( const uint32_t index, uint16_t* depthSource, const NUI_IMAGE_VIEW_AREA* vArea )
+{
+	// split index up in column-index (xDepth) and row-index (yDepth)
+	uint32_t xDepth = index % m_WidthImageDepthAndUser;
+	uint32_t yDepth = index / m_WidthImageDepthAndUser;
+	LONG xMappedColor = 0;
+	LONG yMappedColor = 0;
+
+	// specifies color-source-index for a color index x translated to depthSpace
+	// xDepth/yDepth can be used to change index of source-imagebuffer -> mapping
+	// Note: this does not return position where to write pixel information but rather where to find!!!
+	HRESULT hr = NuiImageGetColorPixelCoordinatesFromDepthPixelAtResolution(
+		m_Configuration.m_ImageResColor.WSDKResType,
+		m_Configuration.m_ImageResDepth.WSDKResType,
+		vArea,
+		xDepth,
+		yDepth,
+		depthSource[index],
+		&xMappedColor,
+		&yMappedColor );
+
+	if( hr != E_INVALIDARG && hr != E_POINTER )
+	{
+		if( xMappedColor >= 0 && xMappedColor < m_WidthImageColor &&
+			yMappedColor >= 0 && yMappedColor < m_HeightImageColor )
+			m_ColorCoords[index] = xMappedColor + yMappedColor * m_WidthImageColor;
+	}
+	else
+	{
+		_2REAL_LOG( error ) << "_2Real: setMappedColorCoords() Error, NUIGETCOLORPIXELCOORDINATESFROMDEPTHPIXELATRESOLULTION could not be called!" << std::endl;
+		m_ColorCoords[index] = 0;
+	}
 }
 
 void WSDKDevice::processSkeletonEvent()
 {
-	if( m_bIsDeletingDevice )
+	if( m_IsDeletingDevice )
 		return;
 
-	boost::mutex::scoped_lock lock(m_MutexUser);
-	
 	NUI_SKELETON_FRAME nuiFrame;
-	m_Users.clear();
 	
-	if( FAILED( m_pNuiSensor->NuiSkeletonGetNextFrame( 0, &nuiFrame ) ) )
+	if( FAILED( m_NuiSensor->NuiSkeletonGetNextFrame( 0, &nuiFrame ) ) )
 	{
-		_2REAL_LOG(error) << "_2Real: Device " << m_Name << " skipping frame. Error while trying to fetch skeleton data..." << std::endl;
+		_2REAL_LOG( error ) << "_2Real: Device " << m_Name << " skipping frame. Error while trying to fetch skeleton data..." << std::endl;
 		return;
 	}
 
@@ -366,6 +423,9 @@ void WSDKDevice::processSkeletonEvent()
 		if( nuiFrame.SkeletonData[i].eTrackingState == NUI_SKELETON_TRACKED )
 			detectedSkeletons = true;
 	}
+
+	boost::mutex::scoped_lock lock(m_MutexUser);
+	m_Users.clear();
 
 	//exiting if no tracked skeletons
 	if( !detectedSkeletons )
@@ -431,7 +491,6 @@ void WSDKDevice::processSkeletonEvent()
 		user->setJoint( JOINT_RIGHT_FOOT, createJointFromNUI( JOINT_RIGHT_FOOT, NUI_SKELETON_POSITION_FOOT_RIGHT, nuiFrame.SkeletonData[i], nuiOrientations ) );
 	}
 	m_NotificationNewUserdata.notify_all();
-	m_bIsNewUserData = m_bIsNewSkeletonData = true;
 }
 
 _2RealTrackedJoint_sptr WSDKDevice::createJointFromNUI( _2RealJointType type, _NUI_SKELETON_POSITION_INDEX nuiType, const NUI_SKELETON_DATA& data, const NUI_SKELETON_BONE_ORIENTATION* nuiOrientation )
@@ -441,12 +500,9 @@ _2RealTrackedJoint_sptr WSDKDevice::createJointFromNUI( _2RealJointType type, _N
 	
 	// Mirror skeleton joints when user image is mirrored
 	Vector4 position = data.SkeletonPositions[nuiType];
-	if(!m_bIsMirroringUser)
-	{
-		position.x = (FLOAT)1.0 -position.x;
-	}
-	else
-		NuiTransformSkeletonToDepthImage( position, (FLOAT*)&screenPos.x, (FLOAT*)&screenPos.y );
+	if( !isFlagEnabled( DFLAG_MIRROR_USER ) )
+		position.x = -position.x;
+	NuiTransformSkeletonToDepthImage( position, (FLOAT*)&screenPos.x, (FLOAT*)&screenPos.y );
 	
 	screenPos.z = data.SkeletonPositions[nuiType].z;
 	worldPos.x = data.SkeletonPositions[nuiType].x;
@@ -478,20 +534,21 @@ _2RealTrackedJoint_sptr WSDKDevice::createJointFromNUI( _2RealJointType type, _N
 															_2RealJointConfidence( 1, 1 )));
 }
 
-void WSDKDevice::getUsers( bool waitForNewData, _2RealTrackedUserVector& out )
+void WSDKDevice::getUsers( bool waitForNewData, _2RealTrackedUserVector& out ) const
 {
-	boost::mutex::scoped_lock lock( m_MutexFetchUser );
 	if( waitForNewData ) //wait for signal for new data of processing thread
-	{
+	{	
+		boost::mutex::scoped_lock lock( m_MutexFetchUser );
 		m_NotificationNewUserdata.wait( lock );
 	}
-	out.clear();
+
+	out.clear(); // ensure writing to "clean" vector
 	//prevent changing data fetching thread to change vector while copying
 	boost::mutex::scoped_lock lock1( m_MutexUser );
 	out = m_Users;
 }
 
-unsigned int WSDKDevice::getNumberOfUsers()
+unsigned int WSDKDevice::getNumberOfUsers() const
 {
 	//prevent changing data fetching thread to change vector while copying
 	boost::mutex::scoped_lock lock( m_MutexUser );
@@ -506,7 +563,6 @@ boost::shared_array<uchar> WSDKDevice::getColorImageBuffer( bool waitForNewData 
 		boost::mutex::scoped_lock lock( m_MutexFetchColorImage );
 		m_NotificationNewColorImageData.wait( lock );
 	}
-	m_bIsNewColorData = false;
 	return m_ImageColor_8bit;
 }
 
@@ -555,19 +611,16 @@ bool WSDKDevice::setMotorAngle(int angle)
 {
 	if(angle<=27 && angle>=-27)
 	{
-		m_pNuiSensor->NuiCameraElevationSetAngle( angle );
+		m_NuiSensor->NuiCameraElevationSetAngle( angle );
 		return true;
 	}
-	else
-	{
-		return false;
-	}
+	return false;
 }
 
-int WSDKDevice::getMotorAngle()
+int WSDKDevice::getMotorAngle() const
 {
 	LONG tmp;
-	m_pNuiSensor->NuiCameraElevationGetAngle(&tmp);
+	m_NuiSensor->NuiCameraElevationGetAngle( &tmp );
 	return tmp;
 }
 
@@ -575,14 +628,15 @@ void WSDKDevice::shutdown()
 {
 	if( m_isDeviceShutDown ) return;
 
-	m_bIsDeletingDevice = 1;
+	m_IsDeletingDevice = 1;
 	m_isDeviceShutDown = true; //needs to be set before stop()
 	stop( true );
 
-	if( m_pNuiSensor )
+	if( m_NuiSensor )
 	{
-		m_pNuiSensor->NuiShutdown();
-		m_pNuiSensor->Release();
+		m_NuiSensor->NuiShutdown();
+		m_NuiSensor->Release();
+		m_NuiSensor = nullptr;
 	}
 }
 
@@ -594,7 +648,7 @@ void WSDKDevice::start()
 	_2REAL_LOG( info ) << "_2Real: Initialize device: " << m_DeviceID << " ...";
 
 	HRESULT status = 0;
-	if( FAILED( status = m_pNuiSensor->NuiInitialize( m_Configuration.m_GeneratorsWSDK ) ) )
+	if( FAILED( status = m_NuiSensor->NuiInitialize( m_Configuration.m_GeneratorsWSDK ) ) )
 	{ 
 		throwError( "_2Real: Error when trying to initialize device");
 	}
@@ -608,10 +662,6 @@ void WSDKDevice::start()
 		initUserDepthStream();
 	else if( m_Configuration.m_GeneratorsWSDK & NUI_INITIALIZE_FLAG_USES_DEPTH )
 		initDepthStream();
-
-
-	// set mirror flags default to true
-	m_bIsMirroringColor = m_bIsMirroringDepth = m_bIsMirroringUser = 1;
 
 	// if it was not a complete shutdown 
 	if( !m_HandleThread )
@@ -664,11 +714,6 @@ void WSDKDevice::stop( const bool shutdown )
 	m_isDeviceStarted = false;
 }
 
-bool WSDKDevice::isDeviceStarted() const
-{
-	return m_isDeviceStarted;
-}
-
 void WSDKDevice::startGenerator( uint32_t generators )
 {
 	if( generators & COLORIMAGE )
@@ -697,14 +742,31 @@ void WSDKDevice::stopGenerator( uint32_t generators )
 	}
 }
 
-bool WSDKDevice::isDeviceShutDown() const
-{
-	return m_isDeviceShutDown;
-}
-
-WSDKDeviceConfiguration& WSDKDevice::getDeviceConfiguration() const
+const WSDKDeviceConfiguration& WSDKDevice::getDeviceConfiguration() const
 {
 	return m_Configuration;
+}
+
+WSDKDeviceConfiguration& WSDKDevice::getDeviceConfiguration()
+{
+	return m_Configuration;
+}
+
+
+bool WSDKDevice::isFlagEnabled( WSDKDeviceFlag flags ) const
+{
+	return ( m_DeviceFlags & flags ) != 0;
+}
+
+void WSDKDevice::setFlag( const WSDKDeviceFlag flags, const bool setEnabled )
+{
+	if( ( m_DeviceFlags & flags ) != (uint8_t)setEnabled )
+		m_DeviceFlags ^= flags;
+}
+
+uint32_t WSDKDevice::mirrorIndex( const uint32_t index, const uint32_t imageWidth )
+{
+	return (( ( index / imageWidth + 1 ) *  imageWidth ) - ( index % imageWidth )) - 1;
 }
 
 }

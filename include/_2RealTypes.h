@@ -133,8 +133,8 @@ namespace _2RealKinectWrapper
 		IMAGE_USER_DEPTH_640X480	= 64,		//WSDK, OpenNI,	user image and depth image must have same resolution
 	
 		IMAGE_INFRARED_320X240		= 128,		//OpenNI
-		IMAGE_INFRARED_640X480		= 256		//OpenNI
-		
+		IMAGE_INFRARED_640X480		= 256,		//OpenNI
+		IMAGE_CONFIG_INVALID		= 2048
 	};
 
 	// Logger enums

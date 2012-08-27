@@ -108,7 +108,7 @@ public:
 
 		if( ( startGenerators & INFRAREDIMAGE ) )
 		{
-			_2REAL_LOG( info ) << "_2Real: Infrared capability is not supported by Win-SDK!" << std::endl;
+			_2REAL_LOG( warn ) << "_2Real: Infrared capability is not supported by Win-SDK!" << std::endl;
 		}
 
 		return true;
@@ -159,7 +159,25 @@ public:
 
 	virtual bool isMirrored( const uint32_t deviceID, _2RealGenerator type ) const
 	{
-		return true;
+		if( !isValidDevice( deviceID ) )
+		{
+			_2REAL_LOG(warn) << "_2Real: setMirrored() Error, deviceid: " << deviceID
+				<< " is not valid!" << std::endl;
+			return false;
+		}
+
+		if( type & COLORIMAGE )
+			return m_Devices[deviceID]->isFlagEnabled( DFLAG_MIRROR_COLOR );
+		else if( type & USERIMAGE )
+			return m_Devices[deviceID]->isFlagEnabled( DFLAG_MIRROR_USER );
+		else if( type & DEPTHIMAGE )
+			return m_Devices[deviceID]->isFlagEnabled( DFLAG_MIRROR_DEPTH );
+
+		if( ( type & INFRAREDIMAGE ) )
+		{
+			_2REAL_LOG( warn ) << "_2Real: setMirrored(), Infrared capability is not supported by Win-SDK!" << std::endl;
+		}
+		return false;
 	}
 
 	virtual bool generatorIsActive( const uint32_t deviceID, _2RealGenerator type ) 
@@ -211,7 +229,24 @@ public:
 
 	virtual void setMirrored( const uint32_t deviceID, _2RealGenerator type, bool flag ) 
 	{
-		
+		if( !isValidDevice( deviceID ) )
+		{
+			_2REAL_LOG(warn) << "_2Real: setMirrored() Error, deviceid: " << deviceID
+							 << " is not valid!" << std::endl;
+			return;
+		}
+
+		if( type & COLORIMAGE )
+			m_Devices[deviceID]->setFlag( DFLAG_MIRROR_COLOR, flag );
+		if( type & USERIMAGE )
+			m_Devices[deviceID]->setFlag( DFLAG_MIRROR_USER, flag );
+		if( type & DEPTHIMAGE )
+			m_Devices[deviceID]->setFlag( DFLAG_MIRROR_DEPTH, flag );
+
+		if( ( type & INFRAREDIMAGE ) )
+		{
+			_2REAL_LOG( warn ) << "_2Real: setMirrored(), Infrared capability is not supported by Win-SDK!" << std::endl;
+		}
 	}
 
 	virtual void removeGenerator( const uint32_t deviceID, uint32_t configureGenerators ) 
@@ -395,14 +430,24 @@ public:
 
 	virtual bool restart() 
 	{
+		// save device startup configuration temporary
+		std::vector<WSDKDeviceConfiguration> tmpConfiguration( m_NumDevices );
+		for( uint8_t i = 0; i < m_NumDevices; ++i )
+			tmpConfiguration[i] = m_Devices[i]->getDeviceConfiguration();
+
+		_2REAL_LOG( info ) << "_2Real: Shutting down system..." << std::endl;
 		shutdown();
+		_2REAL_LOG( info ) << "_2Real: Shutdown: OK" << std::endl;
 		
 		Sleep( 1000 ); //preventing reinitialization t00 fast
-
-		_2REAL_LOG(info) << "_2Real: Restarting system..." << std::endl;
+		initialize();
+		_2REAL_LOG( info ) << "_2Real: Restarting system..." << std::endl;
 		for( uint8_t i = 0; i < m_NumDevices; ++i )
+		{
+			configureDevice( i, tmpConfiguration[i].m_Generators2Real, tmpConfiguration[i].m_ImageConfig2Real );
 			startGenerator( i, m_Devices[i]->getDeviceConfiguration().m_Generators2Real );
-		_2REAL_LOG(info) << "_2Real: Restart: OK" << std::endl;
+		}
+		_2REAL_LOG( info ) << "_2Real: Restart: OK" << std::endl;
 
 		return true;
 	}
@@ -435,10 +480,17 @@ public:
 			m_Devices[deviceID]->startGenerator( configureGenerators );
 		}
 		// called on first start/restart
-		else if( m_Devices[deviceID]->isDeviceShutDown() )
+		else if( m_Devices[deviceID]->isDeviceShutDown() && 
+				 m_Devices[deviceID]->getDeviceConfiguration().m_Generators2Real != IMAGE_CONFIG_INVALID )
 		{
 			m_Devices[deviceID]->start();
-			_2REAL_LOG(info) << "_2Real: Initialization: OK" << std::endl;
+			_2REAL_LOG( info ) << "_2Real: Starting Device: " << deviceID << " -> OK" << std::endl;
+		}
+		else
+		{
+			_2REAL_LOG( error ) << "_2Real: startGenerator() Error, deviceid: " << deviceID 
+								<< " could not be started due to invalid device configuration!"
+								<< "\nDid you FORGET to call CONFIGUREDEVICE()??!" << std::endl;
 		}
 	}
 
@@ -452,7 +504,12 @@ public:
 
 	virtual void alignDepthToColor( const uint32_t deviceID, bool flag ) 
 	{
-		throw std::exception("The method or operation is not implemented.");
+		if( isValidDevice( deviceID ) )
+			m_Devices[deviceID]->setFlag( DFLAG_ALIGN_COLOR_DEPTH, flag );
+		else
+		{
+			_2REAL_LOG( error ) << "_2Real: alignDepthToColor() Error, given deviceid: " << deviceID << " is not valid!" << std::endl;
+		}
 	}
 
 
