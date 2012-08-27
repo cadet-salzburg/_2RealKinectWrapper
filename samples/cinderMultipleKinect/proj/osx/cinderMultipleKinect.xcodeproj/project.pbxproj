@@ -215,7 +215,7 @@
 		C01FCF4B08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CINDER_PATH = ../../../../externalLibs/cinder;
+				CINDER_PATH = /Users/psaroudakis/Frameworks/Cinder;
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
@@ -235,12 +235,13 @@
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = "";
 				OTHER_LDFLAGS = (
-					"\"$(CINDER_PATH)/lib/osx/libcinder_d.a\"",
+					"\"$(CINDER_PATH)/lib/libcinder_d.a\"",
 					../../../../lib/_2RealKinectOpenNI_d.a,
 					/usr/lib/libOpenNI.dylib,
 				);
 				PRODUCT_NAME = cinderMultipleKinect;
 				REZ_SEARCH_PATHS = "";
+				SDKROOT = "";
 				USER_HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\" ../include";
 				WRAPPER_EXTENSION = app;
 			};
@@ -249,7 +250,7 @@
 		C01FCF4C08A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CINDER_PATH = ../../../../externalLibs/cinder;
+				CINDER_PATH = /Users/psaroudakis/Frameworks/Cinder;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_FAST_MATH = YES;
@@ -271,12 +272,13 @@
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = "";
 				OTHER_LDFLAGS = (
-					"\"$(CINDER_PATH)/lib/osx/libcinder.a\"",
+					"\"$(CINDER_PATH)/lib/libcinder.a\"",
 					../../../../lib/_2RealKinectOpenNI.a,
 					/usr/lib/libOpenNI.dylib,
 				);
 				PRODUCT_NAME = cinderMultipleKinect;
 				REZ_SEARCH_PATHS = "";
+				SDKROOT = "";
 				STRIP_INSTALLED_PRODUCT = YES;
 				USER_HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\" ../include";
 				WRAPPER_EXTENSION = app;
@@ -288,7 +290,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = i386;
-				CINDER_PATH = ../../../../externalLibs/cinder;
+				CINDER_PATH = /Users/psaroudakis/Frameworks/Cinder;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = ../../../../externalLibs/boost/include;
@@ -304,7 +306,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = i386;
-				CINDER_PATH = ../../../../externalLibs/cinder;
+				CINDER_PATH = /Users/psaroudakis/Frameworks/Cinder;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = ../../../../externalLibs/boost/include;

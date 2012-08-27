@@ -48,7 +48,7 @@ namespace _2RealKinectWrapper
 	typedef std::vector<_2RealVector2f>							_2RealPositionsVector2f;
 	typedef std::vector<_2RealJointConfidence>					_2RealJointConfidences;
 	typedef std::vector<_2RealMatrix3x3>						_2RealOrientationsMatrix3x3;
-	typedef std::vector<boost::shared_ptr<_2RealTrackedJoint>>	_2RealTrackedJointVector;
+	typedef std::vector<boost::shared_ptr<_2RealTrackedJoint> >	_2RealTrackedJointVector;
 	typedef boost::shared_ptr<_2RealTrackedUser>				_2RealTrackedUser_sptr;
 	typedef boost::shared_ptr<_2RealTrackedJoint>				_2RealTrackedJoint_sptr;
 	typedef std::vector<_2RealTrackedUser_sptr>					_2RealTrackedUserVector;

@@ -25,6 +25,7 @@
 */
 
 #pragma once
+#ifdef TARGET_MSKINECTSDK
 #include "_2RealUtility.h"
 #include <Windows.h>
 #include "NuiApi.h"
@@ -169,4 +170,4 @@ class WSDKDevice
 };
 
 }
-
+#endif

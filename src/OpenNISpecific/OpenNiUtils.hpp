@@ -1,6 +1,5 @@
-#ifndef ONI_UTILS
-#define ONI_UTILS
-
+#pragma once
+#ifndef TARGET_MSKINECTSDK
 #include <XnCppWrapper.h>
 #include <iostream>
 

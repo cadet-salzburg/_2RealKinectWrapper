@@ -1,0 +1,28 @@
+Contents of /Users/psaroudakis/Work/_2RealKinectWrapper/samples/cinderMultipleKinect/proj/osx/cinderMultipleKinect_Prefix.pch
+4.0 (tags/Apple/clang-421.0.60) (based on LLVM 3.1svn)
+i386-apple-darwin12.0.0
+-x
+c++
+-arch
+i386
+-fmessage-length=0
+-fpascal-strings
+-O3
+-fasm-blocks
+-ffast-math
+-mmacosx-version-min=10.5
+-iquote
+-iquote
+-iquote/Users/psaroudakis/Frameworks/Cinder/include
+-iquote../include
+-I/Users/psaroudakis/Work/_2RealKinectWrapper/proj/osx/DerivedData/_2RealKinectProjects/Build/Products/Release/include
+-I../../../../externalLibs/boost/include
+-I../../../../include
+-I../../../../src
+-I/usr/include/ni
+-F/Users/psaroudakis/Work/_2RealKinectWrapper/proj/osx/DerivedData/_2RealKinectProjects/Build/Products/Release
+-ferror-limit=10
+-working-directory=/Users/psaroudakis/Work/_2RealKinectWrapper/samples/cinderMultipleKinect/proj/osx
+-Xclang
+-detailed-preprocessing-record
+SDK_PRODUCT_BUILD_VERSION=12A269

@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8EEA9EA015E6E6F000CAF77F /* _2RealImplementationWinSDK.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 8EEA9E9B15E6E6F000CAF77F /* _2RealImplementationWinSDK.hpp */; };
+		8EEA9EA115E6E6F000CAF77F /* WSDKDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8EEA9E9C15E6E6F000CAF77F /* WSDKDevice.cpp */; };
+		8EEA9EA215E6E6F000CAF77F /* WSDKDevice.h in Headers */ = {isa = PBXBuildFile; fileRef = 8EEA9E9D15E6E6F000CAF77F /* WSDKDevice.h */; };
+		8EEA9EA315E6E6F000CAF77F /* WSDKDeviceConfiguration.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8EEA9E9E15E6E6F000CAF77F /* WSDKDeviceConfiguration.cpp */; };
+		8EEA9EA415E6E6F000CAF77F /* WSDKDeviceConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 8EEA9E9F15E6E6F000CAF77F /* WSDKDeviceConfiguration.h */; };
 		9E40DF421599BA2E00C8A74E /* OpenNIMotorController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9E40DF401599BA2E00C8A74E /* OpenNIMotorController.cpp */; };
 		9E40DF431599BA2E00C8A74E /* OpenNIMotorController.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E40DF411599BA2E00C8A74E /* OpenNIMotorController.h */; };
 		9E7420F11578D3E9009F146E /* _2RealConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E7420DB1578D3E9009F146E /* _2RealConfig.h */; };
@@ -45,6 +50,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		8EEA9E9B15E6E6F000CAF77F /* _2RealImplementationWinSDK.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = _2RealImplementationWinSDK.hpp; sourceTree = "<group>"; };
+		8EEA9E9C15E6E6F000CAF77F /* WSDKDevice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WSDKDevice.cpp; sourceTree = "<group>"; };
+		8EEA9E9D15E6E6F000CAF77F /* WSDKDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WSDKDevice.h; sourceTree = "<group>"; };
+		8EEA9E9E15E6E6F000CAF77F /* WSDKDeviceConfiguration.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WSDKDeviceConfiguration.cpp; sourceTree = "<group>"; };
+		8EEA9E9F15E6E6F000CAF77F /* WSDKDeviceConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WSDKDeviceConfiguration.h; sourceTree = "<group>"; };
 		9E40DF401599BA2E00C8A74E /* OpenNIMotorController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OpenNIMotorController.cpp; sourceTree = "<group>"; };
 		9E40DF411599BA2E00C8A74E /* OpenNIMotorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenNIMotorController.h; sourceTree = "<group>"; };
 		9E7420B91578C3E7009F146E /* _2RealKinectOpenNI_d.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = _2RealKinectOpenNI_d.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -82,6 +92,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8EEA9E9A15E6E6F000CAF77F /* WinSDKSpecific */ = {
+			isa = PBXGroup;
+			children = (
+				8EEA9E9B15E6E6F000CAF77F /* _2RealImplementationWinSDK.hpp */,
+				8EEA9E9C15E6E6F000CAF77F /* WSDKDevice.cpp */,
+				8EEA9E9D15E6E6F000CAF77F /* WSDKDevice.h */,
+				8EEA9E9E15E6E6F000CAF77F /* WSDKDeviceConfiguration.cpp */,
+				8EEA9E9F15E6E6F000CAF77F /* WSDKDeviceConfiguration.h */,
+			);
+			name = WinSDKSpecific;
+			path = ../../../src/WinSDKSpecific;
+			sourceTree = "<group>";
+		};
 		9E7420AE1578C3E7009F146E = {
 			isa = PBXGroup;
 			children = (
@@ -115,6 +138,7 @@
 				9E7420E51578D3E9009F146E /* _2RealVector2f.cpp */,
 				9E7420E61578D3E9009F146E /* _2RealVersion.h */,
 				9E7420E71578D3E9009F146E /* I_2RealImplementation.h */,
+				8EEA9E9A15E6E6F000CAF77F /* WinSDKSpecific */,
 				9E7420E81578D3E9009F146E /* OpenNISpecific */,
 			);
 			name = Source;
@@ -167,6 +191,9 @@
 				9E74210C1578D49F009F146E /* _2RealTypes.h in Headers */,
 				9E74210D1578D49F009F146E /* _2RealVector2f.h in Headers */,
 				9E40DF431599BA2E00C8A74E /* OpenNIMotorController.h in Headers */,
+				8EEA9EA015E6E6F000CAF77F /* _2RealImplementationWinSDK.hpp in Headers */,
+				8EEA9EA215E6E6F000CAF77F /* WSDKDevice.h in Headers */,
+				8EEA9EA415E6E6F000CAF77F /* WSDKDeviceConfiguration.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -229,6 +256,8 @@
 				9E7420FB1578D3E9009F146E /* _2RealVector2f.cpp in Sources */,
 				9E7420FF1578D3E9009F146E /* OpenNIDevice.cpp in Sources */,
 				9E40DF421599BA2E00C8A74E /* OpenNIMotorController.cpp in Sources */,
+				8EEA9EA115E6E6F000CAF77F /* WSDKDevice.cpp in Sources */,
+				8EEA9EA315E6E6F000CAF77F /* WSDKDeviceConfiguration.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -258,7 +287,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = macosx10.6;
+				SDKROOT = "";
 			};
 			name = Debug;
 		};
@@ -278,7 +307,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
-				SDKROOT = macosx10.6;
+				SDKROOT = "";
 			};
 			name = Release;
 		};
@@ -302,7 +331,7 @@
 					/usr/lib/libOpenNI.dylib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)OpenNI_d";
-				SDKROOT = macosx10.6;
+				SDKROOT = "";
 			};
 			name = Debug;
 		};
@@ -326,7 +355,7 @@
 					/usr/lib/libOpenNI.dylib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)OpenNI";
-				SDKROOT = macosx10.6;
+				SDKROOT = "";
 			};
 			name = Release;
 		};
