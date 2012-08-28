@@ -16,7 +16,7 @@ namespace _2RealKinectWrapper
 
 boost::mutex _global_2RealMutex;
 _2RealInstance _2RealKinect::m_Instance;
-
+bool		   _2RealKinect::m_bShouldDelete = true;
 _2RealInstance _2RealKinect::getInstance()
 {
 	boost::interprocess::scoped_lock<boost::mutex> lock( _global_2RealMutex );
@@ -25,6 +25,16 @@ _2RealInstance _2RealKinect::getInstance()
 		m_Instance = new _2RealKinect();
 	}
 	return m_Instance;
+}
+
+void _2RealKinect::destroyInstance()
+{
+	m_Instance->shutdown();
+	if ( m_Instance )
+	{
+		delete m_Instance;
+		m_Instance = nullptr;
+	}
 }
 
 std::string _2RealKinect::getVersion()
@@ -50,7 +60,14 @@ _2RealKinect::_2RealKinect() :
 _2RealKinect::~_2RealKinect()
 {
 	// shutdown && freeing memory
-	shutdown();
+	//shutdown();
+	//if ( m_Instance && m_bShouldDelete )
+	//{
+	//	m_bShouldDelete = false;
+	//	delete m_Instance;
+	//	m_Instance = 0;
+	//}
+	
 }
 
 void _2RealKinect::update()
@@ -91,11 +108,7 @@ bool _2RealKinect::generatorIsActive( const uint32_t deviceID, _2RealGenerator t
 bool _2RealKinect::shutdown()
 {
 	m_Implementation->shutdown();
-	if( m_Instance )
-	{
-		delete m_Instance;
-		m_Instance = nullptr;
-	}
+	
 	return true;
 }
 

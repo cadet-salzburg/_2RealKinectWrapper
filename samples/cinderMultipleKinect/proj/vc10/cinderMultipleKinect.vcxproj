@@ -95,7 +95,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(BOOST_DIR);$(ProjectDir)\..\..\..\..\include;$(CINDER_DIR)\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(BOOST_DIR);$(ProjectDir)\..\..\..\..\include;$(CINDER_DIR)\include;C:\Program Files (x86)\Visual Leak Detector\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <CallingConvention>Cdecl</CallingConvention>
       <IntrinsicFunctions>false</IntrinsicFunctions>
@@ -105,8 +105,8 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(OPEN_NI_LIB);$(KINECTSDK10_DIR)\lib\x86;$(CINDER_DIR)\lib;$(CINDER_DIR)\lib\msw;$(ProjectDir)\..\..\..\..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>cinder_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OPEN_NI_LIB);$(KINECTSDK10_DIR)\lib\x86;$(CINDER_DIR)\lib;$(CINDER_DIR)\lib\msw;$(ProjectDir)\..\..\..\..\lib;C:\Program Files (x86)\Visual Leak Detector\lib\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>cinder_d.lib;vld.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <DataExecutionPrevention>false</DataExecutionPrevention>
       <OptimizeReferences>
       </OptimizeReferences>

@@ -159,7 +159,7 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 
 		~_2RealImplementationOpenNI()
 		{
-			shutdown();
+			//shutdown();
 		}
 
 		//virtual bool start( uint32_t startGenerators, uint32_t configureImages )
@@ -320,7 +320,6 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 		{
 			m_StopRequested = true;
 			m_ProcessingThread.join();
-			return false;
 
 			if( m_IsInitialized )
 			{

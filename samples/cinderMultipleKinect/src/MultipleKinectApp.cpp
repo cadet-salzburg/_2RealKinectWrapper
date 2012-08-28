@@ -33,7 +33,7 @@
 #include "cinder/Rect.h"
 #include "cinder/Utilities.h"
 #include "cinder/Camera.h"
-//#include <vld.h>
+#include <vld.h>
 
 // _2RealKinect Include
 //#define TARGET_MSKINECTSDK		// use this for MS Kinect SDK, comment it or just not define it for using OpenNI
@@ -84,11 +84,9 @@ MultipleKinectApp::MultipleKinectApp() : m_iScreenWidth(1280), m_iScreenHeight(1
 {
 
 }
-
 MultipleKinectApp::~MultipleKinectApp()
 {
-	//m_2RealKinect->shutdown();
-	delete m_2RealKinect;
+	//m_2RealKinect->destroyInstance();
 }
 
 void MultipleKinectApp::prepareSettings( Settings* settings )

@@ -43,6 +43,12 @@ class _2RealKinect
 		!*/
 		static _2RealInstance				getInstance();
 
+
+		/*! /brief     Destroys the instance
+			/return    void
+		!*/
+		static void 						destroyInstance();
+
 		/*! /brief     Returns the version of the _2RealKinectWrapper as string formatted major.minor.patch
 			/return    std::string version number
 		!*/
@@ -310,6 +316,7 @@ class _2RealKinect
 		_2RealKinect& operator=( const _2RealKinect& o );
 
 		boost::shared_ptr<I_2RealImplementation>		m_Implementation;
+		static bool										m_bShouldDelete;
 		//template <class T> friend void boost::checked_delete(T*);	/*!< make m_Instance deletion possible through boost::shared_ptr */
 };
 
