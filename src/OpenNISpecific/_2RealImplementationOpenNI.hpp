@@ -60,7 +60,7 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 		{
 			_2REAL_LOG(info) << "\n_2Real: Init OpenNI SDK " + std::string(XN_VERSION_STRING);
 			checkError( m_Context.Init(), "\n_2Real: Error Could not Initialize OpenNI Context ...\n" );
-			checkError( m_Context.EnumerateProductionTrees( XN_NODE_TYPE_DEVICE, NULL, m_DeviceInfo, NULL ), "\n_2Real: Error while enumerating available devices ...\n" );
+			m_Context.EnumerateProductionTrees( XN_NODE_TYPE_DEVICE, NULL, m_DeviceInfo, NULL );
   			xn::NodeInfoList::Iterator deviceIter = m_DeviceInfo.Begin();
 			for ( ; deviceIter!=m_DeviceInfo.End(); ++deviceIter )
 			{
@@ -72,7 +72,13 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 				deviceRef->addDeviceToContext();
 				m_NumDevices += 1;
 			}
-			_2REAL_LOG(info) << "\n_2Real: Found and init " << (int) m_NumDevices << " device[s]" << std::endl;
+			if ( m_NumDevices == 0 )
+			{
+				_2REAL_LOG(info) << "\n_2Real: There is no device connected!" << std::endl;
+			} else
+			{
+				_2REAL_LOG(info) << "\n_2Real: Found and init " << (int) m_NumDevices << " device[s]" << std::endl;
+			}
 			//Add threaded update
 			m_ProcessingThread = boost::thread( boost::bind( &_2RealImplementationOpenNI::update, this ), this );
 			m_IsInitialized = true;
