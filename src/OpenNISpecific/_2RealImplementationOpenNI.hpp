@@ -58,10 +58,11 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 		boost::thread														m_ProcessingThread;
 		virtual void initialize()
 		{
+			m_NumDevices = 0;
 			_2REAL_LOG(info) << "\n_2Real: Init OpenNI SDK " + std::string(XN_VERSION_STRING);
 			checkError( m_Context.Init(), "\n_2Real: Error Could not Initialize OpenNI Context ...\n" );
 			m_Context.EnumerateProductionTrees( XN_NODE_TYPE_DEVICE, NULL, m_DeviceInfo, NULL );
-  			xn::NodeInfoList::Iterator deviceIter = m_DeviceInfo.Begin();
+			xn::NodeInfoList::Iterator deviceIter = m_DeviceInfo.Begin();
 			for ( ; deviceIter!=m_DeviceInfo.End(); ++deviceIter )
 			{
 				std::stringstream deviceName;
@@ -253,7 +254,7 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 		virtual bool isMirrored( const uint32_t deviceID, _2RealGenerator type ) const
 		{
 			checkDeviceRunning( deviceID );
-            XnBool flag = TRUE;
+			XnBool flag = TRUE;
 			RequestedNodeVector requestedNodes = getRequestedNodes( type );
 			if ( requestedNodes.empty() )
 			{
@@ -333,6 +334,11 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 				m_StopRequested = true;
 				m_ProcessingThread.join();
 				m_IsInitialized = false;
+				for ( uint32_t idx = 0; idx < m_NumDevices; ++idx )
+				{
+					removeGenerator( idx, DEPTHIMAGE | USERIMAGE | COLORIMAGE );
+					removeGenerator( idx, INFRAREDIMAGE );
+				}
 				_2REAL_LOG( info ) << "OK" << std::endl;
 				return true;
 			}
@@ -598,12 +604,24 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 
 		virtual bool restart()
 		{
-			_2REAL_LOG(info) << std::endl << "_2Real: Shutting system down..." << std::endl;
+			// save device startup configuration temporary
+			std::vector<OpenNIDeviceConfiguration> tmpConfiguration( m_NumDevices );
+			for( uint8_t i = 0; i < m_NumDevices; ++i )
+				tmpConfiguration[i] = m_Devices[i]->getDeviceConfiguration();
+			_2REAL_LOG( info ) << "_2Real: Shutting down system..." << std::endl;
 			shutdown();
-			boost::this_thread::sleep(boost::posix_time::seconds((long)3)); //preventing reinitialization too fast (wait 3 sec)
-			_2REAL_LOG(info) << "_2Real: Restarting system..." << std::endl;
-			return false;
-			//return start( m_GeneratorConfig, m_ImageConfig );
+			_2REAL_LOG( info ) << "_2Real: Shutdown: OK" << std::endl;
+			Sleep( 1000 ); //preventing reinitialization t00 fast
+			initialize();
+			_2REAL_LOG( info ) << "_2Real: Restarting system..." << std::endl;
+			for( uint8_t i = 0; i < m_NumDevices; ++i )
+			{
+				configureDevice( i, tmpConfiguration[i].m_GeneratorConfig2Real, tmpConfiguration[i].m_ImageConfig2Real );
+				startGenerator( i, tmpConfiguration[i].m_GeneratorConfig2Real );
+				//Mirroring remains
+			}
+			_2REAL_LOG( info ) << "_2Real: Restart: OK" << std::endl;
+			return true;
 		}
 
 		virtual void convertProjectiveToWorld( const uint32_t deviceID, const uint32_t coordinateCount, const _2RealVector3f* inProjective, _2RealVector3f* outWorld )

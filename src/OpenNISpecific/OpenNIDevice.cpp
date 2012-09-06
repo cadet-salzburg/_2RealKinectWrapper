@@ -436,6 +436,88 @@ XnMapOutputMode	OpenNIDevice::getClosestOutputMode( const XnPredefinedProduction
 	}
 	return getRequestedOutputMode( nodeType, configureImages );
 }
+boost::uint32_t		OpenNIDevice::getImageConfig2Real( const XnPredefinedProductionNodeType &nodeType, const XnMapOutputMode& mode  )
+{
+	boost::uint32_t imageConfig2Real;
+	if ( nodeType == XN_NODE_TYPE_DEPTH )
+	{
+		//configuring image size
+		if ( mode.nXRes == 640 && mode.nYRes == 480 )
+		{
+			imageConfig2Real = IMAGE_USER_DEPTH_640X480;
+		}
+		else if ( mode.nXRes == 320 && mode.nYRes == 240 )
+		{
+			imageConfig2Real = IMAGE_USER_DEPTH_320X240;
+		}
+		else if ( mode.nXRes == 80 && mode.nYRes == 60 )
+		{
+			imageConfig2Real = IMAGE_USER_DEPTH_80X60;
+		}
+		else //default
+		{
+			imageConfig2Real = IMAGE_USER_DEPTH_640X480;
+		}
+		std::cout << "Depth " << std::endl;
+	} else if ( nodeType == XN_NODE_TYPE_IMAGE )
+	{
+		if( mode.nXRes == 1280 && mode.nYRes == 1024 )
+		{
+			imageConfig2Real = IMAGE_COLOR_1280X1024;
+		}
+		else if( mode.nXRes == 640 && mode.nYRes == 480 )
+		{
+			imageConfig2Real = IMAGE_COLOR_640X480;
+		}
+		else if( mode.nXRes == 320 && mode.nYRes == 240 )
+		{
+			imageConfig2Real = IMAGE_COLOR_320X240;
+		}
+		else //default
+		{
+			imageConfig2Real = IMAGE_COLOR_640X480;
+		}
+				std::cout << "Image " << std::endl;
+	} else if ( nodeType == XN_NODE_TYPE_USER )
+	{
+	//configuring image size
+		if ( mode.nXRes == 640 && mode.nYRes == 480 )
+		{
+			imageConfig2Real = IMAGE_USER_DEPTH_640X480;
+		}
+		else if ( mode.nXRes == 320 && mode.nYRes == 240 )
+		{
+			imageConfig2Real = IMAGE_USER_DEPTH_320X240;
+		}
+		else if ( mode.nXRes == 80 && mode.nYRes == 60 )
+		{
+			imageConfig2Real = IMAGE_USER_DEPTH_80X60;
+		}
+		else //default
+		{
+			imageConfig2Real = IMAGE_USER_DEPTH_640X480;
+		}
+				std::cout << "User " << std::endl;
+	} else if ( nodeType == XN_NODE_TYPE_IR )
+	{
+		if ( mode.nXRes == 640 && mode.nYRes == 480 )
+		{
+			imageConfig2Real = IMAGE_INFRARED_640X480;
+		}
+		else if ( mode.nXRes == 320 && mode.nYRes == 240 )
+		{
+			imageConfig2Real = IMAGE_INFRARED_320X240;
+		}
+		else //default
+		{
+			imageConfig2Real = IMAGE_INFRARED_640X480;
+		}
+				std::cout << "IR " << std::endl;
+	} else {
+		throwError(" Requested node type does not support an output mode ");
+	}
+	return imageConfig2Real;
+}
 
 XnMapOutputMode OpenNIDevice::getRequestedOutputMode( const XnPredefinedProductionNodeType &nodeType, boost::uint32_t configureImages )
 {
@@ -981,7 +1063,79 @@ int	OpenNIDevice::getMotorAngle()
 		return 0;
 	return m_DeviceMotorController.GetAngle();
 }
-
+OpenNIDeviceConfiguration OpenNIDevice::getDeviceConfiguration()
+{
+	OpenNIDeviceConfiguration  devConf;
+	boost::uint32_t _2RealImageConfig  = 0;
+	boost::uint32_t _2RealGeneratorConfig  = 0;
+	//Check for color image
+	if ( hasGenerator(XN_NODE_TYPE_IMAGE ) )
+	{
+		xn::ProductionNode imageNode;
+		getExistingProductionNode( XN_NODE_TYPE_IMAGE, imageNode );
+		//Get resolution
+		xn::MapGenerator mapGenerator = static_cast<xn::MapGenerator>(imageNode);
+		XnMapOutputMode imageOutputMode;
+		checkError( mapGenerator.GetMapOutputMode( imageOutputMode ), "Error while trying to get image output mode");
+		boost::uint32_t _2RealImageMode = getImageConfig2Real( XN_NODE_TYPE_IMAGE, imageOutputMode );
+		_2RealImageConfig = _2RealImageConfig | _2RealImageMode;
+		//Get mirrored
+		devConf.setMirror( XN_NODE_TYPE_IMAGE, mapGenerator.GetMirrorCap().IsMirrored() );
+		_2RealGeneratorConfig = _2RealGeneratorConfig | COLORIMAGE;
+		std::cout << "Has COLOR " << std::endl;
+	}
+	//Check for depth image
+	if ( hasGenerator(XN_NODE_TYPE_DEPTH ) )
+	{
+		xn::ProductionNode depthNode;
+		getExistingProductionNode( XN_NODE_TYPE_DEPTH, depthNode );
+		//Get resolution
+		xn::MapGenerator mapGenerator = static_cast<xn::MapGenerator>(depthNode);
+		XnMapOutputMode depthOutputMode;
+		checkError( mapGenerator.GetMapOutputMode( depthOutputMode ), "Error while trying to get depth output mode");
+		boost::uint32_t _2RealImageMode = getImageConfig2Real( XN_NODE_TYPE_DEPTH, depthOutputMode );
+		_2RealImageConfig = _2RealImageConfig | _2RealImageMode;
+		//Get mirrored
+		devConf.setMirror( XN_NODE_TYPE_DEPTH, mapGenerator.GetMirrorCap().IsMirrored() );
+		_2RealGeneratorConfig = _2RealGeneratorConfig | DEPTHIMAGE;
+		std::cout << "Has DEPTH " << std::endl;
+	}
+	//Check for user image
+	if ( hasGenerator(XN_NODE_TYPE_USER ) )
+	{
+		xn::ProductionNode userNode;
+		getExistingProductionNode( XN_NODE_TYPE_DEPTH, userNode );
+		//Get resolution
+		xn::MapGenerator mapGenerator = static_cast<xn::MapGenerator>(userNode);
+		XnMapOutputMode userOutputMode;
+		checkError( mapGenerator.GetMapOutputMode( userOutputMode ), "Error while trying to get depth output mode");
+		boost::uint32_t _2RealImageMode = getImageConfig2Real( XN_NODE_TYPE_USER, userOutputMode );
+		_2RealImageConfig = _2RealImageConfig | _2RealImageMode;
+		//Get mirrored
+		devConf.setMirror( XN_NODE_TYPE_USER, mapGenerator.GetMirrorCap().IsMirrored() );
+		_2RealGeneratorConfig = _2RealGeneratorConfig | USERIMAGE;
+		std::cout << "Has USER " << std::endl;
+	}
+	//check for ir image
+	if ( hasGenerator(XN_NODE_TYPE_IR ) )
+	{
+		xn::ProductionNode irNode;
+		getExistingProductionNode( XN_NODE_TYPE_IR, irNode );
+		//Get resolution
+		xn::MapGenerator mapGenerator = static_cast<xn::MapGenerator>(irNode);
+		XnMapOutputMode irOutputMode;
+		checkError( mapGenerator.GetMapOutputMode( irOutputMode ), "Error while trying to get depth output mode");
+		boost::uint32_t _2RealImageMode = getImageConfig2Real( XN_NODE_TYPE_IR, irOutputMode );
+		_2RealImageConfig = _2RealImageConfig | _2RealImageMode;
+		//Get mirrored
+		devConf.setMirror( XN_NODE_TYPE_IR, mapGenerator.GetMirrorCap().IsMirrored() );
+		_2RealGeneratorConfig = _2RealGeneratorConfig | INFRAREDIMAGE;
+		std::cout << "Has IR " << std::endl;
+	}
+	devConf.setImageConfig( _2RealImageConfig );
+	devConf.setGeneratorConfig( _2RealGeneratorConfig );
+	return devConf;
+}
 
 void OpenNIDevice::registerUserCallbacks()
 {

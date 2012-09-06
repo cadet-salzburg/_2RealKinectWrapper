@@ -40,6 +40,7 @@
     <ClInclude Include="..\..\include\_2RealTypes.h" />
     <ClInclude Include="..\..\include\_2RealVector2f.h" />
     <ClInclude Include="..\..\src\I_2RealImplementation.h" />
+    <ClInclude Include="..\..\src\OpenNIDeviceConfiguration.h" />
     <ClInclude Include="..\..\src\OpenNISpecific\OpenNIDevice.h" />
     <ClInclude Include="..\..\src\OpenNISpecific\OpenNIMotorController.h" />
     <ClInclude Include="..\..\src\OpenNISpecific\OpenNiUtils.hpp" />
@@ -55,6 +56,7 @@
     <ClInclude Include="..\..\src\_2RealVersion.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\OpenNIDeviceConfiguration.cpp" />
     <ClCompile Include="..\..\src\OpenNISpecific\OpenNIDevice.cpp" />
     <ClCompile Include="..\..\src\OpenNISpecific\OpenNIMotorController.cpp" />
     <ClCompile Include="..\..\src\WinSDKSpecific\WSDKDevice.cpp" />

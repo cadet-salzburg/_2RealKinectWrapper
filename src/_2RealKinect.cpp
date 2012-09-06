@@ -59,15 +59,7 @@ _2RealKinect::_2RealKinect() :
 
 _2RealKinect::~_2RealKinect()
 {
-	// shutdown && freeing memory
-	//shutdown();
-	//if ( m_Instance && m_bShouldDelete )
-	//{
-	//	m_bShouldDelete = false;
-	//	delete m_Instance;
-	//	m_Instance = 0;
-	//}
-	
+
 }
 
 void _2RealKinect::update()

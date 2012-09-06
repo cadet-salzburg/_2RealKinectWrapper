@@ -12,7 +12,7 @@ namespace _2RealKinectWrapper {
 	{
 		Release();
 	}
-	
+
 	XnStatus OpenNIMotorController::Create()
 	{
 		const XnUSBConnectionString *paths;

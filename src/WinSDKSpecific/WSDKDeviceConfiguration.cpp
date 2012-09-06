@@ -11,7 +11,6 @@ WSDKDeviceConfiguration::ImageRes::ImageRes()
 
 }
 
-
 WSDKDeviceConfiguration::WSDKDeviceConfiguration()
 	: m_Generators2Real( IMAGE_CONFIG_INVALID ),
 	  m_GeneratorsWSDK( IMAGE_CONFIG_INVALID ),

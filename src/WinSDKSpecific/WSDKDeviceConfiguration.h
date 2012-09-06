@@ -35,6 +35,4 @@ class WSDKDeviceConfiguration
 	ImageRes				m_ImageResUser;
 	ImageRes				m_ImageResInfrared;
 };
-
-
 }

@@ -11,6 +11,7 @@
 #include <boost/shared_array.hpp>
 #include "_2RealTrackedUser.h"
 #include "OpenNIMotorController.h"
+#include "OpenNIDeviceConfiguration.h"
 #include <memory>
 
 
@@ -71,7 +72,7 @@ namespace _2RealKinectWrapper {
 
 		void							setMotorAngle( int angle );
 		int								getMotorAngle();
-
+		OpenNIDeviceConfiguration		getDeviceConfiguration();
 	private:
 		void							convertImage_16_to_8( const boost::shared_array<uint16_t> source, boost::shared_array<unsigned char> destination, uint32_t size, const int normalizing )
 		{
@@ -83,6 +84,7 @@ namespace _2RealKinectWrapper {
 
 		XnMapOutputMode					getClosestOutputMode( const XnPredefinedProductionNodeType &nodeType, unsigned int hRes, unsigned int vRes );
 		XnMapOutputMode					getRequestedOutputMode( const XnPredefinedProductionNodeType &nodeType, uint32_t configureImages );
+		boost::uint32_t					getImageConfig2Real( const XnPredefinedProductionNodeType &nodeType, const XnMapOutputMode& mode  );
 		mutable xn::Context				m_Context;
 		std::string						m_DeviceName;
 		NodeInfoRef						m_DeviceInfo;
@@ -116,6 +118,7 @@ namespace _2RealKinectWrapper {
 		XnStatus						getErrorState() const;
 		OpenNIMotorController			m_DeviceMotorController;
 		bool							m_MotorInitialized;
+		OpenNIDeviceConfiguration		m_DeviceConfiguration;
 	};
 } //namespace
 
