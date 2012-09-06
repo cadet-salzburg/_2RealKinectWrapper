@@ -17,10 +17,6 @@
       <Configuration>Release (OpenNI)</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Release OpenNI2|Win32">
-      <Configuration>Release OpenNI2</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{7FD42DF7-442E-479A-BA76-D0022F99702A}</ProjectGuid>
@@ -34,11 +30,6 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release (OpenNI)|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <CharacterSet>Unicode</CharacterSet>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release OpenNI2|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -60,9 +51,6 @@
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release (OpenNI)|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release OpenNI2|Win32'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug (MS KINECT SDK)|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -82,18 +70,14 @@
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug (OpenNI)|Win32'">true</GenerateManifest>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release (MS KINECT SDK)|Win32'">..\..\bin\</OutDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release (OpenNI)|Win32'">..\..\bin\</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release OpenNI2|Win32'">..\..\bin\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release (MS KINECT SDK)|Win32'">obj\$(Configuration)\</IntDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release (OpenNI)|Win32'">obj\$(Configuration)\</IntDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release OpenNI2|Win32'">obj\$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release (MS KINECT SDK)|Win32'">false</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release (OpenNI)|Win32'">false</LinkIncremental>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release OpenNI2|Win32'">false</LinkIncremental>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug (MS KINECT SDK)|Win32'">$(ProjectName)_d</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug (OpenNI)|Win32'">$(ProjectName)_d</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release (MS KINECT SDK)|Win32'">$(ProjectName)</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release (OpenNI)|Win32'">$(ProjectName)</TargetName>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release OpenNI2|Win32'">$(ProjectName)</TargetName>
     <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Debug (MS KINECT SDK)|Win32'">true</IgnoreImportLibrary>
     <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Debug (OpenNI)|Win32'">true</IgnoreImportLibrary>
   </PropertyGroup>
@@ -199,41 +183,6 @@ if not exist "$(ProjectDir)..\..\bin\data" mkdir  "$(ProjectDir)..\..\bin\data"
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release (OpenNI)|Win32'">
-    <ClCompile>
-      <WholeProgramOptimization>false</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>$(BOOST_DIR);$(ProjectDir)\..\..\..\..\include;$(OPENFRAMEWORKS_DIR)\libs\openFrameworks;$(OPENFRAMEWORKS_DIR)\libs\openFrameworks\graphics;$(OPENFRAMEWORKS_DIR)\libs\openFrameworks\app;$(OPENFRAMEWORKS_DIR)\libs\openFrameworks\sound;$(OPENFRAMEWORKS_DIR)\libs\openFrameworks\utils;$(OPENFRAMEWORKS_DIR)\libs\openFrameworks\communication;$(OPENFRAMEWORKS_DIR)\libs\openFrameworks\video;$(OPENFRAMEWORKS_DIR)\libs\openFrameworks\math;$(OPENFRAMEWORKS_DIR)\libs\openFrameworks\types;$(OPENFRAMEWORKS_DIR)\libs\openFrameworks\events;$(OPENFRAMEWORKS_DIR)\libs\glut\include;$(OPENFRAMEWORKS_DIR)\libs\rtAudio\include;$(OPENFRAMEWORKS_DIR)\libs\quicktime\include;$(OPENFRAMEWORKS_DIR)\libs\freetype\include;$(OPENFRAMEWORKS_DIR)\libs\freetype\include\freetype2;$(OPENFRAMEWORKS_DIR)\libs\freeImage\include;$(OPENFRAMEWORKS_DIR)\libs\fmodex\include;$(OPENFRAMEWORKS_DIR)\libs\videoInput\include;$(OPENFRAMEWORKS_DIR)\libs\glew\include\;$(OPENFRAMEWORKS_DIR)\libs\glu\include;$(OPENFRAMEWORKS_DIR)\libs\poco\include;$(OPENFRAMEWORKS_DIR)\addons;$(OPENFRAMEWORKS_DIR)\libs\openFrameworks\gl;$(OPENFRAMEWORKS_DIR)\libs\openFrameworks\3d;$(OPENFRAMEWORKS_DIR)\libs\tess2\include;$(OPENFRAMEWORKS_DIR)\libs\cairo\include\cairo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;POCO_STATIC;CAIRO_WIN32_STATIC_BUILD;DISABLE_SOME_FLOATING_POINT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
-      <DebugInformationFormat>
-      </DebugInformationFormat>
-    </ClCompile>
-    <Link>
-      <AdditionalDependencies>openframeworksLib.lib;cairo-static.lib;pixman-1.lib;msimg32.lib;OpenGL32.lib;GLu32.lib;kernel32.lib;setupapi.lib;glut32.lib;rtAudio.lib;videoInput.lib;libfreetype.lib;FreeImage.lib;qtmlClient.lib;dsound.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;glew32s.lib;fmodex_vc.lib;glu32.lib;PocoFoundationmd.lib;PocoNetmd.lib;PocoUtilmd.lib;PocoXMLmd.lib;tess2.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProjectDir)\..\..\..\..\lib;$(OPEN_NI_LIB);$(BOOST_DIR_)\lib;$(KINECTSDK10_DIR)\lib\x86;$(ProjectDir)\..\..\..\..\lib;$(OPENFRAMEWORKS_DIR)\libs\glut\lib\vs2010;$(OPENFRAMEWORKS_DIR)\libs\rtAudio\lib\vs2010;$(OPENFRAMEWORKS_DIR)\libs\FreeImage\lib\vs2010;$(OPENFRAMEWORKS_DIR)\libs\freetype\lib\vs2010;$(OPENFRAMEWORKS_DIR)\libs\quicktime\lib\vs2010;$(OPENFRAMEWORKS_DIR)\libs\fmodex\lib\vs2010;$(OPENFRAMEWORKS_DIR)\libs\videoInput\lib\vs2010;$(OPENFRAMEWORKS_DIR)\libs\cairo\lib\vs2010;$(OPENFRAMEWORKS_DIR)\libs\glew\lib\vs2010;$(OPENFRAMEWORKS_DIR)\libs\glu\lib\vs2010;$(OPENFRAMEWORKS_DIR)\libs\Poco\lib\vs2010;$(OPENFRAMEWORKS_DIR)\libs\openFrameworksCompiled\lib\vs2010;$(OPENFRAMEWORKS_DIR)\libs\tess2\lib\vs2010;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
-      <IgnoreSpecificDefaultLibraries>atlthunk.lib; LIBC.lib; LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
-      <SubSystem>Console</SubSystem>
-      <OptimizeReferences>true</OptimizeReferences>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <RandomizedBaseAddress>false</RandomizedBaseAddress>
-      <DataExecutionPrevention>
-      </DataExecutionPrevention>
-      <TargetMachine>MachineX86</TargetMachine>
-      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
-    </Link>
-    <PostBuildEvent>
-      <Message>adding DLLs and creating data folder</Message>
-      <Command>xcopy /e /i /y "$(OPENFRAMEWORKS_DIR)\export\vs2010\*.dll" "$(ProjectDir)..\..\bin"
-if not exist "$(ProjectDir)..\..\bin\data" mkdir  "$(ProjectDir)..\..\bin\data"
-
-</Command>
-    </PostBuildEvent>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release OpenNI2|Win32'">
     <ClCompile>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <AdditionalIncludeDirectories>$(BOOST_DIR);$(ProjectDir)\..\..\..\..\include;$(OPENFRAMEWORKS_DIR)\libs\openFrameworks;$(OPENFRAMEWORKS_DIR)\libs\openFrameworks\graphics;$(OPENFRAMEWORKS_DIR)\libs\openFrameworks\app;$(OPENFRAMEWORKS_DIR)\libs\openFrameworks\sound;$(OPENFRAMEWORKS_DIR)\libs\openFrameworks\utils;$(OPENFRAMEWORKS_DIR)\libs\openFrameworks\communication;$(OPENFRAMEWORKS_DIR)\libs\openFrameworks\video;$(OPENFRAMEWORKS_DIR)\libs\openFrameworks\math;$(OPENFRAMEWORKS_DIR)\libs\openFrameworks\types;$(OPENFRAMEWORKS_DIR)\libs\openFrameworks\events;$(OPENFRAMEWORKS_DIR)\libs\glut\include;$(OPENFRAMEWORKS_DIR)\libs\rtAudio\include;$(OPENFRAMEWORKS_DIR)\libs\quicktime\include;$(OPENFRAMEWORKS_DIR)\libs\freetype\include;$(OPENFRAMEWORKS_DIR)\libs\freetype\include\freetype2;$(OPENFRAMEWORKS_DIR)\libs\freeImage\include;$(OPENFRAMEWORKS_DIR)\libs\fmodex\include;$(OPENFRAMEWORKS_DIR)\libs\videoInput\include;$(OPENFRAMEWORKS_DIR)\libs\glew\include\;$(OPENFRAMEWORKS_DIR)\libs\glu\include;$(OPENFRAMEWORKS_DIR)\libs\poco\include;$(OPENFRAMEWORKS_DIR)\addons;$(OPENFRAMEWORKS_DIR)\libs\openFrameworks\gl;$(OPENFRAMEWORKS_DIR)\libs\openFrameworks\3d;$(OPENFRAMEWORKS_DIR)\libs\tess2\include;$(OPENFRAMEWORKS_DIR)\libs\cairo\include\cairo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>

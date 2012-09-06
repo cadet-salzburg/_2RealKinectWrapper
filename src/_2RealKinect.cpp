@@ -5,7 +5,7 @@
 #include <stdint.h>
 
 
-#ifndef TARGET_MSKINECTSDK
+#ifndef TARGET_MSKINECTSDK 
 	#include "OpenNISpecific/_2RealImplementationOpenNI.hpp"
 #else
 	#include "WinSDKSpecific/_2RealImplementationWinSDK.hpp"
