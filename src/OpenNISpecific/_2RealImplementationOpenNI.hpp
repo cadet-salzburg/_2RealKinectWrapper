@@ -58,6 +58,7 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 		boost::thread														m_ProcessingThread;
 		virtual void initialize()
 		{
+			m_Devices.clear();
 			m_NumDevices = 0;
 			m_StopRequested = false;
 			_2REAL_LOG(info) << "\n_2Real: Init OpenNI SDK " + std::string(XN_VERSION_STRING);
@@ -611,7 +612,7 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 				tmpConfiguration[i] = m_Devices[i]->getDeviceConfiguration();
 			shutdown();
 			_2REAL_LOG( info ) << "_2Real: Shutdown: OK" << std::endl;
-			Sleep( 1000 ); //preventing reinitialization t00 fast
+			Sleep( 3000 ); //preventing reinitialization t00 fast
 			initialize();
 			_2REAL_LOG( info ) << "_2Real: Restarting system..." << std::endl;
 			for( uint8_t i = 0; i < m_NumDevices; ++i )
