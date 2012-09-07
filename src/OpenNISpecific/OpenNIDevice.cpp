@@ -305,7 +305,7 @@ void OpenNIDevice::startGenerator( const XnPredefinedProductionNodeType &nodeTyp
 	getExistingProductionNode( nodeType, generator );
 	if ( !generator.IsGenerating() )
 	{
-		generator.StartGenerating();
+		checkError( generator.StartGenerating(), "Error while starting generator");
 	}
 }
 
@@ -317,7 +317,7 @@ void OpenNIDevice::stopGenerator( const XnPredefinedProductionNodeType &nodeType
 	getExistingProductionNode( nodeType, generator );
 	if ( generator.IsGenerating() )
 	{
-		generator.StopGenerating();
+		checkError( generator.StopGenerating(), "Error while stopping generator");
 	}
 }
 
@@ -1063,6 +1063,7 @@ int	OpenNIDevice::getMotorAngle()
 		return 0;
 	return m_DeviceMotorController.GetAngle();
 }
+
 OpenNIDeviceConfiguration OpenNIDevice::getDeviceConfiguration()
 {
 	OpenNIDeviceConfiguration  devConf;
@@ -1084,6 +1085,7 @@ OpenNIDeviceConfiguration OpenNIDevice::getDeviceConfiguration()
 		_2RealGeneratorConfig = _2RealGeneratorConfig | COLORIMAGE;
 		std::cout << "Has COLOR " << std::endl;
 	}
+
 	//Check for depth image
 	if ( hasGenerator(XN_NODE_TYPE_DEPTH ) )
 	{
