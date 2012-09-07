@@ -386,6 +386,12 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 			return 1; //depth-, and userimage will be converted to 1byte/Pixel (8bit uchar*)
 		}
 
+		virtual _2RealFoV getFieldOfView( const uint32_t deviceID )
+		{
+			checkDeviceRunning( deviceID );
+			return m_Devices[ deviceID ]->getFieldOfView();	
+		}
+
 		virtual void setResolution( const uint32_t deviceID, _2RealGenerator type, unsigned int hRes, unsigned int vRes )
 		{
 			checkDeviceRunning( deviceID );
@@ -675,6 +681,10 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 		{
 			return m_Devices[ deviceID ]->getMotorAngle();
 		}
+
+
+
+
 
 		virtual const _2RealVector3f getUsersWorldCenterOfMass(const uint32_t deviceID, const uint8_t userID)
 		{

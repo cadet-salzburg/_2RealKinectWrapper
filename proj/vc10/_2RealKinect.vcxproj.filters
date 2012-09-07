@@ -31,7 +31,9 @@
     <ClCompile Include="..\..\src\WinSDKSpecific\WSDKDeviceConfiguration.cpp">
       <Filter>_2RealKinectWrapper\MS Kinect SDK</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\OpenNIDeviceConfiguration.cpp" />
+    <ClCompile Include="..\..\src\OpenNIDeviceConfiguration.cpp">
+      <Filter>_2RealKinectWrapper\OpenNI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\_2RealKinect.h">
@@ -88,7 +90,9 @@
     <ClInclude Include="..\..\src\WinSDKSpecific\WSDKDeviceConfiguration.h">
       <Filter>_2RealKinectWrapper\MS Kinect SDK</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\OpenNIDeviceConfiguration.h" />
+    <ClInclude Include="..\..\src\OpenNIDeviceConfiguration.h">
+      <Filter>_2RealKinectWrapper\OpenNI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="API Interface">

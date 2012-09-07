@@ -62,6 +62,7 @@ class I_2RealImplementation
 		virtual const _2RealVector3f				getJointWorldPosition( const uint32_t deviceID, const uint8_t userID, _2RealJointType type ) = 0;
 		virtual int									getMotorAngle(int deviceID) = 0;
 		virtual uint32_t							getNumberOfDevices() const = 0;
+		virtual _2RealFoV							getFieldOfView( const uint32_t deviceID ) = 0;
 		virtual void								setResolution( const uint32_t deviceID, _2RealGenerator type, unsigned int hRes, unsigned int vRes ) = 0;
 		virtual const _2RealJointConfidence			getSkeletonJointConfidence(const uint32_t deviceID, const uint8_t userID, _2RealJointType type) = 0;
 		virtual const _2RealJointConfidences		getSkeletonJointConfidences(const uint32_t deviceID, const uint8_t userID) = 0;

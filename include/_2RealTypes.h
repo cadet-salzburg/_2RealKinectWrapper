@@ -140,6 +140,12 @@ namespace _2RealKinectWrapper
 	// Logger enums
 	enum _2RealLogLevel {none, error, warn, info, debug };	// debug outputs all messages, none outputs nothing
 
+	struct _2RealFoV
+	{
+		double horizontalFoV;
+		double verticalFoV;
+	};
+
 	struct _2RealVector3f
 	{
 		_2RealVector3f( void );
