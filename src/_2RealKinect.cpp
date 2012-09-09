@@ -144,6 +144,11 @@ uint32_t _2RealKinect::getImageHeight( const uint32_t deviceID, _2RealGenerator 
 	return m_Implementation->getImageHeight( deviceID, type );
 }
 
+_2RealFoV _2RealKinect::getFieldOfView( const uint32_t deviceID )
+{
+	return m_Implementation->getFieldOfView( deviceID );
+}
+
 void _2RealKinect::setResolution( const uint32_t deviceID, _2RealGenerator type, unsigned int hRes, unsigned int vRes )
 {
 	m_Implementation->setResolution( deviceID, type, hRes, vRes );

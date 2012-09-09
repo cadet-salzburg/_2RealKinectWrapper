@@ -69,6 +69,8 @@ namespace _2RealKinectWrapper {
 		_2RealTrackedJointRef			getUserJoint( const uint32_t userID, XnSkeletonJoint type );
 		void							forceResetUser( const uint32_t id );
 		void							forceResetUsers( );
+		
+		_2RealFoV						getFieldOfView();
 
 		void							setMotorAngle( int angle );
 		int								getMotorAngle();
@@ -79,6 +81,7 @@ namespace _2RealKinectWrapper {
 			for( unsigned int i=0; i<size; ++i )
 			{
 				destination[i] = (unsigned char) ( source[i] * ( (float)( 1 << 8 ) / normalizing ) ); 	
+				//destination[i] = (unsigned char)( source[i] >> 8 );
 			}
 		};
 

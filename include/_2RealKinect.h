@@ -31,6 +31,8 @@
 
 namespace _2RealKinectWrapper
 {
+
+
 class I_2RealImplementation;
 
 //singleton implementation of _2Real-Wrapper for Windows-Kinect-SDK && OpenNI
@@ -110,6 +112,13 @@ class _2RealKinect
 		!*/
 		uint32_t							getImageHeight( const uint32_t deviceID, _2RealGenerator type );
 
+		/*! /brief     Returns the field of view of the depth generator if present.
+		!*/
+
+		_2RealFoV							getFieldOfView( const uint32_t deviceID );
+
+		void								setResolution( const uint32_t deviceID, _2RealGenerator type, unsigned int hRes, unsigned int vRes );
+
 		/*! /brief     Returns a 8bit pointer to a image buffer of a particular image
 			/param     const uint32_t deviceID for choosing specific device
 			/param     _2RealGenerator type indicating the type of the generator to be requested, Use _2RealGenerator enum
@@ -117,8 +126,6 @@ class _2RealKinect
 			/param     const uint8_t userId only used for GENERATOR_USERIMAGE. Ignored by other types
 			/return    boost::shared_ptr<unsigned char> Shared Pointer to image buffer; use getImageWidth, getImageHeight, getImageBytePerPixel to obtain image specifications
 		!*/
-
-		void								setResolution( const uint32_t deviceID, _2RealGenerator type, unsigned int hRes, unsigned int vRes );
 
 		boost::shared_array<unsigned char>	getImageData( const uint32_t deviceID, _2RealGenerator type, bool waitAndBlock=false, const uint8_t userId=0 );
 

@@ -198,6 +198,10 @@ public:
 		}
 		return false;
 	}
+	virtual _2RealFoV getFieldOfView( const uint32_t deviceID )
+	{
+		throw std::exception("The method or operation is not implemented.");
+	}
 
 	virtual void setResolution( const uint32_t deviceID, _2RealGenerator type, unsigned int hRes, unsigned int vRes ) 
 	{

@@ -305,7 +305,7 @@ void OpenNIDevice::startGenerator( const XnPredefinedProductionNodeType &nodeTyp
 	getExistingProductionNode( nodeType, generator );
 	if ( !generator.IsGenerating() )
 	{
-		generator.StartGenerating();
+		checkError( generator.StartGenerating(), "Error while starting generator");
 	}
 }
 
@@ -317,7 +317,7 @@ void OpenNIDevice::stopGenerator( const XnPredefinedProductionNodeType &nodeType
 	getExistingProductionNode( nodeType, generator );
 	if ( generator.IsGenerating() )
 	{
-		generator.StopGenerating();
+		checkError( generator.StopGenerating(), "Error while stopping generator");
 	}
 }
 
@@ -1050,6 +1050,22 @@ void  OpenNIDevice::forceResetUsers( )
 	delete [] currentUsers;
 }
 
+_2RealFoV	OpenNIDevice::getFieldOfView()
+{
+	_2RealFoV devFoV;
+	if ( hasGenerator( XN_NODE_TYPE_DEPTH ) )
+	{
+		XnFieldOfView fov;
+		checkError( m_DepthGenerator.GetFieldOfView( fov ), "Error while trying to get FoV");
+		devFoV.horizontalFoV = fov.fHFOV;
+		devFoV.verticalFoV = fov.fVFOV;
+	} else 
+	{
+		_2REAL_LOG(info) << "A depth generator must be present in order to get the field-of-view" << std::endl;
+	}
+	return devFoV;
+}
+
 void OpenNIDevice::setMotorAngle( int angle )
 {
 	if ( !m_MotorInitialized )
@@ -1063,6 +1079,7 @@ int	OpenNIDevice::getMotorAngle()
 		return 0;
 	return m_DeviceMotorController.GetAngle();
 }
+
 OpenNIDeviceConfiguration OpenNIDevice::getDeviceConfiguration()
 {
 	OpenNIDeviceConfiguration  devConf;
@@ -1084,6 +1101,7 @@ OpenNIDeviceConfiguration OpenNIDevice::getDeviceConfiguration()
 		_2RealGeneratorConfig = _2RealGeneratorConfig | COLORIMAGE;
 		std::cout << "Has COLOR " << std::endl;
 	}
+
 	//Check for depth image
 	if ( hasGenerator(XN_NODE_TYPE_DEPTH ) )
 	{

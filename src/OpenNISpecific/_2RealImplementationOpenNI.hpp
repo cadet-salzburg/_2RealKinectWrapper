@@ -58,6 +58,9 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 		boost::thread														m_ProcessingThread;
 		virtual void initialize()
 		{
+			m_Devices.clear();
+			m_NumDevices = 0;
+			m_StopRequested = false;
 			_2REAL_LOG(info) << "\n_2Real: Init OpenNI SDK " + std::string(XN_VERSION_STRING);
 			checkError( m_Context.Init(), "\n_2Real: Error Could not Initialize OpenNI Context ...\n" );
 			m_Context.EnumerateProductionTrees( XN_NODE_TYPE_DEVICE, NULL, m_DeviceInfo, NULL );
@@ -126,10 +129,10 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 			{
 				return;
 			}
-
 			for ( std::vector<XnPredefinedProductionNodeType>::iterator iter = requestedNodes.begin(); iter!=requestedNodes.end(); ++iter ) 
 			{
-				if ( start ){
+				if ( start )
+				{
 					m_Devices[ deviceID ]->startGenerator(*iter);
 				} else {
 					m_Devices[ deviceID ]->stopGenerator(*iter);
@@ -333,13 +336,18 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 				m_StopRequested = true;
 				m_ProcessingThread.join();
 				m_IsInitialized = false;
+				//Remove generators
+				_2REAL_LOG( info )  << std::endl << "_2Real: Removing generators..." << std::endl;
+				for (size_t i =0; i<m_NumDevices; ++i)
+				{
+					 removeGenerator( i, COLORIMAGE | DEPTHIMAGE | USERIMAGE );
+					 removeGenerator( i, INFRAREDIMAGE );
+				}
 				_2REAL_LOG( info ) << "OK" << std::endl;
 				return true;
 			}
 			_2REAL_LOG( warn ) << std::endl << "_2Real: System not shutdown correctly..." << std::endl;
 			return false;
-
-
 		}
 		virtual boost::shared_array<unsigned char> getImageData( const uint32_t deviceID, _2RealGenerator type, bool waitAndBlock, const uint8_t userId )
 		{
@@ -376,6 +384,12 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 			if( type == COLORIMAGE || type == USERIMAGE_COLORED ) //rgb image 3byte/Pixel
 				return 3;
 			return 1; //depth-, and userimage will be converted to 1byte/Pixel (8bit uchar*)
+		}
+
+		virtual _2RealFoV getFieldOfView( const uint32_t deviceID )
+		{
+			checkDeviceRunning( deviceID );
+			return m_Devices[ deviceID ]->getFieldOfView();	
 		}
 
 		virtual void setResolution( const uint32_t deviceID, _2RealGenerator type, unsigned int hRes, unsigned int vRes )
@@ -598,12 +612,28 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 
 		virtual bool restart()
 		{
-			_2REAL_LOG(info) << std::endl << "_2Real: Shutting system down..." << std::endl;
+			// save device startup configuration temporary
+			std::vector<OpenNIDeviceConfiguration> tmpConfiguration( m_NumDevices );
+			for( uint8_t i = 0; i < m_NumDevices; ++i )
+				tmpConfiguration[i] = m_Devices[i]->getDeviceConfiguration();
 			shutdown();
-			boost::this_thread::sleep(boost::posix_time::seconds((long)3)); //preventing reinitialization too fast (wait 3 sec)
-			_2REAL_LOG(info) << "_2Real: Restarting system..." << std::endl;
-			return false;
-			//return start( m_GeneratorConfig, m_ImageConfig );
+			_2REAL_LOG( info ) << "_2Real: Shutdown: OK" << std::endl;
+			Sleep( 3000 ); //preventing reinitialization t00 fast
+			initialize();
+			_2REAL_LOG( info ) << "_2Real: Restarting system..." << std::endl;
+			for( uint8_t i = 0; i < m_NumDevices; ++i )
+			{
+				configureDevice( i, tmpConfiguration[i].m_GeneratorConfig2Real, tmpConfiguration[i].m_ImageConfig2Real );
+				startGenerator( i,tmpConfiguration[i].m_GeneratorConfig2Real );
+			}
+			_2REAL_LOG( info ) << "_2Real: Restart: OK" << std::endl;
+			return true;
+
+
+
+
+
+
 		}
 
 		virtual void convertProjectiveToWorld( const uint32_t deviceID, const uint32_t coordinateCount, const _2RealVector3f* inProjective, _2RealVector3f* outWorld )
@@ -651,6 +681,10 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 		{
 			return m_Devices[ deviceID ]->getMotorAngle();
 		}
+
+
+
+
 
 		virtual const _2RealVector3f getUsersWorldCenterOfMass(const uint32_t deviceID, const uint8_t userID)
 		{

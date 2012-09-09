@@ -63,16 +63,13 @@ namespace _2RealKinectWrapper {
 				Release();
 				return res;
 			}
-			
 			m_bOpened = true;
 			
-			std::cout << "\n The motor controller was initialized correctly" << std::endl;
+			std::cout << "\n_2Real: The motor controller was initialized correctly" << std::endl;
 			return XN_STATUS_OK;
 		}
-
 		return XN_STATUS_OS_FILE_OPEN_FAILED;
 	}
-
 	void OpenNIMotorController::Release()
 	{
 		if( m_bOpened )
