@@ -17,6 +17,7 @@
 		5323E6B60EAFCA7E003A9687 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B50EAFCA7E003A9687 /* QTKit.framework */; };
 		53E3CDFC0E86099300238D2B /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53E3CDFB0E86099300238D2B /* Carbon.framework */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		8EDB717A15FCB03F00EB255B /* _2RealKinectOpenNI.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EDB717915FCB03F00EB255B /* _2RealKinectOpenNI.a */; };
 		9E4EF202157CAF3800263758 /* MultipleKinectApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9E4EF201157CAF3800263758 /* MultipleKinectApp.cpp */; };
 		9E4EF204157CB00600263758 /* CinderApp.icns in Resources */ = {isa = PBXBuildFile; fileRef = 9E4EF203157CB00600263758 /* CinderApp.icns */; };
 /* End PBXBuildFile section */
@@ -38,6 +39,7 @@
 		53E3CDFB0E86099300238D2B /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* cinderMultipleKinect.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = cinderMultipleKinect.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8EDB717915FCB03F00EB255B /* _2RealKinectOpenNI.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = _2RealKinectOpenNI.a; path = ../../../../lib/_2RealKinectOpenNI.a; sourceTree = "<group>"; };
 		9E4EF201157CAF3800263758 /* MultipleKinectApp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MultipleKinectApp.cpp; path = ../../src/MultipleKinectApp.cpp; sourceTree = "<group>"; };
 		9E4EF203157CB00600263758 /* CinderApp.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = CinderApp.icns; path = ../../res/CinderApp.icns; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -57,6 +59,7 @@
 				00B784B40FF439BC000DE1D7 /* AudioToolbox.framework in Frameworks */,
 				00B784B50FF439BC000DE1D7 /* AudioUnit.framework in Frameworks */,
 				00B784B60FF439BC000DE1D7 /* CoreAudio.framework in Frameworks */,
+				8EDB717A15FCB03F00EB255B /* _2RealKinectOpenNI.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -109,6 +112,7 @@
 		29B97314FDCFA39411CA2CEA /* cinderMultipleKinect */ = {
 			isa = PBXGroup;
 			children = (
+				8EDB717915FCB03F00EB255B /* _2RealKinectOpenNI.a */,
 				29B97315FDCFA39411CA2CEA /* Headers */,
 				080E96DDFE201D6D7F000001 /* Source */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
@@ -233,7 +237,10 @@
 				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../../../lib\"",
+				);
 				OTHER_LDFLAGS = (
 					"\"$(CINDER_PATH)/lib/libcinder_d.a\"",
 					../../../../lib/_2RealKinectOpenNI_d.a,
@@ -270,7 +277,10 @@
 				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../../../lib\"",
+				);
 				OTHER_LDFLAGS = (
 					"\"$(CINDER_PATH)/lib/libcinder.a\"",
 					../../../../lib/_2RealKinectOpenNI.a,
@@ -291,6 +301,9 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = i386;
 				CINDER_PATH = /Users/psaroudakis/Frameworks/Cinder;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.2;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_UNROLL_LOOPS = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = ../../../../externalLibs/boost/include;
@@ -307,6 +320,9 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = i386;
 				CINDER_PATH = /Users/psaroudakis/Frameworks/Cinder;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.2;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_UNROLL_LOOPS = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = ../../../../externalLibs/boost/include;

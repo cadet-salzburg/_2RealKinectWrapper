@@ -33,7 +33,7 @@ void _2RealKinect::destroyInstance()
 	if ( m_Instance )
 	{
 		delete m_Instance;
-		m_Instance = nullptr;
+		m_Instance = NULL;
 	}
 }
 

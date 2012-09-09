@@ -117,13 +117,13 @@ void MultipleKinectApp::setup()
 		m_iNumberOfDevices = m_2RealKinect->getNumberOfDevices();
 		for ( int devIdx=0; devIdx < m_iNumberOfDevices ; ++devIdx )
 		{
-			bResult = m_2RealKinect->configure( devIdx, COLORIMAGE | DEPTHIMAGE | USERIMAGE, IMAGE_COLOR_640X480 );
+			bResult = m_2RealKinect->configure( devIdx, COLORIMAGE | DEPTHIMAGE | USERIMAGE,  IMAGE_COLOR_640X480 );
 			if( bResult )
 			{
 				std::cout << "_2RealKinectWrapper Device " << devIdx << " configured successfully!..." << std::endl;
 			}
 			//m_iMotorValue = m_2RealKinect->getMotorAngle( devIdx );	// just make motor device 0 controllable
-			m_2RealKinect->startGenerator( devIdx,  DEPTHIMAGE | COLORIMAGE | USERIMAGE );
+			m_2RealKinect->startGenerator( devIdx,   COLORIMAGE | DEPTHIMAGE | USERIMAGE );
 
 		}
 		resizeImages();
@@ -177,7 +177,7 @@ void MultipleKinectApp::drawKinectImages()
 		Surface8u color( imgRef.get(), m_iKinectWidth, m_iKinectHeight, m_iKinectWidth*numberChannels, SurfaceChannelOrder::RGB );
 		gl::draw( gl::Texture( color ), destinationRectangle );
 
-		//---------------Depth Image---------------------//
+//		//---------------Depth Image---------------------//
 		imgRef = getImageData( i, DEPTHIMAGE, m_iKinectWidth, m_iKinectHeight, numberChannels);
 		Channel depth( m_iKinectWidth, m_iKinectHeight, m_iKinectWidth, numberChannels, imgRef.get() );
 		destinationRectangle.offset( ci::Vec2f( 0, m_ImageSize.y) );
@@ -205,7 +205,7 @@ void MultipleKinectApp::drawKinectImages()
 		}
 		//---------------Skeletons---------------------//	
 		destinationRectangle.offset( ci::Vec2f( 0, m_ImageSize.y) );
-		drawSkeletons(i, destinationRectangle );
+		//drawSkeletons(i, destinationRectangle );
 
 		gl::disableDepthRead();
 		gl::drawString( "Skeletons: "+ toString(m_2RealKinect->getNumberOfSkeletons(i)), Vec2f( destinationRectangle.x1 + 20 , destinationRectangle.y1 ), Color( 1.0f, 0.0f, 0.0f ), m_Font );	

@@ -16,6 +16,7 @@ proj/osx/DerivedData/
 *.mode1v3
 *.mode2v3
 *.user
+*.a
 xcuserdata
 
 #Visual Studio files

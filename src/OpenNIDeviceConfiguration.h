@@ -13,6 +13,7 @@ class OpenNIDeviceConfiguration
 public:
 	OpenNIDeviceConfiguration();
 	~OpenNIDeviceConfiguration();
+    
 	
 	void setMirror( XnPredefinedProductionNodeType nodeType, bool isMirrored );
 	void setImageConfig( boost::uint32_t imageConfig );

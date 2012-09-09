@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8E2C88EB15F947F9001422A3 /* OpenNIDeviceConfiguration.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8E2C88E915F947F9001422A3 /* OpenNIDeviceConfiguration.cpp */; };
+		8E2C88EC15F947F9001422A3 /* OpenNIDeviceConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E2C88EA15F947F9001422A3 /* OpenNIDeviceConfiguration.h */; };
 		8EEA9EA015E6E6F000CAF77F /* _2RealImplementationWinSDK.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 8EEA9E9B15E6E6F000CAF77F /* _2RealImplementationWinSDK.hpp */; };
 		8EEA9EA115E6E6F000CAF77F /* WSDKDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8EEA9E9C15E6E6F000CAF77F /* WSDKDevice.cpp */; };
 		8EEA9EA215E6E6F000CAF77F /* WSDKDevice.h in Headers */ = {isa = PBXBuildFile; fileRef = 8EEA9E9D15E6E6F000CAF77F /* WSDKDevice.h */; };
@@ -50,6 +52,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		8E2C88E915F947F9001422A3 /* OpenNIDeviceConfiguration.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OpenNIDeviceConfiguration.cpp; path = ../OpenNIDeviceConfiguration.cpp; sourceTree = "<group>"; };
+		8E2C88EA15F947F9001422A3 /* OpenNIDeviceConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OpenNIDeviceConfiguration.h; path = ../OpenNIDeviceConfiguration.h; sourceTree = "<group>"; };
 		8EEA9E9B15E6E6F000CAF77F /* _2RealImplementationWinSDK.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = _2RealImplementationWinSDK.hpp; sourceTree = "<group>"; };
 		8EEA9E9C15E6E6F000CAF77F /* WSDKDevice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WSDKDevice.cpp; sourceTree = "<group>"; };
 		8EEA9E9D15E6E6F000CAF77F /* WSDKDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WSDKDevice.h; sourceTree = "<group>"; };
@@ -147,6 +151,8 @@
 		9E7420E81578D3E9009F146E /* OpenNISpecific */ = {
 			isa = PBXGroup;
 			children = (
+				8E2C88E915F947F9001422A3 /* OpenNIDeviceConfiguration.cpp */,
+				8E2C88EA15F947F9001422A3 /* OpenNIDeviceConfiguration.h */,
 				9E40DF401599BA2E00C8A74E /* OpenNIMotorController.cpp */,
 				9E40DF411599BA2E00C8A74E /* OpenNIMotorController.h */,
 				9E7420E91578D3E9009F146E /* _2RealImplementationOpenNI.hpp */,
@@ -194,6 +200,7 @@
 				8EEA9EA015E6E6F000CAF77F /* _2RealImplementationWinSDK.hpp in Headers */,
 				8EEA9EA215E6E6F000CAF77F /* WSDKDevice.h in Headers */,
 				8EEA9EA415E6E6F000CAF77F /* WSDKDeviceConfiguration.h in Headers */,
+				8E2C88EC15F947F9001422A3 /* OpenNIDeviceConfiguration.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -258,6 +265,7 @@
 				9E40DF421599BA2E00C8A74E /* OpenNIMotorController.cpp in Sources */,
 				8EEA9EA115E6E6F000CAF77F /* WSDKDevice.cpp in Sources */,
 				8EEA9EA315E6E6F000CAF77F /* WSDKDeviceConfiguration.cpp in Sources */,
+				8E2C88EB15F947F9001422A3 /* OpenNIDeviceConfiguration.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -315,8 +323,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.2;
 				CONFIGURATION_BUILD_DIR = ../../../lib;
 				EXECUTABLE_PREFIX = "";
+				GCC_UNROLL_LOOPS = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = (
 					../../../src,
@@ -339,8 +349,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.2;
 				CONFIGURATION_BUILD_DIR = ../../../lib;
 				EXECUTABLE_PREFIX = "";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_UNROLL_LOOPS = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = (
 					../../../src,
