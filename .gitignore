@@ -9,7 +9,7 @@
 *.swp
 *~.nib
 */DerivedData/
-build/osx/DerivedData
+proj/osx/DerivedData/
 *.pbxuser
 *.perspective
 *.perspectivev3
