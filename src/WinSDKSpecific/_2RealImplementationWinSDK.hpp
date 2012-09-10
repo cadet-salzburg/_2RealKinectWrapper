@@ -198,7 +198,7 @@ public:
 		}
 		return false;
 	}
-	virtual _2RealFoV getFieldOfView( const uint32_t deviceID )
+	virtual _2RealFov getFieldOfView( const uint32_t deviceID )
 	{
 		throw std::exception("The method or operation is not implemented.");
 	}

@@ -70,7 +70,7 @@ namespace _2RealKinectWrapper {
 		void							forceResetUser( const uint32_t id );
 		void							forceResetUsers( );
 		
-		_2RealFoV						getFieldOfView();
+		_2RealFov						getFieldOfView();
 
 		void							setMotorAngle( int angle );
 		int								getMotorAngle();

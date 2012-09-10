@@ -115,7 +115,7 @@ class _2RealKinect
 		/*! /brief     Returns the field of view of the depth generator if present.
 		!*/
 
-		_2RealFoV							getFieldOfView( const uint32_t deviceID );
+		_2RealFov							getFieldOfView( const uint32_t deviceID );
 
 		void								setResolution( const uint32_t deviceID, _2RealGenerator type, unsigned int hRes, unsigned int vRes );
 

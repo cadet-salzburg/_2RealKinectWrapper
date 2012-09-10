@@ -386,7 +386,7 @@ class _2RealImplementationOpenNI : public I_2RealImplementation
 			return 1; //depth-, and userimage will be converted to 1byte/Pixel (8bit uchar*)
 		}
 
-		virtual _2RealFoV getFieldOfView( const uint32_t deviceID )
+		virtual _2RealFov getFieldOfView( const uint32_t deviceID )
 		{
 			checkDeviceRunning( deviceID );
 			return m_Devices[ deviceID ]->getFieldOfView();	

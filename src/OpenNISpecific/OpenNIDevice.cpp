@@ -1050,20 +1050,20 @@ void  OpenNIDevice::forceResetUsers( )
 	delete [] currentUsers;
 }
 
-_2RealFoV	OpenNIDevice::getFieldOfView()
+_2RealFov	OpenNIDevice::getFieldOfView()
 {
-	_2RealFoV devFoV;
+	_2RealFov devFov;
 	if ( hasGenerator( XN_NODE_TYPE_DEPTH ) )
 	{
 		XnFieldOfView fov;
 		checkError( m_DepthGenerator.GetFieldOfView( fov ), "Error while trying to get FoV");
-		devFoV.horizontalFoV = fov.fHFOV;
-		devFoV.verticalFoV = fov.fVFOV;
+		devFov.horizontalFov = fov.fHFOV;
+		devFov.verticalFov = fov.fVFOV;
 	} else 
 	{
 		_2REAL_LOG(info) << "A depth generator must be present in order to get the field-of-view" << std::endl;
 	}
-	return devFoV;
+	return devFov;
 }
 
 void OpenNIDevice::setMotorAngle( int angle )
